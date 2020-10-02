@@ -35,7 +35,7 @@ function IterableMap.Add(self, key, data)
 	self.indexByKey[key] = self.indexMax
 end
 
-function IterableMap.Append(self, data)
+function IterableMap.AddSelf(self, data)
 	key = IterableMap.GetUnusedKey(self)
 	data.index = key
 	IterableMap.Add(self, key, data)
@@ -69,14 +69,9 @@ function IterableMap.ReplaceKey(self, oldKey, newKey)
 end
 
 -- Get is also set in the case of tables because tables pass by reference
-function IterableMap.GetAny(self)
-	return self.keyByIndex[1] and self.dataByKey[self.keyByIndex[1]]
-end
-
 function IterableMap.Get(self, key)
 	return self.dataByKey[key]
 end
-
 function IterableMap.Set(self, key, data)
 	if not self.indexByKey[key] then
 		IterableMap.Add(self, key, data)
