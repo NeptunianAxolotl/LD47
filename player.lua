@@ -29,9 +29,9 @@ function self.Update(Terrain, cameraX, cameraY, dt)
 	self.speed, self.velDir = util.CartToPolar(self.velocity)
 	
 	if self.speed < 8 and util.Dot(self.velocity, DOWNHILL_DIR) < 0 then
-		self.mouseControlMult = 0
+		self.mouseControlMult = 0.4
 	elseif self.mouseControlMult and self.speed > 8 then
-		self.mouseControlMult = self.mouseControlMult + 0.03
+		self.mouseControlMult = self.mouseControlMult + 0.02
 		if self.mouseControlMult > 1 then
 			self.mouseControlMult = false
 		end
