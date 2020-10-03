@@ -18,7 +18,7 @@ function util.Dist(x1, y1, x2, y2)
 end
 
 function util.DistVectors(u, v)
-	return util.Dist(u[1], v[1], u[2], v[2])
+	return util.Dist(u[1], u[2], v[1], v[2])
 end
 
 function util.Dist3D(x1,y1,z1,x2,y2,z2)

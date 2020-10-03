@@ -50,9 +50,9 @@ end
 local function detectPlacementCollision(obstacles, colPos, colDef)
 	--Does the circle described by 'x,y,radius' intersect with any
 	--of the objects in the 'obstacles' list?
-	for i,v in ipairs(obstacles) do
+	for i, v in ipairs(obstacles) do
 		if v.IsBlockingPlacement(colPos, colDef) then
-			return
+			return true
 		end
 	end
 end
@@ -96,9 +96,10 @@ local function generateChunk(a, b)
 	
 	for i = 1, numObstacles do
 		local obstacleDef = ObstacleDefs.defs[util.SampleDistribution(spawnDistribution)]
+		local radius = math.max(obstacleDef.placeBlockRadius, obstacleDef.radius)
 		local obstaclePos = {
-			a*CHUNK_WIDTH+obstacleDef.radius+rng:random()*(CHUNK_WIDTH-obstacleDef.radius*2),
-			b*CHUNK_HEIGHT+obstacleDef.radius+rng:random()*(CHUNK_HEIGHT-obstacleDef.radius*2),
+			a*CHUNK_WIDTH  + radius + rng:random()*0.01*(CHUNK_WIDTH  - radius*2),
+			b*CHUNK_HEIGHT + radius + rng:random()*0.01*(CHUNK_HEIGHT - radius*2),
 		}
 		
 		if not detectPlacementCollision(obstacles, obstaclePos, obstacleDef) then
@@ -137,11 +138,11 @@ function self.Update(playerX, playerY, dt)
 	-- Include and deal with individual behaviours for dynamic feature (a burning tree, an exploding bomb etc..) here.
 end
 
-function self.GetTerrainCollision(x, y, radius)
+function self.GetTerrainCollision(pos, radius)
 	-- Other things, such as the player, enemies, and active spell effects, may call the terrain
 	-- to check whether they are colliding with any mechanical part of it.
 	--TODO: Additional chunks need to be checked, if the 'radius' overlaps with the edge of the chunk that 'x','y' is in.
-	return detectCollision(generateChunk(getChunkIDFromPosition(x, y)).obstacles, {x=x,y=y,radius=radius})
+	return detectCollision(generateChunk(getChunkIDFromPosition(x, y)).obstacles, pos, radius)
 end
 
 function self.GetTerrainBiome(x, y)
