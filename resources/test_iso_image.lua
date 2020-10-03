@@ -3,6 +3,7 @@ return {
 	xScale = 0.3,
 	yScale = 0.3,
 	firstDir = 0,
+	rotate = true,
 	files = {
 		"resources/images/croc_e.png",
 		"resources/images/croc_se.png",

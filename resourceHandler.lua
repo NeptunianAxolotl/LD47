@@ -40,9 +40,10 @@ local function LoadIsoImage(resData)
 		yScale = resData.yScale or 1,
 		firstDir = resData.firstDir or 0,
 		imageCount = #resData.files,
+		rotate = resData.rotate,
 	}
-	data.xOffset = resData.xOffset or data.xScale*imageWidth/2
-	data.yOffset = resData.yOffset or data.yScale*imageHeight/2
+	data.xOffset = resData.xOffset or imageWidth/2
+	data.yOffset = resData.yOffset or imageHeight/2
 	
 	return data
 end
@@ -123,12 +124,12 @@ function self.DrawAnim(name, x, y, progress)
 	
 	love.graphics.setColor(1, 1, 1, 1)
 	
-	local anim = self.animations[name]
-	local quadToDraw = math.floor((progress%anim.duration) / anim.duration * anim.frames) + 1
-	love.graphics.draw(anim.image, anim.quads[quadToDraw], x - anim.xOffset, y - anim.yOffset, 0, anim.xScale, anim.yScale, 0, 0, 0, 0)
+	local data = self.dataations[name]
+	local quadToDraw = math.floor((progress%data.duration) / data.duration * data.frames) + 1
+	love.graphics.draw(data.image, data.quads[quadToDraw], x, y, 0, data.xScale, data.yScale, data.xOffset, data.yOffset, 0, 0)
 	
 	if self.debugMode then
-		love.graphics.rectangle("line", x, y, anim.quadWidth*anim.xScale, anim.quadHeight*anim.yScale, 0, 0)
+		love.graphics.rectangle("line", x, y, data.quadWidth*data.xScale, data.quadHeight*data.yScale, 0, 0)
 	end
 end
 
@@ -143,7 +144,12 @@ function self.DrawIsoImage(name, x, y, direction)
 	local data = self.images[name]
 	local drawDir = util.DirectionToCardinal(direction, data.firstDir, data.imageCount)
 	
-	love.graphics.draw(data.image[drawDir], x - data.xOffset, y - data.yOffset, 0, data.xScale, data.yScale, 0, 0, 0, 0)
+	local rotation = 0
+	if data.rotate then
+		rotation = -util.AngleToCardinal(direction, drawDir, data.firstDir, data.imageCount)
+	end
+	
+	love.graphics.draw(data.image[drawDir], x, y, rotation, data.xScale, data.yScale, data.xOffset, data.yOffset, 0, 0)
 end
 
 

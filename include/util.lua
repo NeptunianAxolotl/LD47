@@ -135,6 +135,13 @@ function util.DirectionToCardinal(direction, start, segments)
 	return math.floor((direction + start + math.pi/segments) / (2*math.pi/segments)) % segments + 1
 end
 
+function util.AngleToCardinal(angle, cardinal, start, segments)
+	start = start or 0
+	segments = segments or 4
+	local cardinalAngle = (cardinal - 1)*math.pi*2/segments + start
+	return cardinalAngle - angle
+end
+
 function util.InverseBasis(a, b, c, d)
 	local det = a*d - b*c
 	return d/det, -b/det, -c/det, a/det
@@ -211,7 +218,6 @@ end
 function util.PosInRectangle(x1, y1, w1, h1, x2, y2)
 	return (x1 + w1 > x2 and x1 <= x2) and (y1 + h1 > y2 and y1 <= y2)
 end
-
 
 --------------------------------------------------
 --------------------------------------------------
