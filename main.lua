@@ -1,6 +1,7 @@
 
 local Font = require("include/font")
 local Resources = require("resourceHandler")
+local Terrain = require("terrainHandler")
 
 --------------------------------------------------
 -- Draw
@@ -33,6 +34,7 @@ end
 
 function love.update(dt)
 	animDt = Resources.UpdateAnim("test_anim", animDt, dt/5)
+	Terrain.Update(0, 0, dt)
 end
 
 --------------------------------------------------
