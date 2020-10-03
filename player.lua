@@ -5,9 +5,9 @@ local pi = math.pi
 
 local self = {}
 
-function self.Update(Terrain, dt)
-	local mouseX = love.mouse.getX()
-	local mouseY = love.mouse.getY()
+function self.Update(Terrain, cameraX, cameraY, dt)
+	local mouseX = love.mouse.getX() + cameraX
+	local mouseY = love.mouse.getY() + cameraY
 	
 	local mouseVector = util.Subtract({mouseX, mouseY}, self.pos)
 	local mouseAngle = util.Angle(mouseVector)
@@ -15,17 +15,23 @@ function self.Update(Terrain, dt)
 	self.travelAngle = mouseAngle
 	self.speed = 5
 	
-	self.pos = util.Add(self.pos, util.PolarToCart(self.speed, self.travelAngle))
+	self.velocity = util.PolarToCart(self.speed, self.travelAngle)
+	self.pos = util.Add(self.pos, self.velocity)
 	
 	self.faceAngle = self.travelAngle
 end
 
-function self.Draw()
-	Resources.DrawIsoImage("test_iso_image", self.pos[1], self.pos[2], self.faceAngle)
+function self.GetPhysics()
+	return self.pos, self.velocity
+end
+
+function self.Draw(xOffset, yOffset)
+	Resources.DrawIsoImage("test_iso_image", self.pos[1] - xOffset, self.pos[2] - yOffset, self.faceAngle)
 end
 
 function self.Initialize()
-	self.pos = {0, 0}
+	self.pos = {500, 0}
+	self.velocity = {0, 0}
 	self.speed = 0
 	self.travelAngle = pi*3/2
 	self.faceAngle = pi*3/2

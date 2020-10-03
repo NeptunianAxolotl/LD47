@@ -9,7 +9,7 @@ local World = require("world")
 
 local animDt = 0
 function love.draw()
-	Resources.DrawAnim("test_anim", 100, 100, animDt)
+	--Resources.DrawAnim("test_anim", 100, 100, animDt)
 	World.Draw()
 end
 
