@@ -62,9 +62,9 @@ end
 
 local function getChunksIDsForRegion(top, left, bottom, right)
 	local leftTile = math.floor(left/CHUNK_WIDTH)
-	local rightTile = math.ceil(right/CHUNK_WIDTH)
+	local rightTile = math.floor(right/CHUNK_WIDTH)
 	local topTile = math.floor(top/CHUNK_HEIGHT)
-	local bottomTile = math.ceil(bottom/CHUNK_HEIGHT)
+	local bottomTile = math.floor(bottom/CHUNK_HEIGHT)
 	local chunkIDs = {}
 	for a = leftTile, rightTile do
 		for b = topTile, bottomTile do
