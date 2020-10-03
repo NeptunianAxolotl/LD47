@@ -6,7 +6,7 @@ local function NewSpell(player)
 	local self = {}
 	
 	self.pos, self.velocity = player.GetPhysics()
-	self.velocity = util.Norm(25, self.velocity)
+	self.velocity = util.SetLength(25, self.velocity)
 	
 	function self.Update(dt)
 		self.pos = util.Add(util.Mult(dt*60, self.velocity), self.pos)

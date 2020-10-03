@@ -54,7 +54,7 @@ function util.Unit(v)
 	end
 end
 
-function util.Norm(b, v)
+function util.SetLength(b, v)
 	local mag = util.AbsVal(v)
 	if mag > 0 then
 		return {b*v[1]/mag, b*v[2]/mag}
