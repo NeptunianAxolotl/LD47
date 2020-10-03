@@ -98,8 +98,8 @@ local function generateChunk(a, b)
 		local obstacleDef = ObstacleDefs.defs[util.SampleDistribution(spawnDistribution)]
 		local radius = math.max(obstacleDef.placeBlockRadius, obstacleDef.radius)
 		local obstaclePos = {
-			a*CHUNK_WIDTH  + radius + rng:random()*0.01*(CHUNK_WIDTH  - radius*2),
-			b*CHUNK_HEIGHT + radius + rng:random()*0.01*(CHUNK_HEIGHT - radius*2),
+			left + radius + rng:random()*(CHUNK_WIDTH  - radius*2),
+			top + radius + rng:random()*(CHUNK_HEIGHT - radius*2),
 		}
 		
 		if not detectPlacementCollision(obstacles, obstaclePos, obstacleDef) then
