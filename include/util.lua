@@ -17,6 +17,10 @@ function util.Dist(x1, y1, x2, y2)
 	return sqrt(util.DistSq(x1,y1,x2,y2))
 end
 
+function util.DistVectors(u, v)
+	return util.Dist(u[1], v[1], u[2], v[2])
+end
+
 function util.Dist3D(x1,y1,z1,x2,y2,z2)
 	return sqrt((x1 - x2)*(x1 - x2) + (y1 - y2)*(y1 - y2) + (z1 - z2)*(z1 - z2))
 end
@@ -251,9 +255,51 @@ end
 --------------------------------------------------
 --------------------------------------------------
 -- Circles
-function util.IntersectingCircles(l, r)
-	return util.Dist(l.x, l.y, r.x, r.y) <= l.radius+r.radius
+
+function util.IntersectingCircles(pos1, radius1, pos2, radius2)
+	return util.DistVectors(pos1, pos2) <= radius1 + radius2
 end
+
+--------------------------------------------------
+--------------------------------------------------
+-- Probability
+
+function util.WeightsToDistribution(weights)
+	local sum = 0
+	for i = 1, #weights do
+		sum = sum + weights[i]
+	end
+	local normWeights = {}
+	for i = 1, #weights do
+		 normWeights[i] =  weights[i]/sum
+	end
+	return normWeights
+end
+
+function util.GenerateBoundedRandomWeight(bounds)
+	local weights = {}
+	for i = 1, #bounds do
+		weights[i] = bounds[i][1] + math.random()*(bounds[i][2] - bounds[i][1])
+	end
+	return weights
+end
+
+function util.GenerateDistributionFromBoundedRandomWeights(bounds)
+	local weights = util.GenerateBoundedRandomWeight(bounds)
+	return util.WeightsToDistribution(weights)
+end
+
+function util.SampleDistribution(distribution)
+	local value = math.random()
+	for i = 1, #distribution do
+		if value < distribution[i] then
+			return i
+		end
+		value = value - distribution[i]
+	end
+	return #distribution
+end
+
 --------------------------------------------------
 --------------------------------------------------
 -- Group Utilities

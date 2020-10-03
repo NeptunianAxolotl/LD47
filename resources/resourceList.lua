@@ -5,4 +5,6 @@ return {
 	"test_anim",
 	"fireball",
 	"test_iso_image",
+	"tree_1",
+	"rock_1",
 }

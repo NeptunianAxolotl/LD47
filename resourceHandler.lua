@@ -18,8 +18,8 @@ local function LoadImage(resData)
 		xScale = resData.xScale or 1,
 		yScale = resData.yScale or 1,
 	}
-	data.xOffset = resData.xOffset or data.xScale*imageWidth/2
-	data.yOffset = resData.yOffset or data.yScale*imageHeight/2
+	data.xOffset = (resData.xOffset or 0.5)*imageWidth
+	data.yOffset = (resData.yOffset or 0.5)*imageHeight
 	
 	return data
 end
@@ -42,41 +42,46 @@ local function LoadIsoImage(resData)
 		imageCount = #resData.files,
 		rotate = resData.rotate,
 	}
-	data.xOffset = resData.xOffset or imageWidth/2
-	data.yOffset = resData.yOffset or imageHeight/2
+	data.xOffset = (resData.xOffset or 0.5)*imageWidth
+	data.yOffset = (resData.yOffset or 0.5)*imageHeight
 	
 	return data
 end
 
 local function LoadAnimation(resData)
-	local v = LoadImage(resData)
+	local data = LoadImage(resData)
 	
-	v.quads = {}
-	v.duration = resData.duration
+	data.quads = {}
+	data.duration = resData.duration
 	
-	v.xOffset = resData.xOffset or 0
-	v.yOffset = resData.yOffset or 0
 	
 	local width = resData.width
-	local imageWidth = v.image:getWidth()
-	local imageHeight = v.image:getHeight()
+	local imageWidth = data.image:getWidth()
+	local imageHeight = data.image:getHeight()
 	
-	v.quadWidth = width
-	v.quadHeight = imageHeight
+	data.xOffset = (resData.xOffset or 0.5)*imageWidth
+	data.yOffset = (resData.yOffset or 0.5)*imageHeight
+	
+	data.quadWidth = width
+	data.quadHeight = imageHeight
 	
 	for x = 0, imageWidth - width, width do
 		--print(x)
-		v.quads[#v.quads + 1] = love.graphics.newQuad(x, 0, width, imageHeight, imageWidth, imageHeight)
+		data.quads[#data.quads + 1] = love.graphics.newQuad(x, 0, width, imageHeight, imageWidth, imageHeight)
 	end
 	
-	v.frames = #v.quads
+	data.frames = #data.quads
 	
-	return v
+	return data
 end
 
 local function LoadSound(resData)
 
 end
+
+--------------------------------------------------
+-- Loading
+--------------------------------------------------
 
 local function LoadResource(name)
 	local res = require("resources/" .. name)
@@ -125,7 +130,7 @@ function self.DrawImage(name, x, y, rotation)
 	rotation = rotation or 0
 	love.graphics.setColor(1, 1, 1, 1)
 	
-	local data = self.animations[name]
+	local data = self.images[name]
 	love.graphics.draw(data.image, x, y, rotation, data.xScale, data.yScale, data.xOffset, data.yOffset, 0, 0)
 end
 

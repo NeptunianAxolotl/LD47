@@ -12,6 +12,8 @@
 --}
 
 local util = require("include/util")
+local ObstacleDefs = require("entities/obstacleDefs")
+local NewObstacle = require("entities/obstacle")
 
 local self = {}
 
@@ -35,12 +37,22 @@ function self.Initialize()
 	RNG_SEED = math.random(0, 2^16)
 end
 
-local function detectCollision(obstacles, collider)
+local function detectCollision(obstacles, otherPos, otherRadius)
+	--Does the circle described by 'x,y,radius' intersect with any
+	--of the objects in the 'obstacles' list?
+	for i, v in ipairs(obstacles) do
+		if v.IsColliding(otherPos, otherRadius) then
+			return v
+		end
+	end
+end
+
+local function detectPlacementCollision(obstacles, colPos, colDef)
 	--Does the circle described by 'x,y,radius' intersect with any
 	--of the objects in the 'obstacles' list?
 	for i,v in ipairs(obstacles) do
-		if util.IntersectingCircles(v, collider) then
-			return v.obstacleType
+		if v.IsBlockingPlacement(colPos, colDef) then
+			return
 		end
 	end
 end
@@ -79,18 +91,18 @@ local function generateChunk(a, b)
 	
 	local obstacles = {}
 	local numObstacles = rng:random(OBSTACLES_PER_CHUNK_MIN, OBSTACLES_PER_CHUNK_MAX)
-	local radius = 100
+	
+	local spawnDistribution = util.GenerateDistributionFromBoundedRandomWeights(ObstacleDefs.spawnWeights)
+	
 	for i = 1, numObstacles do
-		--TODO: Choose Obstacle Type
-		local obstacle = {
-			--image = '??tree??',
-			obstacleType = 'tree',
-			radius = radius,
-			x = left+radius+rng:random()*(CHUNK_WIDTH-radius*2),
-			y = top+radius+rng:random()*(CHUNK_HEIGHT-radius*2),
+		local obstacleDef = ObstacleDefs.defs[util.SampleDistribution(spawnDistribution)]
+		local obstaclePos = {
+			a*CHUNK_WIDTH+obstacleDef.radius+rng:random()*(CHUNK_WIDTH-obstacleDef.radius*2),
+			b*CHUNK_HEIGHT+obstacleDef.radius+rng:random()*(CHUNK_HEIGHT-obstacleDef.radius*2),
 		}
-		if not detectCollision(obstacles, obstacle) then
-			obstacles[#obstacles+1] = obstacle
+		
+		if not detectPlacementCollision(obstacles, obstaclePos, obstacleDef) then
+			obstacles[#obstacles + 1] = NewObstacle({pos = obstaclePos}, obstacleDef)
 		end
 	end
 	
@@ -149,7 +161,7 @@ local function drawChunk(chunk)
 	love.graphics.rectangle('fill', chunk.left, chunk.top, CHUNK_WIDTH, CHUNK_HEIGHT)
 	love.graphics.setColor(1, 0, 1)
 	for i,v in ipairs(chunk.obstacles) do
-		love.graphics.circle('line',v.x, v.y, v.radius)
+		v.Draw()
 	end
 end
 
