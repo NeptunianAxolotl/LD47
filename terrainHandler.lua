@@ -45,6 +45,19 @@ local function detectCollision(obstacles, collider)
 	end
 end
 
+
+local function getChunkIDFromPosition(x, y)
+	local b = math.floor(y/CHUNK_HEIGHT)
+	local a = math.floor((x/CHUNK_WIDTH)+(b%2==0 and 0.5 or 0))
+	return a, b
+end
+
+local function getChunkPositionFromID(a, b)
+	local x = ((b%2==0 and 0.5 or 0)+a)*CHUNK_WIDTH
+	local y = b*CHUNK_HEIGHT
+	return x, y
+end
+
 local function generateChunk(a, b)
 	if not chunkCache[a] then
 		chunkCache[a] = {}
@@ -57,6 +70,7 @@ local function generateChunk(a, b)
 	
 	local rng = love.math.newRandomGenerator(RNG_SEED+19391*a+16127*b)
 
+	local left, top = getChunkPositionFromID(a, b)
 	--Chuncks should be made of tiles+doodads (miminally)
 	--Potentially other elements too.
 	--Random but repeatable generation using RNG deterministically seeded by a, b, and RNG_SEED 
@@ -72,8 +86,8 @@ local function generateChunk(a, b)
 			--image = '??tree??',
 			obstacleType = 'tree',
 			radius = radius,
-			x = a*CHUNK_WIDTH+radius+rng:random()*(CHUNK_WIDTH-radius*2),
-			y = b*CHUNK_HEIGHT+radius+rng:random()*(CHUNK_HEIGHT-radius*2),
+			x = left+radius+rng:random()*(CHUNK_WIDTH-radius*2),
+			y = top+radius+rng:random()*(CHUNK_HEIGHT-radius*2),
 		}
 		if not detectCollision(obstacles, obstacle) then
 			obstacles[#obstacles+1] = obstacle
@@ -82,8 +96,8 @@ local function generateChunk(a, b)
 	
 	local chunk = {
 		colour = rng:random(),
-		left = a*CHUNK_WIDTH,
-		top = b*CHUNK_HEIGHT,
+		left = left,
+		top = top,
 		obstacles = obstacles,
 	}
 	hCache[b] = chunk
@@ -92,13 +106,12 @@ end
 
 
 local function getChunksIDsForRegion(top, left, bottom, right)
-	local leftTile = math.floor(left/CHUNK_WIDTH)
-	local rightTile = math.floor(right/CHUNK_WIDTH)
-	local topTile = math.floor(top/CHUNK_HEIGHT)
-	local bottomTile = math.floor(bottom/CHUNK_HEIGHT)
+	local lt_a, lt_b = getChunkIDFromPosition(left, top)
+	local rb_a, rb_b = getChunkIDFromPosition(right, bottom)
+
 	local chunkIDs = {}
-	for a = leftTile, rightTile do
-		for b = topTile, bottomTile do
+	for a = lt_a-1, rb_a+1 do
+		for b = lt_b, rb_b do
 			chunkIDs[#chunkIDs+1] = {a; b}
 		end
 	end
@@ -116,7 +129,7 @@ function self.GetTerrainCollision(x, y, radius)
 	-- Other things, such as the player, enemies, and active spell effects, may call the terrain
 	-- to check whether they are colliding with any mechanical part of it.
 	--TODO: Additional chunks need to be checked, if the 'radius' overlaps with the edge of the chunk that 'x','y' is in.
-	return detectCollision(generateChunk(math.floor(x/CHUNK_WIDTH), math.floor(y/CHUNK_HEIGHT)).obstacles, {x=x,y=y,radius=radius})
+	return detectCollision(generateChunk(getChunkIDFromPosition(x, y)).obstacles, {x=x,y=y,radius=radius})
 end
 
 function self.GetTerrainBiome(x, y)
