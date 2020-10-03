@@ -1,6 +1,6 @@
 
-Font = require("include/font")
-Resources = require("resourceHandler")
+local Font = require("include/font")
+local Resources = require("resourceHandler")
 
 --------------------------------------------------
 -- Draw
