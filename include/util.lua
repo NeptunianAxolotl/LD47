@@ -117,6 +117,31 @@ function util.Average(u, v, uFactor)
 	return util.Add(util.Mult(uFactor, util.Subtract(v, u)), u)
 end
 
+function util.AngleSubtractShortest(angleA, angleB)
+	local dist = angleA - angleB
+	if dist > 0 then
+		if dist < pi then
+			return dist
+		end
+		return dist - 2*pi
+	else
+		if dist > -pi then
+			return dist
+		end
+		return dist + 2*pi
+	end
+end
+
+function util.SignPreserveMax(val, mag)
+	if val > mag then
+		return mag
+	end
+	if val < -mag then
+		return -mag
+	end
+	return val
+end
+
 --------------------------------------------------
 --------------------------------------------------
 -- Transforms

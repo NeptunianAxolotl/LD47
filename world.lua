@@ -8,16 +8,16 @@ local self = {}
 function self.Update(dt)
 	Terrain.Update(0, 0, dt)
 	Player.Update(Terrain, self.cameraX, self.cameraY, dt)
+	local playerPos, playerVelocity = Player.GetPhysics()
+	self.cameraX, self.cameraY = Camaera.UpdateCamera(dt, playerPos, playerVelocity)
 end
 
 function self.Draw()
 	Terrain.Draw(0, 0)
 	
 	local windowX, windowY = love.window.getMode()
-	local playerPos, playerVelocity = Player.GetPhysics()
 	local gridSize = 128
 	
-	self.cameraX, self.cameraY = Camaera.UpdateCamera(dt, playerPos, playerVelocity)
 	local gridX = -self.cameraX%gridSize
 	local gridY = -self.cameraY%gridSize
 	
