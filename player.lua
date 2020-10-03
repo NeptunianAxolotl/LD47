@@ -49,7 +49,7 @@ function self.GetPhysics()
 	return self.pos, self.velocity
 end
 
-function self.Draw(xOffset, yOffset)
+function self.Draw()
 	Resources.DrawIsoImage("test_iso_image", self.pos[1], self.pos[2], self.faceAngle)
 end
 

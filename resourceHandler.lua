@@ -116,21 +116,17 @@ function self.UpdateAnim(name, progress, dt)
 	return (progress + dt)%self.animations[name].duration
 end
 
-function self.DrawAnim(name, x, y, progress)
-	if not self.animations[name] then
-		print("Invalid DrawAnimation ", name)
+function self.DrawImage(name, x, y, rotation)
+	if not self.images[name] then
+		print("Invalid DrawImage ", name)
 		return
 	end
 	
+	rotation = rotation or 0
 	love.graphics.setColor(1, 1, 1, 1)
 	
 	local data = self.dataations[name]
-	local quadToDraw = math.floor((progress%data.duration) / data.duration * data.frames) + 1
-	love.graphics.draw(data.image, data.quads[quadToDraw], x, y, 0, data.xScale, data.yScale, data.xOffset, data.yOffset, 0, 0)
-	
-	if self.debugMode then
-		love.graphics.rectangle("line", x, y, data.quadWidth*data.xScale, data.quadHeight*data.yScale, 0, 0)
-	end
+	love.graphics.draw(data.image, x, y, rotation, data.xScale, data.yScale, data.xOffset, data.yOffset, 0, 0)
 end
 
 function self.DrawIsoImage(name, x, y, direction)
@@ -152,6 +148,22 @@ function self.DrawIsoImage(name, x, y, direction)
 	love.graphics.draw(data.image[drawDir], x, y, rotation, data.xScale, data.yScale, data.xOffset, data.yOffset, 0, 0)
 end
 
+function self.DrawAnim(name, x, y, progress)
+	if not self.animations[name] then
+		print("Invalid DrawAnimation ", name)
+		return
+	end
+	
+	love.graphics.setColor(1, 1, 1, 1)
+	
+	local data = self.dataations[name]
+	local quadToDraw = math.floor((progress%data.duration) / data.duration * data.frames) + 1
+	love.graphics.draw(data.image, data.quads[quadToDraw], x, y, 0, data.xScale, data.yScale, data.xOffset, data.yOffset, 0, 0)
+	
+	if self.debugMode then
+		love.graphics.rectangle("line", x, y, data.quadWidth*data.xScale, data.quadHeight*data.yScale, 0, 0)
+	end
+end
 
 --------------------------------------------------
 -- Drawing Functions
