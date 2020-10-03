@@ -76,6 +76,15 @@ local function CheckTerrainCollision(Terrain, dt)
 
 	self.speed = (1 - math.max(0.2, math.min(0.7, severityFactor)))*self.speed + 3*severityFactor
 	
+	if severityFactor > 0.95 then
+		self.speed = self.speed + 3
+		if toOther[1] > 0 then
+			self.velocity = util.Add(self.velocity, {2, 0})
+		else
+			self.velocity = util.Add(self.velocity, {-2, 0})
+		end
+	end
+	
 	self.velocity = util.SetLength(self.speed, self.velocity)
 	self.velDir = util.Angle(self.velocity)
 	
