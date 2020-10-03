@@ -50,7 +50,6 @@ local function generateChunk(a, b)
 	--Potentially other elements too.
 	--Random but repeatable generation using RNG deterministically seeded by a, b, and RNG_SEED 
 
-	return {
 	local chunk = {
 		colour = rng:random(),
 		left = a*CHUNK_WIDTH,
