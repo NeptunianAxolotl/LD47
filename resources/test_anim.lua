@@ -1,5 +1,5 @@
 return {
-	form = "animation", -- image, sound or animation
+	form = "animation",
 	file = "resources/images/monk_walk_nw.png",
 	xScale = 0.5,
 	yScale = 0.5,

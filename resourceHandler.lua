@@ -1,4 +1,6 @@
 
+local util = require("include/util")
+
 local self = {
 	debugMode = false
 }
@@ -9,11 +11,40 @@ local self = {
 
 local function LoadImage(resData)
 	local image = love.graphics.newImage(resData.file)
-	return {
+	local imageWidth, imageHeight = image:getWidth(), image:getHeight()
+	
+	local data = {
 		image = image,
 		xScale = resData.xScale or 1,
 		yScale = resData.yScale or 1,
 	}
+	data.xOffset = resData.xOffset or data.xScale*imageWidth/2
+	data.yOffset = resData.yOffset or data.yScale*imageHeight/2
+	
+	return data
+end
+
+local function LoadIsoImage(resData)
+	local image = {}
+	local imageWidth, imageHeight
+	for i = 1, #resData.files do
+		image[i] = love.graphics.newImage(resData.files[i])
+		if not imageWidth then
+			imageWidth, imageHeight = image[i]:getWidth(), image[i]:getHeight()
+		end
+	end
+	
+	local data = {
+		image = image,
+		xScale = resData.xScale or 1,
+		yScale = resData.yScale or 1,
+		firstDir = resData.firstDir or 0,
+		imageCount = #resData.files,
+	}
+	data.xOffset = resData.xOffset or data.xScale*imageWidth/2
+	data.yOffset = resData.yOffset or data.yScale*imageHeight/2
+	
+	return data
 end
 
 local function LoadAnimation(resData)
@@ -22,8 +53,8 @@ local function LoadAnimation(resData)
 	v.quads = {}
 	v.duration = resData.duration
 	
-	v.xoffset = resData.xoffset or 0
-	v.yoffset = resData.yoffset or 0
+	v.xOffset = resData.xOffset or 0
+	v.yOffset = resData.yOffset or 0
 	
 	local width = resData.width
 	local imageWidth = v.image:getWidth()
@@ -50,6 +81,8 @@ local function LoadResource(name)
 	local res = require("resources/" .. name)
 	if res.form == "image" then
 		self.images[name] = LoadImage(res)
+	elseif res.form == "iso_image" then
+		self.images[name] = LoadIsoImage(res)
 	elseif res.form == "animation" then
 		self.animations[name] = LoadAnimation(res)
 	elseif res.form == "sound" then
@@ -92,12 +125,27 @@ function self.DrawAnim(name, x, y, progress)
 	
 	local anim = self.animations[name]
 	local quadToDraw = math.floor((progress%anim.duration) / anim.duration * anim.frames) + 1
-	love.graphics.draw(anim.image, anim.quads[quadToDraw], x + anim.xoffset, y + anim.yoffset, 0, anim.xScale, anim.yScale, 0, 0, 0, 0)
+	love.graphics.draw(anim.image, anim.quads[quadToDraw], x - anim.xOffset, y - anim.yOffset, 0, anim.xScale, anim.yScale, 0, 0, 0, 0)
 	
 	if self.debugMode then
 		love.graphics.rectangle("line", x, y, anim.quadWidth*anim.xScale, anim.quadHeight*anim.yScale, 0, 0)
 	end
 end
+
+function self.DrawIsoImage(name, x, y, direction)
+	if not self.images[name] then
+		print("Invalid DrawIsoImage ", name)
+		return
+	end
+	
+	love.graphics.setColor(1, 1, 1, 1)
+	
+	local data = self.images[name]
+	local drawDir = util.DirectionToCardinal(direction, data.firstDir, data.imageCount)
+	
+	love.graphics.draw(data.image[drawDir], x - data.xOffset, y - data.yOffset, 0, data.xScale, data.yScale, 0, 0, 0, 0)
+end
+
 
 --------------------------------------------------
 -- Drawing Functions

@@ -123,8 +123,10 @@ function util.RotateVector(x, y, angle)
 	return x*math.cos(angle) - y*math.sin(angle), x*math.sin(angle) + y*math.cos(angle)
 end
 
-function util.DirectionToCardinal(direction)
-	return math.floor((direction + math.pi/8) / (math.pi/4)) % 8 + 1
+function util.DirectionToCardinal(direction, start, segments)
+	start = start or 0
+	segments = segments or 4
+	return math.floor((direction + start + math.pi/segments) / (2*math.pi/segments)) % segments + 1
 end
 
 function util.InverseBasis(a, b, c, d)

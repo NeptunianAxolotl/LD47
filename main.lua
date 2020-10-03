@@ -35,6 +35,7 @@ end
 
 function love.update(dt)
 	animDt = Resources.UpdateAnim("test_anim", animDt, dt/5)
+	World.Update(dt)
 end
 
 --------------------------------------------------

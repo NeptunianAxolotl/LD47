@@ -6,6 +6,7 @@ local self = {}
 
 function self.Update(dt)
 	Terrain.Update(0, 0, dt)
+	Player.Update(Terrain, dt)
 end
 
 function self.Draw()
