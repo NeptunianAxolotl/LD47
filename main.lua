@@ -40,6 +40,9 @@ end
 --------------------------------------------------
 
 function love.load()
+	local major, minor, revision, codename = love.getVersion()
+	print(string.format("Version %d.%d.%d - %s", major, minor, revision, codename))
+
 	math.randomseed(os.clock())
 	Resources.LoadResources()
 end
