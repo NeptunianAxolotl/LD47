@@ -15,6 +15,8 @@
 local self = {}
 
 
+local chunkCache = {}
+
 local TILE_WIDTH = 64
 local TILE_HEIGHT = 64
 
@@ -33,6 +35,15 @@ end
 
 
 local function generateChunk(a, b)
+	if not chunkCache[a] then
+		chunkCache[a] = {}
+	end
+	local hCache = chunkCache[a]
+	local cachedVal = hCache[b]
+	if cachedVal then
+		return cachedVal
+	end
+	
 	local rng = love.math.newRandomGenerator(RNG_SEED+19391*a+16127*b)
 
 	--Chuncks should be made of tiles+doodads (miminally)
@@ -40,10 +51,13 @@ local function generateChunk(a, b)
 	--Random but repeatable generation using RNG deterministically seeded by a, b, and RNG_SEED 
 
 	return {
+	local chunk = {
 		colour = rng:random(),
 		left = a*CHUNK_WIDTH,
 		top = b*CHUNK_HEIGHT,
 	}
+	hCache[b] = chunk
+	return chunk
 end
 
 
