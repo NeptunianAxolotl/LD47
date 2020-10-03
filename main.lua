@@ -32,14 +32,14 @@ end
 --------------------------------------------------
 
 function love.update(dt)
-	animDt = Resources.UpdateAnim("test_anim", animDt, dt)
+	animDt = Resources.UpdateAnim("test_anim", animDt, dt/5)
 end
 
 --------------------------------------------------
 -- Loading
 --------------------------------------------------
-
-function love.load()
+function love.load(arg)
+	if arg[#arg] == "-debug" then require("mobdebug").start() end
 	local major, minor, revision, codename = love.getVersion()
 	print(string.format("Version %d.%d.%d - %s", major, minor, revision, codename))
 
