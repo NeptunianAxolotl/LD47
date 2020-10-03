@@ -7,7 +7,6 @@ local World = require("world")
 -- Draw
 --------------------------------------------------
 
-local animDt = 0
 function love.draw()
 	--Resources.DrawAnim("test_anim", 100, 100, animDt)
 	World.Draw()
@@ -33,9 +32,18 @@ end
 -- Update
 --------------------------------------------------
 
+local acc = 0
 function love.update(dt)
-	animDt = Resources.UpdateAnim("test_anim", animDt, dt/5)
-	World.Update(dt)
+	--animDt = Resources.UpdateAnim("test_anim", animDt, dt/5)
+	if dt > 0.08 then
+		dt = 0.08
+	end
+	acc = acc + dt
+	if acc < 1/4000 then
+		return
+	end
+	World.Update(acc)
+	acc = 0
 end
 
 --------------------------------------------------

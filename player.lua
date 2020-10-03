@@ -14,10 +14,10 @@ function self.Update(Terrain, cameraTransform, dt)
 	local mouseAngle = util.Angle(mouseVector)
 	
 	local dirDiff = util.AngleSubtractShortest(mouseAngle, self.velDir)
-	local dirChange = math.abs(util.AngleSubtractShortest(self.velDir, self.prevVelDir or self.velDir))
+	local dirChange = dt*60*math.abs(util.AngleSubtractShortest(self.velDir, self.prevVelDir or self.velDir))
 	self.prevVelDir = self.velDir
 	
-	local maxTurnRate = math.min(0.085, 0.035 + math.sqrt(self.speed)*0.02)
+	local maxTurnRate = dt*60*math.min(0.085, 0.035 + math.sqrt(self.speed)*0.02)
 	self.velDir = self.velDir + util.SignPreserveMax(dirDiff, (self.mouseControlMult or 1)*maxTurnRate)
 	
 	local downhillFactor = util.Dot(self.velocity, DOWNHILL_DIR)
@@ -25,10 +25,10 @@ function self.Update(Terrain, cameraTransform, dt)
 		downhillFactor = downhillFactor/10
 	end
 	
-	self.speed = math.max(0, self.speed + 0.012*downhillFactor)
-	self.speed = self.speed - 0.0025*self.speed^1.5 - 0.05*self.speed*dirChange^3
+	self.speed = math.max(0, self.speed + dt*60*0.012*downhillFactor)
+	self.speed = self.speed - dt*60*(0.0025*self.speed^1.5 + 0.05*self.speed*dirChange^3)
 	
-	self.velocity = util.Add(util.Mult(0.1 - 0.09*(self.speed/(self.speed + 15)), DOWNHILL_DIR), util.PolarToCart(self.speed, self.velDir))
+	self.velocity = util.Add(util.Mult(dt*60*(0.1 - 0.09*(self.speed/(self.speed + 15))), DOWNHILL_DIR), util.PolarToCart(self.speed, self.velDir))
 	self.speed, self.velDir = util.CartToPolar(self.velocity)
 	
 	if self.speed < 8 and util.Dot(self.velocity, DOWNHILL_DIR) < 0 then
@@ -40,9 +40,10 @@ function self.Update(Terrain, cameraTransform, dt)
 		end
 	end
 	
-	self.pos = util.Add(self.pos, self.velocity)
+	self.pos = util.Add(self.pos, util.Mult(dt*60, self.velocity))
 	
 	self.faceAngle = self.velDir
+	print(self.speed)
 end
 
 function self.GetPhysics()
