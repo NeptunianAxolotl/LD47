@@ -6,9 +6,11 @@ local pi = math.pi
 
 local DOWNHILL_DIR = {0, 1}
 
-local self = {}
+local self = {
+	radius = 8,
+}
 
-local function UpdatePhysics(Terrain, mouseX, mouseY, dt)
+local function UpdatePhysics(mouseX, mouseY, dt)
 	local mouseVector = util.Unit(util.Subtract({mouseX, mouseY}, self.pos))
 	local mouseAngle = util.Angle(mouseVector)
 	
@@ -44,6 +46,13 @@ local function UpdatePhysics(Terrain, mouseX, mouseY, dt)
 	self.faceAngle = self.velDir
 end
 
+local function CheckCollision(Terrain, dt)
+	local collide = Terrain.GetTerrainCollision(self.pos, self.radius)
+	if collide then
+		print("collison")
+	end
+end
+
 local function UpdateSpellcasting(dt)
 	if math.random() < 0.05 then
 		SpellHandler.CastSpell("shotgun", self)
@@ -53,7 +62,9 @@ end
 function self.Update(Terrain, cameraTransform, dt)
 	local mouseX, mouseY = cameraTransform:inverseTransformPoint(love.mouse.getX(), love.mouse.getY())
 	
-	UpdatePhysics(Terrain, mouseX, mouseY, dt)
+	UpdatePhysics(mouseX, mouseY, dt)
+	
+	CheckCollision(Terrain, dt)
 	
 	UpdateSpellcasting(dt)
 end

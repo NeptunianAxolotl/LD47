@@ -59,10 +59,9 @@ local function detectPlacementCollision(obstacles, colPos, colDef)
 	end
 end
 
-
 local function getChunkIDFromPosition(x, y)
 	local b = math.floor(y/CHUNK_HEIGHT)
-	local a = math.floor((x/CHUNK_WIDTH)+(b%2==0 and 0.5 or 0))
+	local a = math.floor((x/CHUNK_WIDTH) - (b%2==0 and 0.5 or 0))
 	return a, b
 end
 
@@ -144,7 +143,7 @@ function self.GetTerrainCollision(pos, radius)
 	-- Other things, such as the player, enemies, and active spell effects, may call the terrain
 	-- to check whether they are colliding with any mechanical part of it.
 	--TODO: Additional chunks need to be checked, if the 'radius' overlaps with the edge of the chunk that 'x','y' is in.
-	return detectCollision(generateChunk(getChunkIDFromPosition(x, y)).obstacles, pos, radius)
+	return detectCollision(generateChunk(getChunkIDFromPosition(pos[1], pos[2])).obstacles, pos, radius)
 end
 
 function self.GetTerrainBiome(x, y)
