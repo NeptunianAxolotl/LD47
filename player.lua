@@ -55,7 +55,7 @@ end
 
 local function UpdateSpellcasting(dt)
 	if math.random() < 0.05 then
-		SpellHandler.CastSpell("shotgun", self)
+		SpellHandler.CastSpell("serpent", self)
 	end
 end
 

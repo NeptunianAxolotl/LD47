@@ -12,7 +12,6 @@ local function NewSpell(player, modifiers)
     self.modifiers = modifiers or {}
     self.projectiles = {}
     
-    
     for i = 1,nProjectiles do
         self.projectiles[i] = {}
         self.projectiles[i].pos, self.projectiles[i].velocity = player.GetPhysics()
