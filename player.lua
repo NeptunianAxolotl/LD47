@@ -84,7 +84,11 @@ end
 
 local function UpdateFacing(dt)
 	local dirDiff = util.AngleSubtractShortest(self.velDir, self.facingDir)
-	self.facingDir = self.facingDir + util.SignPreserveMax(dirDiff, dt*60*0.08)
+	if self.stunTime then
+		self.facingDir = self.facingDir + util.SignPreserveMax(dirDiff, dt*60*0.18)
+	else
+		self.facingDir = self.facingDir + util.SignPreserveMax(dirDiff, dt*60*0.8)
+	end
 end
 
 local function UpdateSpellcasting(dt)

@@ -40,7 +40,7 @@ local function NewSpell(player, modifiers)
         local phaseAngle = self.currentPhase / self.phaseLength * 2 * math.pi
         for k in pairs(self.projectiles) do
             local perpvector = {}
-            perpvector[1], perpvector[2] = util.RotateVector(self.velocity[1],self.velocity[2],math.pi/2)
+            perpvector = util.RotateVector(self.velocity, math.pi/2)
             perpvector = util.SetLength(1, perpvector)
             self.projectiles[k].pos = util.Add(util.Mult(math.sin(phaseAngle)*self.amplitude*sineMultiplier(k),perpvector), self.pos)
         end
