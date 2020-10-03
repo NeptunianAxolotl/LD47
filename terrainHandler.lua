@@ -26,6 +26,8 @@ local TILE_HEIGHT = 64
 local CHUNK_WIDTH_TILES = 40
 local CHUNK_HEIGHT_TILES = 40
 
+local CHUNK_DRAW_RANGE = 100 -- stops tall sprites from popping at the bottom of the screen.
+
 local CHUNK_WIDTH = TILE_WIDTH * CHUNK_WIDTH_TILES
 local CHUNK_HEIGHT = TILE_HEIGHT * CHUNK_HEIGHT_TILES
 
@@ -119,8 +121,8 @@ end
 
 
 local function getChunksIDsForRegion(top, left, bottom, right)
-	local lt_a, lt_b = getChunkIDFromPosition(left, top)
-	local rb_a, rb_b = getChunkIDFromPosition(right, bottom)
+	local lt_a, lt_b = getChunkIDFromPosition(left - CHUNK_DRAW_RANGE, top - CHUNK_DRAW_RANGE)
+	local rb_a, rb_b = getChunkIDFromPosition(right + CHUNK_DRAW_RANGE, bottom + CHUNK_DRAW_RANGE)
 
 	local chunkIDs = {}
 	for a = lt_a-1, rb_a+1 do
