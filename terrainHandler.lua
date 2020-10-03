@@ -11,6 +11,7 @@
 	--Player; enemies; spells
 --}
 
+local util = require("include/util")
 
 local self = {}
 
@@ -26,13 +27,23 @@ local CHUNK_HEIGHT_TILES = 40
 local CHUNK_WIDTH = TILE_WIDTH * CHUNK_WIDTH_TILES
 local CHUNK_HEIGHT = TILE_HEIGHT * CHUNK_HEIGHT_TILES
 
-
+local OBSTACLES_PER_CHUNK_MIN = 14
+local OBSTACLES_PER_CHUNK_MAX = 40
 
 local RNG_SEED
 function self.Initialize()
 	RNG_SEED = math.random(0, 2^16)
 end
 
+local function detectCollision(obstacles, collider)
+	--Does the circle described by 'x,y,radius' intersect with any
+	--of the objects in the 'obstacles' list?
+	for i,v in ipairs(obstacles) do
+		if util.IntersectingCircles(v, collider) then
+			return v.obstacleType
+		end
+	end
+end
 
 local function generateChunk(a, b)
 	if not chunkCache[a] then
@@ -50,10 +61,30 @@ local function generateChunk(a, b)
 	--Potentially other elements too.
 	--Random but repeatable generation using RNG deterministically seeded by a, b, and RNG_SEED 
 
+	--Generate Obstacles
+	
+	local obstacles = {}
+	local numObstacles = rng:random(OBSTACLES_PER_CHUNK_MIN, OBSTACLES_PER_CHUNK_MAX)
+	local radius = 100
+	for i = 1, numObstacles do
+		--TODO: Choose Obstacle Type
+		local obstacle = {
+			--image = '??tree??',
+			obstacleType = 'tree',
+			radius = radius,
+			x = a*CHUNK_WIDTH+radius+rng:random()*(CHUNK_WIDTH-radius*2),
+			y = b*CHUNK_HEIGHT+radius+rng:random()*(CHUNK_HEIGHT-radius*2),
+		}
+		if not detectCollision(obstacles, obstacle) then
+			obstacles[#obstacles+1] = obstacle
+		end
+	end
+	
 	local chunk = {
 		colour = rng:random(),
 		left = a*CHUNK_WIDTH,
 		top = b*CHUNK_HEIGHT,
+		obstacles = obstacles,
 	}
 	hCache[b] = chunk
 	return chunk
@@ -84,6 +115,8 @@ end
 function self.GetTerrainCollision(x, y, radius)
 	-- Other things, such as the player, enemies, and active spell effects, may call the terrain
 	-- to check whether they are colliding with any mechanical part of it.
+	--TODO: Additional chunks need to be checked, if the 'radius' overlaps with the edge of the chunk that 'x','y' is in.
+	return detectCollision(generateChunk(math.floor(x/CHUNK_WIDTH), math.floor(y/CHUNK_HEIGHT)).obstacles, {x=x,y=y,radius=radius})
 end
 
 function self.GetTerrainBiome(x, y)
@@ -101,6 +134,10 @@ end
 local function drawChunk(chunk)
 	love.graphics.setColor(chunk.colour, chunk.colour, chunk.colour)
 	love.graphics.rectangle('fill', chunk.left, chunk.top, CHUNK_WIDTH, CHUNK_HEIGHT)
+	love.graphics.setColor(1, 0, 1)
+	for i,v in ipairs(chunk.obstacles) do
+		love.graphics.circle('line',v.x, v.y, v.radius)
+	end
 end
 
 local function drawChunks(visibleChunks)
