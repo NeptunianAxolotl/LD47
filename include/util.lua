@@ -9,12 +9,12 @@ local sin = math.sin
 -- Vector funcs
 --------------------------------------------------
 
-function util.DistSq(x1, z1, x2, z2)
-	return (x1 - x2)*(x1 - x2) + (z1 - z2)*(z1 - z2)
+function util.DistSq(x1, y1, x2, y2)
+	return (x1 - x2)*(x1 - x2) + (y1 - y2)*(y1 - y2)
 end
 
 function util.Dist(x1, y1, x2, y2)
-	return sqrt(util.DistSq(x1,z1,x2,z2))
+	return sqrt(util.DistSq(x1,y1,x2,y2))
 end
 
 function util.Dist3D(x1,y1,z1,x2,y2,z2)
@@ -248,6 +248,12 @@ function util.PosInRectangle(x1, y1, w1, h1, x2, y2)
 	return (x1 + w1 > x2 and x1 <= x2) and (y1 + h1 > y2 and y1 <= y2)
 end
 
+--------------------------------------------------
+--------------------------------------------------
+-- Circles
+function util.IntersectingCircles(l, r)
+	return util.Dist(l.x, l.y, r.x, r.y) <= l.radius+r.radius
+end
 --------------------------------------------------
 --------------------------------------------------
 -- Group Utilities
