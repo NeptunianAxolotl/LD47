@@ -121,6 +121,10 @@ end
 --------------------------------------------------
 -- Transforms
 
+function util.CartToPolar(v)
+	return util.AbsVal(v), util.Angle(v)
+end
+
 function util.PolarToCart(mag, dir)
 	return {mag*cos(dir), mag*sin(dir)}
 end

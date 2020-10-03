@@ -9,9 +9,10 @@ local self = {
 local function UpdateCamera(dt, playerPos, playerVelocity)
 	local windowX, windowY = love.window.getMode()
 	
-	local centrePos = util.Subtract(playerPos, {windowX/2, 200})
+	local centrePos = util.Subtract(playerPos, {windowX/2, 120})
 	
-	self.cameraPos = util.Average(self.cameraPos, centrePos, 0.2)
+	self.cameraVelocity = util.Average(self.cameraVelocity, playerVelocity, 0.2)
+	self.cameraPos = util.Add(self.cameraVelocity, util.Average(self.cameraPos, centrePos, 0.2))
 	
 	return self.cameraPos[1], self.cameraPos[2]
 end
