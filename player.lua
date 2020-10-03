@@ -46,7 +46,7 @@ function self.Update(Terrain, cameraTransform, dt)
 end
 
 function self.GetPhysics()
-	return self.pos, self.velocity
+	return self.pos, self.velocity, self.speed
 end
 
 function self.Draw()
@@ -54,11 +54,11 @@ function self.Draw()
 end
 
 function self.Initialize()
-	self.pos = {500, 0}
-	self.velocity = {0, 0}
-	self.speed = 0
-	self.velDir = pi*3/2
-	self.faceAngle = pi*3/2
+	self.pos = {0, 0}
+	self.velocity = {0, 2}
+	self.speed = 2
+	self.velDir = pi/2
+	self.faceAngle = pi/2
 end
 
 return self

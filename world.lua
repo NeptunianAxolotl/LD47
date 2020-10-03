@@ -8,9 +8,11 @@ local self = {}
 function self.Update(dt)
 	Terrain.Update(0, 0, dt)
 	Player.Update(Terrain, self.cameraTransform, dt)
-	local playerPos, playerVelocity = Player.GetPhysics()
-	local cameraX, cameraY = Camera.UpdateCamera(dt, playerPos, playerVelocity)
-	self.cameraTransform:setTransformation(-cameraX, -cameraY)
+	
+	local playerPos, playerVelocity, playerSpeed = Player.GetPhysics()
+	local cameraX, cameraY, cameraScale = Camera.UpdateCamera(dt, playerPos, playerVelocity, playerSpeed)
+	local windowX, windowY = love.window.getMode()
+	self.cameraTransform:setTransformation(windowX/2, 150, 0, cameraScale, cameraScale, cameraX, cameraY)
 end
 
 function self.Draw()
