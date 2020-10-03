@@ -1,6 +1,7 @@
 
 local Font = require("include/font")
 local Resources = require("resourceHandler")
+local SpellHandler = require("spellHandler")
 local World = require("world")
 
 --------------------------------------------------
@@ -57,5 +58,6 @@ function love.load(arg)
 	print(_VERSION)
 	math.randomseed(os.time()+os.clock())
 	Resources.LoadResources()
+	SpellHandler.Initialize()
 	World.Initialize()
 end

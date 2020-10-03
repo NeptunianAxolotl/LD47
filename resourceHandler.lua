@@ -125,7 +125,7 @@ function self.DrawImage(name, x, y, rotation)
 	rotation = rotation or 0
 	love.graphics.setColor(1, 1, 1, 1)
 	
-	local data = self.dataations[name]
+	local data = self.animations[name]
 	love.graphics.draw(data.image, x, y, rotation, data.xScale, data.yScale, data.xOffset, data.yOffset, 0, 0)
 end
 

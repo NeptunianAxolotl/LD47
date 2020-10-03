@@ -23,6 +23,11 @@ function IterableMap.Add(self, key, data)
 	if not key then
 		return
 	end
+	if not data then
+		data = key
+		key = IterableMap.GetUnusedKey(self)
+	data.index = key
+	end
 	if self.indexByKey[key] then
 		-- Overwrites
 		self.dataByKey[key] = data
@@ -33,12 +38,6 @@ function IterableMap.Add(self, key, data)
 	self.keyByIndex[self.indexMax] = key
 	self.dataByKey[key] = data
 	self.indexByKey[key] = self.indexMax
-end
-
-function IterableMap.AddSelf(self, data)
-	key = IterableMap.GetUnusedKey(self)
-	data.index = key
-	IterableMap.Add(self, key, data)
 end
 
 function IterableMap.Remove(self, key)

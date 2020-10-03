@@ -1,15 +1,14 @@
 
 local util = require("include/util")
 local Resources = require("resourceHandler")
+local SpellHandler = require("spellHandler")
 local pi = math.pi
 
 local DOWNHILL_DIR = {0, 1}
 
 local self = {}
 
-function self.Update(Terrain, cameraTransform, dt)
-	local mouseX, mouseY = cameraTransform:inverseTransformPoint(love.mouse.getX(), love.mouse.getY())
-	
+local function UpdatePhysics(Terrain, mouseX, mouseY, dt)
 	local mouseVector = util.Unit(util.Subtract({mouseX, mouseY}, self.pos))
 	local mouseAngle = util.Angle(mouseVector)
 	
@@ -43,7 +42,20 @@ function self.Update(Terrain, cameraTransform, dt)
 	self.pos = util.Add(self.pos, util.Mult(dt*60, self.velocity))
 	
 	self.faceAngle = self.velDir
-	print(self.speed)
+end
+
+local function UpdateSpellcasting(dt)
+	if math.random() < 0.05 then
+		SpellHandler.CastSpell("fireball", self)
+	end
+end
+
+function self.Update(Terrain, cameraTransform, dt)
+	local mouseX, mouseY = cameraTransform:inverseTransformPoint(love.mouse.getX(), love.mouse.getY())
+	
+	UpdatePhysics(Terrain, mouseX, mouseY, dt)
+	
+	UpdateSpellcasting(dt)
 end
 
 function self.GetPhysics()
