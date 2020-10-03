@@ -16,7 +16,7 @@ local function NewSpell(player, modifiers)
         self.projectiles[i] = {}
         self.projectiles[i].pos, self.projectiles[i].velocity = player.GetPhysics()
         local launchVelocity = util.SetLength(15, self.projectiles[i].velocity)
-        launchVelocity[1], launchVelocity[2] = util.RotateVector(launchVelocity[1],launchVelocity[2],math.random() * sprayAngle * 2 - sprayAngle)
+        launchVelocity = util.RotateVector(launchVelocity, math.random() * sprayAngle * 2 - sprayAngle)
         self.projectiles[i].velocity = util.Add(self.projectiles[i].velocity, launchVelocity);
     end
 	

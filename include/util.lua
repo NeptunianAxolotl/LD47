@@ -158,8 +158,12 @@ function util.PolarToCart(mag, dir)
 	return {mag*cos(dir), mag*sin(dir)}
 end
 
-function util.RotateVector(x, y, angle)
-	return x*math.cos(angle) - y*math.sin(angle), x*math.sin(angle) + y*math.cos(angle)
+function util.RotateVector(v, angle)
+	return {v[1]*math.cos(angle) - v[2]*math.sin(angle), v[1]*math.sin(angle) + v[2]*math.cos(angle)}
+end
+
+function util.ReflectVector(v, angle)
+	return {v[1]*math.cos(2*angle) + v[2]*math.sin(2*angle), v[1]*math.sin(2*angle) - v[2]*math.cos(2*angle)}
 end
 
 function util.DirectionToCardinal(direction, start, segments)

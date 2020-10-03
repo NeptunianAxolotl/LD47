@@ -26,7 +26,7 @@ local TILE_HEIGHT = 64
 local CHUNK_WIDTH_TILES = 40
 local CHUNK_HEIGHT_TILES = 40
 
-local CHUNK_DRAW_RANGE = 100 -- stops tall sprites from popping at the bottom of the screen.
+local CHUNK_DRAW_RANGE = 300 -- stops tall sprites from popping at the bottom of the screen.
 
 local CHUNK_WIDTH = TILE_WIDTH * CHUNK_WIDTH_TILES
 local CHUNK_HEIGHT = TILE_HEIGHT * CHUNK_HEIGHT_TILES
@@ -160,6 +160,7 @@ end
 
 local function drawChunk(chunk)
 	love.graphics.setColor(chunk.colour, chunk.colour, chunk.colour)
+	love.graphics.setColor(100/255, 153/255, 0)
 	love.graphics.rectangle('fill', chunk.left, chunk.top, CHUNK_WIDTH, CHUNK_HEIGHT)
 	love.graphics.setColor(1, 0, 1)
 	for i,v in ipairs(chunk.obstacles) do

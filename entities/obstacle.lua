@@ -6,6 +6,9 @@ local function NewObstacle(self, def)
 	-- pos
 	self.health = def.health + math.random()*def.healthRange
 	
+	function self.GetPhysics()
+		return self.pos, def.radius
+	end
 	
 	function self.IsColliding(otherPos, otherRadius)
 		if util.IntersectingCircles(self.pos, def.radius, otherPos, otherRadius) then
@@ -21,7 +24,7 @@ local function NewObstacle(self, def)
 	
 	function self.Draw()
 		Resources.DrawImage(def.imageName, self.pos[1], self.pos[2])
-		love.graphics.circle('line',self.pos[1], self.pos[2], def.radius)
+		--love.graphics.circle('line',self.pos[1], self.pos[2], def.radius)
 	end
 	
 	return self
