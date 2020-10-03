@@ -7,9 +7,8 @@ local DOWNHILL_DIR = {0, 1}
 
 local self = {}
 
-function self.Update(Terrain, cameraX, cameraY, dt)
-	local mouseX = love.mouse.getX() + cameraX
-	local mouseY = love.mouse.getY() + cameraY
+function self.Update(Terrain, cameraTransform, dt)
+	local mouseX, mouseY = cameraTransform:inverseTransformPoint(love.mouse.getX(), love.mouse.getY())
 	
 	local mouseVector = util.Unit(util.Subtract({mouseX, mouseY}, self.pos))
 	local mouseAngle = util.Angle(mouseVector)
@@ -51,7 +50,7 @@ function self.GetPhysics()
 end
 
 function self.Draw(xOffset, yOffset)
-	Resources.DrawIsoImage("test_iso_image", self.pos[1] - xOffset, self.pos[2] - yOffset, self.faceAngle)
+	Resources.DrawIsoImage("test_iso_image", self.pos[1], self.pos[2], self.faceAngle)
 end
 
 function self.Initialize()

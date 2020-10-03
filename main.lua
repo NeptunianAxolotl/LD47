@@ -44,9 +44,10 @@ end
 function love.load(arg)
 	if arg[#arg] == "-debug" then require("mobdebug").start() end
 	local major, minor, revision, codename = love.getVersion()
-	print(string.format("Version %d.%d.%d - %s", major, minor, revision, codename))
-
-	math.randomseed(os.clock())
+	io.stdout:setvbuf('no')
+	print(string.format("LÖVE %d.%d.%d - %s", major, minor, revision, codename))
+	print(_VERSION)
+	math.randomseed(os.time()+os.clock())
 	Resources.LoadResources()
 	World.Initialize()
 end
