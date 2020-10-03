@@ -2,11 +2,15 @@
 local util = require("include/util")
 local Resources = require("resourceHandler")
 
-local function NewSpell(player)
+local function NewSpell(player, modifiers)
 	local self = {}
 	
 	self.pos, self.velocity = player.GetPhysics()
-	self.velocity = util.SetLength(25, self.velocity)
+    self.modifiers = modifiers or {}
+    
+    local launchVelocity = util.SetLength(15, self.velocity)
+    
+	self.velocity = util.Add(self.velocity, launchVelocity);
 	
 	function self.Update(dt)
 		self.pos = util.Add(util.Mult(dt*60, self.velocity), self.pos)

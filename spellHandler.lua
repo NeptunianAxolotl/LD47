@@ -8,6 +8,7 @@ local self = {
 
 local spellList = {
 	"fireball",
+    "shotgun",
 }
 
 function self.CastSpell(name, player, world)
