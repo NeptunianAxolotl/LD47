@@ -1,9 +1,14 @@
 
+Font = require("include/font")
+Resources = require("resourceHandler")
+
 --------------------------------------------------
 -- Draw
 --------------------------------------------------
 
+local animDt = 0
 function love.draw()
+	Resources.DrawAnim("test_anim", 100, 100, animDt)
 end
 
 --------------------------------------------------
@@ -27,16 +32,14 @@ end
 --------------------------------------------------
 
 function love.update(dt)
+	animDt = Resources.UpdateAnim("test_anim", animDt, dt)
 end
-
---------------------------------------------------
--- Resource Loading
---------------------------------------------------
-
 
 --------------------------------------------------
 -- Loading
 --------------------------------------------------
 
 function love.load()
+	math.randomseed(os.clock())
+	Resources.LoadResources()
 end
