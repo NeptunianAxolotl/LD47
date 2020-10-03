@@ -13,4 +13,9 @@ function self.GetTerrainCollision(x, y, radius)
 	-- to check whether they are colliding with any mechanical part of it.
 end
 
+function self.Draw(offsetX, offsetY)
+	-- Other things, such as the player, enemies, and active spell effects, may call the terrain
+	-- to check whether they are colliding with any mechanical part of it.
+end
+
 return self

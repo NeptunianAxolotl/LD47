@@ -1,7 +1,7 @@
 
 local Font = require("include/font")
 local Resources = require("resourceHandler")
-local Terrain = require("terrainHandler")
+local World = require("world")
 
 --------------------------------------------------
 -- Draw
@@ -10,6 +10,7 @@ local Terrain = require("terrainHandler")
 local animDt = 0
 function love.draw()
 	Resources.DrawAnim("test_anim", 100, 100, animDt)
+	World.Draw()
 end
 
 --------------------------------------------------
@@ -34,7 +35,6 @@ end
 
 function love.update(dt)
 	animDt = Resources.UpdateAnim("test_anim", animDt, dt/5)
-	Terrain.Update(0, 0, dt)
 end
 
 --------------------------------------------------
@@ -47,4 +47,5 @@ function love.load(arg)
 
 	math.randomseed(os.clock())
 	Resources.LoadResources()
+	World.Initialize()
 end
