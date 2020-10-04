@@ -21,6 +21,11 @@ local function NewCreature(self, def)
 	end
 	
 	function self.Update(Terrain, Enemies, player, dt)
+		local playerPos = player.GetPhysics()
+		if playerPos[2] > self.pos[2] + def.despawnDistance then
+			return true -- Remove
+		end
+		
 		if def.updateFunc then
 			def.updateFunc(self, def, Terrain, Enemies, player, dt)
 		end

@@ -9,7 +9,6 @@ local NewCreature = require("entities/creature")
 local SPAWN_OFFSET = {0, 400}
 local OUTER_SPAWN = 1500
 local INNER_SPAWN = 1200
-local SPAWN_TIME = 3
 local START_ANGLE, END_ANGLE = math.pi*0.2, math.pi*0.8
 
 local self = {
@@ -21,7 +20,7 @@ local function SpawnNewEnemies(player)
 	local playerPos, playerVel, playerSpeed = player.GetPhysics()
 	
 	local spawnCentre = util.Add(playerPos, SPAWN_OFFSET)
-	local enemyCount = math.random(4, 7)
+	local enemyCount = math.random(0, 7)
 	
 	local spawnDistribution = util.GenerateDistributionFromBoundedRandomWeights(CreatureDefs.spawnWeights)
 	
@@ -48,7 +47,7 @@ function self.Update(player, dt)
 	self.spawnCheckAcc = self.spawnCheckAcc - dt
 	if self.spawnCheckAcc <= 0 then
 		SpawnNewEnemies(player)
-		self.spawnCheckAcc = SPAWN_TIME
+		self.spawnCheckAcc = 0.5 + math.random()*3
 	end
 
 	IterableMap.ApplySelf(self.activeEnemies, "Update", Terrain, self, player, dt)
