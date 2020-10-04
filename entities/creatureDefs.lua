@@ -9,11 +9,12 @@ local creatureDefs = {
 		health = 50,
 		healthRange = 70,
 		radius = 32,
+		speed = 4 * 60,
 		minSpawnWeight = 10,
 		maxSpawnWeight = 30,
-		updateFunc = function (self, Terrain, player, dt)
-			local playerPos = player.GetPhysics()
-			self.direction = util.Angle(util.Subtract(playerPos, self.pos))
+		updateFunc = function (self, def, Terrain, Enemies, player, dt)
+			creatureUtil.DoCollisions(self, def, Terrain, Enemies, player, dt)
+			creatureUtil.MoveTowardsPlayer(self, def, Terrain, Enemies, player, dt)
 		end
 	},
 }

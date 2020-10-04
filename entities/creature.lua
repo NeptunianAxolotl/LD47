@@ -13,25 +13,21 @@ local function NewCreature(self, def)
 		return self.pos, def.radius
 	end
 	
-	function self.IsColliding(otherPos, otherRadius, isCreature, isProjectile, player, dt)
-		if not ((isCreature and def.collideCreature) or (isProjectile and def.collideProjectile) or (player and def.overlapEffect)) then
+	function self.IsColliding(otherPos, otherRadius, otherCreatureIndex, isProjectile, player, dt)
+		if otherCreatureIndex and otherCreatureIndex >= self.index then
 			return
 		end
-		local collide, dist = util.IntersectingCircles(self.pos, def.radius, otherPos, otherRadius)
-		if not collide then
-			return
-		end
-		if not (player and def.overlapEffect) then
-			return true
-		end
-		local realCollide, removeObstacle = def.overlapEffect(self, player, dist, dt)
-		return realCollide, removeObstacle
+		return util.IntersectingCircles(self.pos, def.radius, otherPos, otherRadius)
 	end
 	
-	function self.Update(Terrain, player, dt)
+	function self.Update(Terrain, Enemies, player, dt)
 		if def.updateFunc then
-			def.updateFunc(self, Terrain, player, dt)
+			def.updateFunc(self, def, Terrain, Enemies, player, dt)
 		end
+	end
+	
+	function self.AddPosition(posToAdd)
+		self.pos = util.Add(self.pos, posToAdd)
 	end
 	
 	function self.Draw()

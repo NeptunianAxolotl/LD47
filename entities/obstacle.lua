@@ -16,14 +16,14 @@ local function NewObstacle(self, def, rng)
 		if not ((isCreature and def.collideCreature) or (isProjectile and def.collideProjectile) or (player and def.overlapEffect)) then
 			return
 		end
-		local collide, dist = util.IntersectingCircles(self.pos, def.radius, otherPos, otherRadius)
+		local collide, distSq = util.IntersectingCircles(self.pos, def.radius, otherPos, otherRadius)
 		if not collide then
 			return
 		end
 		if not (player and def.overlapEffect) then
 			return true
 		end
-		local realCollide, removeObstacle = def.overlapEffect(self, player, dist, dt)
+		local realCollide, removeObstacle = def.overlapEffect(self, player, distSq, dt)
 		return realCollide, removeObstacle
 	end
 	

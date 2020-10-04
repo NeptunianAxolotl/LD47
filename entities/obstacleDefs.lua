@@ -59,7 +59,7 @@ local obstacleDefs = {
 		placeBlockRadius = 80,
 		radius = 70,
 		collideCreature = false,
-		overlapEffect = function (self, player, centreDist, dt)
+		overlapEffect = function (self, player, distSq, dt)
 			if player.speed > 6 then
 				player.speed = player.speed*(1 - 60*dt*0.07)
 				player.velocity = util.SetLength(player.speed, player.velocity)

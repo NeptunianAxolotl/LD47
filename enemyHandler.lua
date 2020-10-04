@@ -10,7 +10,7 @@ local SPAWN_OFFSET = {0, 400}
 local OUTER_SPAWN = 1500
 local INNER_SPAWN = 1200
 local SPAWN_TIME = 3
-local START_ANGLE, END_ANGLE = 0, math.pi
+local START_ANGLE, END_ANGLE = math.pi*0.2, math.pi*0.8
 
 local self = {
 	activeEnemies = IterableMap.New(),
@@ -21,7 +21,7 @@ local function SpawnNewEnemies(player)
 	local playerPos, playerVel, playerSpeed = player.GetPhysics()
 	
 	local spawnCentre = util.Add(playerPos, SPAWN_OFFSET)
-	local enemyCount = math.random(3, 6)
+	local enemyCount = math.random(4, 7)
 	
 	local spawnDistribution = util.GenerateDistributionFromBoundedRandomWeights(CreatureDefs.spawnWeights)
 	
@@ -33,6 +33,17 @@ local function SpawnNewEnemies(player)
 	end
 end
 
+function self.DetectCollision(otherPos, otherRadius, otherCreatureIndex, isProjectile, player, dt)
+	local maxIndex, keyByIndex, dataByKey = IterableMap.GetBarbarianData(self.activeEnemies)
+	for i = 1, maxIndex do
+		local v = dataByKey[keyByIndex[i]]
+		if v.IsColliding(otherPos, otherRadius, otherCreatureIndex, isProjectile, player, dt) then
+			return v
+		end
+	end
+	return false
+end
+
 function self.Update(player, dt)
 	self.spawnCheckAcc = self.spawnCheckAcc - dt
 	if self.spawnCheckAcc <= 0 then
@@ -40,7 +51,7 @@ function self.Update(player, dt)
 		self.spawnCheckAcc = SPAWN_TIME
 	end
 
-	IterableMap.ApplySelf(self.activeEnemies, "Update", Terrain, player, dt)
+	IterableMap.ApplySelf(self.activeEnemies, "Update", Terrain, self, player, dt)
 end
 
 function self.Draw()

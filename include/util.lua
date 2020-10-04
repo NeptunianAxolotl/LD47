@@ -17,6 +17,10 @@ function util.Dist(x1, y1, x2, y2)
 	return sqrt(util.DistSq(x1,y1,x2,y2))
 end
 
+function util.DistSqVectors(u, v)
+	return util.DistSq(u[1], u[2], v[1], v[2])
+end
+
 function util.DistVectors(u, v)
 	return util.Dist(u[1], u[2], v[1], v[2])
 end
@@ -261,8 +265,8 @@ end
 -- Circles
 
 function util.IntersectingCircles(pos1, radius1, pos2, radius2)
-	local dist = util.DistVectors(pos1, pos2)
-	if dist <= radius1 + radius2 then
+	local distSq = util.DistSqVectors(pos1, pos2)
+	if distSq <= (radius1 + radius2)*(radius1 + radius2) then
 		return true, dist
 	end
 end
