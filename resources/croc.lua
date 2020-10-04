@@ -3,7 +3,7 @@ return {
 	xScale = 0.18,
 	yScale = 0.18,
 	firstDir = 0,
-	width = 400,
+	width = 200,
 	duration = 0.4,
 	rotate = false,
 	files = {

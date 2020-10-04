@@ -39,7 +39,7 @@ local function UpdatePhysics(mouseX, mouseY, dt)
 	end
 	
 	self.speed = math.max(0, self.speed + dt*60*0.012*downhillFactor)
-	self.speed = math.max(0, self.speed - dt*60*(0.0025*self.speed^1.5 + 0.05*self.speed*dirChange^3))
+	self.speed = math.max(0, self.speed - dt*60*(0.003*self.speed^1.5 + 0.05*self.speed*dirChange^3))
 	
 	
 	self.velocity = util.Add(util.Mult(dt*60*(0.1 - 0.09*(self.speed/(self.speed + 15))), DOWNHILL_DIR), util.PolarToCart(self.speed, self.velDir))
