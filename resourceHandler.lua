@@ -113,8 +113,7 @@ end
 -- Loading
 --------------------------------------------------
 
-local function LoadResource(name)
-	local res = require("resources/" .. name)
+local function LoadResouce(name, res)
 	if res.form == "image" then
 		self.images[name] = LoadImage(res)
 	elseif res.form == "iso_image" then
@@ -130,6 +129,18 @@ local function LoadResource(name)
 	end
 end
 
+local function LoadResourceFile(name)
+	local res = require("resources/" .. name)
+	if res.form then
+		LoadResouce(name, res)
+		return
+	end
+	
+	for i = 1, #res do
+		LoadResouce(res[i].name, res[i])
+	end
+end
+
 function self.LoadResources()
 	local resList = require("resources/resourceList")
 	self.images = {}
@@ -137,7 +148,7 @@ function self.LoadResources()
 	self.sounds = {}
 	
 	for i = 1, #resList do
-		LoadResource(resList[i])
+		LoadResourceFile(resList[i])
 	end
 end
 

@@ -21,4 +21,5 @@ return {
 	"wisp_icon",
 	"shotgun_icon",
 	"spell_anim",
+	"shape_n",
 }

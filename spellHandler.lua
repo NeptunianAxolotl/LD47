@@ -54,9 +54,10 @@ function self.Draw(drawQueue)
 end
 
 function self.DrawInterface()
-	Resources.DrawImage("spell_interface", 0, 0)
+	Resources.DrawImage("spell_interface", 1280 - 260, 0)
 	for i = 1, SPELL_COUNT do
 		local spellData = self.spellPositions[i]
+		Resources.DrawImage("shape_" .. spellData.spellLevel, spellData.pos[1], spellData.pos[2], spellData.rotation)
 		if i == self.currentSpell then
 			Resources.DrawAnimation("spell_anim", spellData.pos[1], spellData.pos[2], self.spellAnim, nil, 0.2 + 0.7*self.charge)
 		elseif i%8 + 1 == self.currentSpell and self.charge < 0.1 then
@@ -65,16 +66,18 @@ function self.DrawInterface()
 		Resources.DrawImage(spellDefs.spellIcon[spellData.spellName], spellData.pos[1], spellData.pos[2])
 	end
 	
-	Resources.DrawImage("spell_croc", CROC_CENTRE, CROC_CENTRE, SpellChargeToAngle())
+	Resources.DrawImage("spell_croc", 1280 - CROC_CENTRE, CROC_CENTRE, SpellChargeToAngle())
 end
 
 function self.Initialize()
-	local spellCentre = {CROC_CENTRE, CROC_CENTRE}
+	local spellCentre = {1280 - CROC_CENTRE, CROC_CENTRE}
 	for i = 1, SPELL_COUNT do
 		local spellData = {
 			startChargeAngle = i*math.pi/4,
 			chargeProgressRange = 9*math.pi/4,
 			spellName = spellDefs.spellList[i%4 + 1],
+			spellLevel = math.random(3, 8),
+			rotation = (i + 5)*math.pi/4,
 		}
 		spellData.pos = util.Add(spellCentre, util.PolarToCart(SPELL_RADIUS, (i - 1)*math.pi/4))
 		
