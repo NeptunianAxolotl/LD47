@@ -32,8 +32,7 @@ local function NewSpell(player, modifiers)
 	self.pos, self.velocity = player.GetPhysics()
     self.modifiers = modifiers
     self.projectiles = {}
-    self.maxlifetime = 10
-    self.lifetime = 0
+    self.lifetime = 10
     self.explosionEffects = {}
     
     -- setting up the projectiles
@@ -50,8 +49,8 @@ local function NewSpell(player, modifiers)
 	
 	function self.Update(Terrain, Enemies, dt)
         -- check for spell termination
-        self.lifetime = self.lifetime + dt
-        if self.lifetime > self.maxlifetime then return true end
+        self.lifetime = self.lifetime - dt
+        if self.lifetime <= 0 then return true end
         
         local anyAlive = false
         for k in pairs(self.projectiles) do 
@@ -118,7 +117,8 @@ local function NewSpell(player, modifiers)
                 drawQueue:push({
 					y=self.explosionEffects[f].y,
                     f=function() 
-                        love.graphics.setColor(1,0.2,0)
+                        love.graphics.setColor(1,0.3,0)
+                        love.graphics.setLineWidth(6)
                         love.graphics.circle("line", self.explosionEffects[f].x, self.explosionEffects[f].y, (exploDuration-self.explosionEffects[f].timer)/exploDuration*exploRadius) 
                     end,
 				})

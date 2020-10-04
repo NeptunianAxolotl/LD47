@@ -21,6 +21,7 @@ return {
 	"wisp_icon",
 	"shotgun_icon",
     "haste_icon",
+    "cantrip_icon",
 	"spell_anim",
 	"shape_n",
 	"health",

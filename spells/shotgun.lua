@@ -21,8 +21,7 @@ local function NewSpell(player, modifiers)
 	local self = {}
     self.modifiers = modifiers
     self.projectiles = {}
-    self.maxlifetime = 10
-    self.lifetime = 0
+    self.lifetime = 10
     
     -- setting up the projectiles
     for i = 1,nProjectiles do
@@ -38,8 +37,8 @@ local function NewSpell(player, modifiers)
 	
 	function self.Update(Terrain, Enemies, dt)
         -- check for spell termination
-        self.lifetime = self.lifetime + dt
-        if self.lifetime > self.maxlifetime then return true end
+        self.lifetime = self.lifetime - dt
+        if self.lifetime <= 0 then return true end
         
         local anyAlive = false
         for k in pairs(self.projectiles) do 

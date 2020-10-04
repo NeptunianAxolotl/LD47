@@ -143,7 +143,7 @@ function self.Initialize()
 			chargeProgressRange = 9*math.pi/4,
 			spellName = spellDefs.spellList[i%4 + 1],
 			spellLevel = 1,
-			rotation = (i + 5)*math.pi/4,
+			rotation = (i + 6)*math.pi/4,
 		}
 		spellData.pos = util.Add(spellCentre, util.PolarToCart(SPELL_RADIUS, (i - 1)*math.pi/4))
 		

@@ -1,5 +1,6 @@
 
 local spellList = {
+    "cantrip",
 	"fireball",
 	"shotgun",
 	"serpent",
@@ -8,6 +9,7 @@ local spellList = {
 }
 
 local spellIcon = {
+    cantrip = "cantrip_icon",
 	fireball = "fireball_icon",
 	shotgun  = "shotgun_icon",
 	serpent  = "snake_icon",

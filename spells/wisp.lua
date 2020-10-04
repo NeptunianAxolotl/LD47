@@ -33,8 +33,7 @@ local function NewSpell(player, modifiers)
     self.pos, self.facing = player.GetPhysics()
     self.modifiers = modifiers
     self.projectiles = {}
-    self.maxlifetime = 10
-    self.lifetime = 0
+    self.lifetime = myDuration
     self.radius = myRadius
     self.phaseLength = myPhaseLength
     self.maxVelocity = 2 * math.pi * self.radius / (self.phaseLength * 60) + 1
@@ -53,8 +52,8 @@ local function NewSpell(player, modifiers)
 	
 	function self.Update(Terrain, Enemies, dt)
         -- check for spell termination
-        self.lifetime = self.lifetime + dt
-        if self.lifetime > self.maxlifetime then return true end
+        self.lifetime = self.lifetime - dt
+        if self.lifetime <= 0 then return true end
         
         local anyAlive = false
         for k in pairs(self.projectiles) do 
