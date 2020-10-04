@@ -120,7 +120,7 @@ local function UpdateFacing(dt)
 	if self.stunTime then
 		self.facingDir = self.facingDir + util.SignPreserveMax(dirDiff, dt*60*0.18)
 	else
-		self.facingDir = self.facingDir + util.SignPreserveMax(dirDiff, dt*60*0.8)
+		self.facingDir = self.facingDir + util.SignPreserveMax(dirDiff, dt*60*2)
 	end
 end
 

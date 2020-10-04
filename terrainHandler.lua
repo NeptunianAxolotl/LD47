@@ -17,7 +17,7 @@ local NewObstacle = require("entities/obstacle")
 
 local self = {}
 
-
+local chunkList = {}
 local chunkCache = {}
 
 local CHUNK_DRAW_HOR_RANGE = 80
@@ -85,12 +85,24 @@ local function getChunkPositionFromID(a, b)
 	return x, y
 end
 
-local function generateChunk(a, b)
-	if not chunkCache[a] then
-		chunkCache[a] = {}
+local function getExistingChunk(a, b)
+	if not chunkCache[b] then
+		return false
 	end
-	local hCache = chunkCache[a]
-	local cachedVal = hCache[b]
+	local hCache = chunkCache[b]
+	local cachedVal = hCache[a]
+	if cachedVal then
+		return cachedVal
+	end
+	return false
+end
+
+local function generateChunk(a, b)
+	if not chunkCache[b] then
+		chunkCache[b] = {}
+	end
+	local hCache = chunkCache[b]
+	local cachedVal = hCache[a]
 	if cachedVal then
 		return cachedVal
 	end
@@ -142,7 +154,9 @@ local function generateChunk(a, b)
 	local chunk = {
 		obstacles = obstacles,
 	}
-	hCache[b] = chunk
+	hCache[a] = chunk
+	
+	chunkList[#chunkList + 1] = {a, b}
 	return chunk
 end
 
@@ -168,7 +182,10 @@ function self.GetTerrainCollision(pos, radius, isCreature, projectile, player, d
 	-- Other things, such as the player, enemies, and active spell effects, may call the terrain
 	-- to check whether they are colliding with any mechanical part of it.
 	--TODO: Additional chunks need to be checked, if the 'radius' overlaps with the edge of the chunk that 'x','y' is in.
-	return detectCollision(generateChunk(getChunkIDFromPosition(pos[1], pos[2])).obstacles, pos, radius, isCreature, projectile, player, dt)
+	local chunk = getExistingChunk(getChunkIDFromPosition(pos[1], pos[2]))
+	if chunk then
+		return detectCollision(chunk.obstacles, pos, radius, isCreature, projectile, player, dt)
+	end
 end
 
 local function getChunksForIDs(chunkIDs)
@@ -184,6 +201,25 @@ local function GetVisibleChunks()
 	local right, bottom = love.graphics.inverseTransformPoint(love.graphics.getDimensions())
 	local visibleChunkIDs = getChunksIDsForRegion(top, left, bottom, right)
 	return getChunksForIDs(visibleChunkIDs)
+end
+
+local function DeleteOldChunks()
+	local left, top = love.graphics.inverseTransformPoint(0,0)
+	local _, _, topChunkIndex = getChunkIDFromPositionForBothParities(left, top)
+	
+	local newChunkList = {}
+	for i = 1, #chunkList do
+		local data = chunkList[i]
+		if data[2] <= topChunkIndex - 3 then
+			if chunkCache[data[2]] then
+				chunkCache[data[2]] = nil
+			end
+		else
+			newChunkList[#newChunkList + 1] = data
+		end
+	end
+	
+	chunkList = newChunkList
 end
 
 local function updateChunk(chunk, dt)
@@ -212,7 +248,14 @@ local function drawChunks(visibleChunks, drawQueue)
 	end
 end
 
+local deleteAcc = 0
 function self.Update(dt)
+	deleteAcc = deleteAcc + dt
+	if deleteAcc > 1 then
+		DeleteOldChunks()
+		deleteAcc = 0
+	end
+	
 	self.visibleChunks = GetVisibleChunks()
 	updateChunks(self.visibleChunks, dt)
 end
