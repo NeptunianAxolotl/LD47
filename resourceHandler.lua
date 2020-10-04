@@ -145,26 +145,30 @@ end
 -- Drawing Functions
 --------------------------------------------------
 
-function self.DrawImage(name, x, y, rotation)
+function self.DrawImage(name, x, y, rotation, alpha, scale)
 	if not self.images[name] then
 		print("Invalid DrawImage ", name)
 		return
 	end
 	
 	rotation = rotation or 0
-	love.graphics.setColor(1, 1, 1, 1)
+	scale = scale or 1
+	
+	love.graphics.setColor(1, 1, 1, alpha or 1)
 	
 	local data = self.images[name]
-	love.graphics.draw(data.image, x, y, rotation, data.xScale, data.yScale, data.xOffset, data.yOffset, 0, 0)
+	love.graphics.draw(data.image, x, y, rotation, data.xScale*scale, data.yScale*scale, data.xOffset, data.yOffset, 0, 0)
 end
 
-function self.DrawIsoImage(name, x, y, direction)
+function self.DrawIsoImage(name, x, y, direction, alpha, scale)
 	if not self.images[name] then
 		print("Invalid DrawIsoImage ", name)
 		return
 	end
 	
-	love.graphics.setColor(1, 1, 1, 1)
+	scale = scale or 1
+	
+	love.graphics.setColor(1, 1, 1, alpha or 1)
 	
 	local data = self.images[name]
 	local drawDir = util.DirectionToCardinal(direction, data.firstDir, data.directionCount)
@@ -174,7 +178,7 @@ function self.DrawIsoImage(name, x, y, direction)
 		rotation = -util.AngleToCardinal(direction, drawDir, data.firstDir, data.directionCount)
 	end
 	
-	love.graphics.draw(data.image[drawDir], x, y, rotation, data.xScale, data.yScale, data.xOffset, data.yOffset, 0, 0)
+	love.graphics.draw(data.image[drawDir], x, y, rotation, data.xScale*scale, data.yScale*scale, data.xOffset, data.yOffset, 0, 0)
 end
 
 function self.UpdateAnimation(name, progress, dt)
@@ -185,27 +189,30 @@ function self.UpdateAnimation(name, progress, dt)
 	return (progress + dt)%self.animations[name].duration
 end
 
-function self.DrawAnimInternal(data, x, y, progress, rotation, alpha)
+function self.DrawAnimInternal(data, x, y, progress, rotation, alpha, scale)
 	love.graphics.setColor(1, 1, 1, alpha or 1)
+	
+	scale = scale or 1
+	rotation = rotation or 0
 	
 	local quadToDraw = math.floor((progress%data.duration) / data.duration * data.frames) + 1
 	
-	love.graphics.draw(data.image, data.quads[quadToDraw], x, y, rotation, data.xScale, data.yScale, data.xOffset, data.yOffset, 0, 0)
+	love.graphics.draw(data.image, data.quads[quadToDraw], x, y, rotation, data.xScale*scale, data.yScale*scale, data.xOffset, data.yOffset, 0, 0)
 	
 	if self.debugMode then
 		love.graphics.rectangle("line", x - data.xOffset*data.xScale, y - data.yOffset*data.yScale, data.quadWidth*data.xScale, data.quadHeight*data.yScale, 0, 0)
 	end
 end
 
-function self.DrawAnimation(name, x, y, progress, rotation, alpha)
+function self.DrawAnimation(name, x, y, progress, rotation, alpha, scale)
 	if not self.animations[name] then
 		print("Invalid DrawAnimation ", name)
 		return
 	end
-	self.DrawAnimInternal(self.animations[name], x, y, progress, rotation, alpha)
+	self.DrawAnimInternal(self.animations[name], x, y, progress, rotation, alpha, scale)
 end
 
-function self.DrawIsoAnimation(name, x, y, progress, direction, alpha)
+function self.DrawIsoAnimation(name, x, y, progress, direction, alpha, scale)
 	if not self.animations[name] then
 		print("Invalid DrawIsoAnimation ", name)
 		return
@@ -221,7 +228,7 @@ function self.DrawIsoAnimation(name, x, y, progress, direction, alpha)
 		rotation = -util.AngleToCardinal(direction, drawDir, data.firstDir, data.directionCount)
 	end
 	
-	self.DrawAnimInternal(data.dirAnim[drawDir], x, y, progress, rotation, alpha)
+	self.DrawAnimInternal(data.dirAnim[drawDir], x, y, progress, rotation, alpha, scale)
 end
 
 

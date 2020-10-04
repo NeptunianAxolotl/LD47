@@ -55,13 +55,13 @@ local function UpdatePhysics(mouseX, mouseY, dt)
 	end
 end
 
-local function DoCollision(other, dt)
+local function DoCollision(other, typeMult, dt)
 	local otherPos, otherRadius = other.GetPhysics()
 	
 	local toOther = util.Unit(util.Subtract(otherPos, self.pos))
 	local toOtherAngle = util.Angle(toOther)
 	
-	local severityFactor = util.Dot(toOther, util.Unit(util.Add(self.velocity, DOWNHILL_DIR)))
+	local severityFactor = util.Dot(toOther, util.Unit(util.Add(self.velocity, DOWNHILL_DIR)))*typeMult
 	if severityFactor < 0 then
 		return
 	end
@@ -98,7 +98,7 @@ local function CheckTerrainCollision(Terrain, dt)
 		return
 	end
 	
-	DoCollision(collide, dt)
+	DoCollision(collide, 1, dt)
 end
 
 local function CheckEnemyCollision(EnemyHandler, dt)
@@ -107,7 +107,7 @@ local function CheckEnemyCollision(EnemyHandler, dt)
 		return
 	end
 	
-	DoCollision(collide, dt)
+	DoCollision(collide, 0.02, dt)
 end
 
 local function UpdateFacing(dt)
@@ -121,6 +121,10 @@ end
 
 local function UpdateSpellcasting(dt)
 	SpellHandler.AddChargeAndCast(self, world, dt * (self.speed + 2))
+end
+
+function self.ReplaceSpell(spellName)
+	SpellHandler.ReplaceSpell(spellName)
 end
 
 function self.Update(Terrain, EnemyHandler, cameraTransform, dt)

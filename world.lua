@@ -13,7 +13,6 @@ local IDENTITY_TRANSFORM = love.math.newTransform()
 local self = {}
 
 function self.Update(dt)
-	Terrain.Update(0, 0, dt)
 	Player.Update(Terrain, EnemyHandler, self.cameraTransform, dt)
 	
 	local playerPos, playerVelocity, playerSpeed = Player.GetPhysics()
@@ -23,6 +22,10 @@ function self.Update(dt)
 	
 	SpellHandler.Update(dt)
 	EnemyHandler.Update(Player, dt)
+	
+	-- Only update visible chunks.
+	love.graphics.replaceTransform(self.cameraTransform)
+	Terrain.Update(dt)
 end
 
 function self.Draw()

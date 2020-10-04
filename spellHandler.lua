@@ -2,6 +2,8 @@
 local util = require("include/util")
 local IterableMap = require("include/IterableMap")
 
+local spellDefs = require("spells/spellDefs")
+
 local Terrain = require("terrainHandler")
 local Resources = require("resourceHandler")
 local Enemies = require("enemyHandler")
@@ -20,20 +22,6 @@ local SPELL_COUNT = 8
 local SPELL_RADIUS = 70
 local CROC_CENTRE = 95
 
-local spellList = {
-	"fireball",
-	"shotgun",
-	"serpent",
-	"wisp",
-}
-
-local spellIcon = {
-	fireball = "fireball_icon",
-	shotgun  = "shotgun_icon",
-	serpent  = "snake_icon",
-	wisp     = "wisp_icon",
-}
-
 local function SpellChargeToAngle()
 	local spellData = self.spellPositions[self.currentSpell]
 	return spellData.startChargeAngle + self.charge*spellData.chargeProgressRange
@@ -41,6 +29,10 @@ end
 
 function self.CastSpell(name, player, world)
 	IterableMap.Add(self.activeSpells, self.spellTypes[name](player, world))
+end
+
+function self.ReplaceSpell(name)
+	self.spellPositions[self.currentSpell].spellName = name
 end
 
 function self.AddChargeAndCast(player, world, chargeAdd)
@@ -70,7 +62,7 @@ function self.DrawInterface()
 		elseif i%8 + 1 == self.currentSpell and self.charge < 0.1 then
 			Resources.DrawAnimation("spell_anim", spellData.pos[1], spellData.pos[2], self.spellAnim, nil, 0.3 - 3*self.charge)
 		end
-		Resources.DrawImage(spellIcon[spellData.spellName], spellData.pos[1], spellData.pos[2])
+		Resources.DrawImage(spellDefs.spellIcon[spellData.spellName], spellData.pos[1], spellData.pos[2])
 	end
 	
 	Resources.DrawImage("spell_croc", CROC_CENTRE, CROC_CENTRE, SpellChargeToAngle())
@@ -82,15 +74,15 @@ function self.Initialize()
 		local spellData = {
 			startChargeAngle = i*math.pi/4,
 			chargeProgressRange = 9*math.pi/4,
-			spellName = spellList[i%4 + 1],
+			spellName = spellDefs.spellList[i%4 + 1],
 		}
 		spellData.pos = util.Add(spellCentre, util.PolarToCart(SPELL_RADIUS, (i - 1)*math.pi/4))
 		
 		self.spellPositions[i] = spellData
 	end
 
-	for i = 1, #spellList do
-		self.spellTypes[spellList[i]] = require("spells/" .. spellList[i])
+	for i = 1, #spellDefs.spellList do
+		self.spellTypes[spellDefs.spellList[i]] = require("spells/" .. spellDefs.spellList[i])
 	end
 end
 

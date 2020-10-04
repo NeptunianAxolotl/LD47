@@ -2,7 +2,7 @@
 local util = require("include/util")
 local Resources = require("resourceHandler")
 
-local DRAW_DEBUG = true
+local DRAW_DEBUG = false
 
 local PROJ_TIMEOUT = 0.6
 

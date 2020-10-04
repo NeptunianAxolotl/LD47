@@ -110,6 +110,21 @@ local function generateChunk(a, b)
 	local obstacles = {}
 	local numObstacles = rng:random(OBSTACLES_PER_CHUNK_MIN, OBSTACLES_PER_CHUNK_MAX)
 	
+	local addSpell = rng:random() < 1
+	if addSpell then
+		local spawnDistribution = util.GenerateDistributionFromBoundedRandomWeights(ObstacleDefs.spellSpawnWeights, Random)
+		local obstacleDef = ObstacleDefs.spellSpawnDefs[util.SampleDistribution(spawnDistribution, Random)]
+		local radius = math.max(obstacleDef.placeBlockRadius, obstacleDef.radius)
+		local obstaclePos = {
+			left + radius + rng:random()*(CHUNK_WIDTH  - radius*2),
+			top + radius + rng:random()*(CHUNK_HEIGHT - radius*2),
+		}
+		
+		if not detectPlacementCollision(obstacles, obstaclePos, obstacleDef) then
+			obstacles[#obstacles + 1] = NewObstacle({pos = obstaclePos}, obstacleDef, rng)
+		end
+	end
+	
 	local spawnDistribution = util.GenerateDistributionFromBoundedRandomWeights(ObstacleDefs.spawnWeights, Random)
 	for i = 1, numObstacles do
 		local obstacleDef = ObstacleDefs.defs[util.SampleDistribution(spawnDistribution, Random)]
@@ -149,13 +164,6 @@ local function getChunksIDsForRegion(top, left, bottom, right)
 	return chunkIDs
 end
 
-function self.Update(playerX, playerY, dt)
-	-- Creates and removes mechanical obstacles as well as graphical things based on
-	-- player position. Things may use dt to animate or otherwise do stuff (like a tree burning down).
-	
-	-- Include and deal with individual behaviours for dynamic feature (a burning tree, an exploding bomb etc..) here.
-end
-
 function self.GetTerrainCollision(pos, radius, isCreature, projectile, player, dt)
 	-- Other things, such as the player, enemies, and active spell effects, may call the terrain
 	-- to check whether they are colliding with any mechanical part of it.
@@ -171,6 +179,26 @@ local function getChunksForIDs(chunkIDs)
 	return chunks
 end
 
+local function GetVisibleChunks()
+	local left, top = love.graphics.inverseTransformPoint(0,0)
+	local right, bottom = love.graphics.inverseTransformPoint(love.graphics.getDimensions())
+	local visibleChunkIDs = getChunksIDsForRegion(top, left, bottom, right)
+	return getChunksForIDs(visibleChunkIDs)
+end
+
+local function updateChunk(chunk, dt)
+	for i = 1, #chunk.obstacles do
+		chunk.obstacles[i].Update(dt)
+	end
+end
+
+local function updateChunks(visibleChunks, dt)
+	--print(#visibleChunks)
+	for i, v in ipairs(visibleChunks) do
+		updateChunk(v, dt)
+	end
+end
+
 local function drawChunk(chunk, drawQueue)
 	for i = 1, #chunk.obstacles do
 		chunk.obstacles[i].Draw(drawQueue)
@@ -184,12 +212,14 @@ local function drawChunks(visibleChunks, drawQueue)
 	end
 end
 
+function self.Update(dt)
+	self.visibleChunks = GetVisibleChunks()
+	updateChunks(self.visibleChunks, dt)
+end
+
 function self.Draw(drawQueue)
-	local left, top = love.graphics.inverseTransformPoint(0,0)
-	local right, bottom = love.graphics.inverseTransformPoint(love.graphics.getDimensions())
-	local visibleChunkIDs = getChunksIDsForRegion(top, left, bottom, right)
-	local visibleChunks = getChunksForIDs(visibleChunkIDs)
-	drawChunks(visibleChunks, drawQueue)
+	self.visibleChunks = self.visibleChunks or GetVisibleChunks()
+	drawChunks(self.visibleChunks, drawQueue)
 end
 
 return self

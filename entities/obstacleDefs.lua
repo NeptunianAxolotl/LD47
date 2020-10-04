@@ -1,5 +1,6 @@
 
 local util = require("include/util")
+local spellDefs = require("spells/spellDefs")
 
 local obstacleDefs = {
 	{
@@ -31,7 +32,7 @@ local obstacleDefs = {
 		placeBlockRadius = 10,
 		radius = 30,
 		collideCreature = true,
-        collideProjectile = true,
+		collideProjectile = true,
 		minSpawnWeight = 10,
 		maxSpawnWeight = 30,
 	},
@@ -44,7 +45,7 @@ local obstacleDefs = {
 		placeBlockRadius = 60,
 		radius = 70,
 		collideCreature = true,
-        collideProjectile = true,
+		collideProjectile = true,
 		minSpawnWeight = 2,
 		maxSpawnWeight = 15,
 	},
@@ -88,7 +89,36 @@ for i = 1, #obstacleDefs do
 	}
 end
 
+local spellSpawnDefs = {}
+for i = 1, #spellDefs.spellList do
+	local spellName = spellDefs.spellList[i]
+	spellSpawnDefs[i] = {
+		name = "spell_" .. i,
+		imageName = spellDefs.spellIcon[spellName],
+		spellName = spellName,
+		health = 80,
+		healthRange = 70,
+		placeRadius = 80,
+		placeBlockRadius = 120,
+		radius = 60,
+		scale = 1.4,
+		collideCreature = false,
+		minSpawnWeight = 8,
+		maxSpawnWeight = 20,
+	}
+end
+
+local spellSpawnWeights = {}
+for i = 1, #spellSpawnDefs do
+	spellSpawnWeights[i] = {
+		spellSpawnDefs[i].minSpawnWeight,
+		spellSpawnDefs[i].maxSpawnWeight,
+	}
+end
+
 return {
 	defs = obstacleDefs,
 	spawnWeights = spawnWeights,
+	spellSpawnDefs = spellSpawnDefs,
+	spellSpawnWeights = spellSpawnWeights,
 }

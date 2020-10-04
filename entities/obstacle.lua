@@ -2,7 +2,7 @@
 local util = require("include/util")
 local Resources = require("resourceHandler")
 
-local DRAW_DEBUG = true
+local DRAW_DEBUG = false
 
 local function NewObstacle(self, def, rng)
 	-- pos
@@ -13,13 +13,18 @@ local function NewObstacle(self, def, rng)
 	end
 	
 	function self.IsColliding(otherPos, otherRadius, isCreature, projectile, player, dt)
-		if not ((isCreature and def.collideCreature) or (projectile and def.collideProjectile) or (player and def.overlapEffect)) then
+		if not ((isCreature and def.collideCreature) or (projectile and def.collideProjectile) or (player and (def.overlapEffect or def.spellName))) then
 			return
 		end
 		local collide, distSq = util.IntersectingCircles(self.pos, def.radius, otherPos, otherRadius)
 		if not collide then
 			return
 		end
+		if player and def.spellName then
+			player.ReplaceSpell(def.spellName)
+			return false, true
+		end
+		
         -- player collision
 		if (player and def.overlapEffect) then
             local realCollide, removeObstacle = def.overlapEffect(self, player, distSq, dt)
@@ -27,7 +32,7 @@ local function NewObstacle(self, def, rng)
 		end
         return true
 	end
-    
+	
     function self.ProjectileImpact(projEffect)
         if projEffect and def.projectileCalc then
             self.health = self.health - def.projectileCalc(projEffect)
@@ -39,10 +44,20 @@ local function NewObstacle(self, def, rng)
 			return true
 		end
 	end
-    
+	
+	function self.Update(dt)
+		if def.spellName then
+			self.animDt = Resources.UpdateAnimation("spell_anim", self.animDt or 0, dt)
+		end
+	end
+	
 	function self.Draw(drawQueue)
-		
-		drawQueue:push({y=self.pos[2]; f=function() Resources.DrawImage(def.imageName, self.pos[1], self.pos[2]) end})
+		drawQueue:push({y=self.pos[2]; f=function()
+			if def.spellName then
+				Resources.DrawAnimation("spell_anim", self.pos[1], self.pos[2], self.animDt or 0, false, 0.8, def.scale)
+			end
+			Resources.DrawImage(def.imageName, self.pos[1], self.pos[2], false, false, def.scale)
+		end})
 		if DRAW_DEBUG then
 			drawQueue:push({y=2^20; f=function() love.graphics.circle('line',self.pos[1], self.pos[2], def.radius) end})
 		end
