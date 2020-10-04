@@ -113,10 +113,10 @@ function self.DrawInterface()
 	for i = 1, SPELL_COUNT do
 		local spellData = self.spellPositions[i]
 		DrawSpellLevel(spellData.pos, spellData.spellLevel, spellData.rotation, 1, i == self.currentSpell)
-		if i == self.currentSpell then
-			Resources.DrawAnimation("spell_anim", spellData.pos[1], spellData.pos[2], self.spellAnim, nil, 0.1 + 0.9*self.charge)
+		if i == self.currentSpell and self.charge > 0.8 then
+			Resources.DrawAnimation("spell_anim", spellData.pos[1], spellData.pos[2], self.spellAnim, nil, (self.charge - 0.8)/0.2)
 		elseif i%8 + 1 == self.currentSpell and self.charge < 0.1 then
-			Resources.DrawAnimation("spell_anim", spellData.pos[1], spellData.pos[2], self.spellAnim, nil, 0.3 - 3*self.charge)
+			Resources.DrawAnimation("spell_anim", spellData.pos[1], spellData.pos[2], self.spellAnim, nil, 1 - 10*self.charge)
 		end
 		Resources.DrawImage(spellDefs.spellIcon[spellData.spellName], spellData.pos[1], spellData.pos[2])
 	end
