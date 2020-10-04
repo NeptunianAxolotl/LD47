@@ -9,12 +9,19 @@ local pi = math.pi
 local DOWNHILL_DIR = {0, 1}
 
 local HEALTH_SPACING = 58
-local DIST_TO_KM = 1/4000
+local DIST_TO_KM = 1/15000
 
 local self = {
 	radius = 8,
 	stunTime = false,
 	animProgress = 0,
+	health = 6,
+}
+
+local healthImages = {
+	"health_none",
+	"health_half",
+	"health_full",
 }
 
 local function UpdatePhysics(mouseX, mouseY, dt)
@@ -43,8 +50,8 @@ local function UpdatePhysics(mouseX, mouseY, dt)
 		downhillFactor = downhillFactor/10
 	end
 	
-	self.speed = math.max(0, self.speed + dt*60*0.012*downhillFactor + ((self.speedMult or 1) - 1)*12*dt)
-	self.speed = math.max(0, self.speed - dt*60*(0.003*self.speed^1.5 + 0.05*self.speed*dirChange^3))
+	self.speed = math.max(0, self.speed + dt*60*0.012*downhillFactor + ((self.speedMult or 1) - 1)*7*dt)
+	self.speed = math.max(0, self.speed - dt*60*(0.0032*self.speed^1.5 + 0.06*self.speed*dirChange^3))
 	
 	self.velocity = util.Add(util.Mult(dt*60*(0.1 - 0.09*(self.speed/(self.speed + 15))), DOWNHILL_DIR), util.PolarToCart(self.speed, self.velDir))
 	self.speed, self.velDir = util.CartToPolar(self.velocity)
@@ -57,6 +64,8 @@ local function UpdatePhysics(mouseX, mouseY, dt)
 			self.mouseControlMult = false
 		end
 	end
+	
+	self.speedMult = false
 end
 
 local function DoCollision(other, typeMult, dt)
@@ -137,11 +146,7 @@ function self.PickupSpell(spellName, spellLevel)
 end
 
 function self.SetSpeedMult(speedMult)
-	self.speedMult = speedMult
-end
-
-function self.GetSpeedMult()
-	return self.speedMult or 1
+	self.speedMult = math.max(self.speedMult or 1, speedMult)
 end
 
 function self.Update(Terrain, EnemyHandler, cameraTransform, dt)
@@ -163,16 +168,24 @@ function self.GetPhysics()
 	return self.pos, self.velocity, self.speed
 end
 
+local function DrawHealth()
+	local healthLimit = -1
+	
+	for i = 1, 3 do
+		local heartVal = math.max(1, math.min(3, (self.health - healthLimit)))
+		Resources.DrawImage(healthImages[heartVal], 10 + (i - 1)*HEALTH_SPACING, 10)
+		healthLimit = healthLimit + 2
+	end
+end
+
 function self.DrawInterface()
 	Resources.DrawImage("status_interface", 0, 0)
-	
-	Resources.DrawImage("health_full", 10, 10)
-	Resources.DrawImage("health_half", 10 + HEALTH_SPACING, 10)
-	Resources.DrawImage("health_none", 10 + 2*HEALTH_SPACING, 10)
+	DrawHealth()
 	
 	Font.SetSize(2)
 	love.graphics.setColor(0, 0, 0)
 	love.graphics.print("Distance " .. (string.format("%.1f", math.floor(self.pos[2]*10*DIST_TO_KM)/10)) .. "km", 8, 10 + HEALTH_SPACING + 14)
+	love.graphics.print("Speed " .. (string.format("%.0f", math.floor(self.speed*60*1000*DIST_TO_KM))) .. "m/s", 8, 10 + HEALTH_SPACING + 14 + 26)
 end
 
 function self.Draw(drawQueue)
