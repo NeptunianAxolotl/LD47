@@ -56,6 +56,8 @@ function self.Initialize()
 	self.cameraTransform = love.math.newTransform()
 	Player.Initialize()
 	Terrain.Initialize()
+	SpellHandler.Initialize()
+	EnemyHandler.Initialize()
 end
 
 return self

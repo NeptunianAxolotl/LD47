@@ -24,6 +24,9 @@ function love.mousereleased(x, y, button, istouch, presses)
 end
 
 function love.keypressed(key, scancode, isRepeat)
+	if key == 'r' then
+		World.Initialize()
+	end
 end
 
 function love.mousepressed(x, y, button, istouch, presses)
@@ -64,6 +67,5 @@ function love.load(arg)
 	print(_VERSION)
 	math.randomseed(os.time()+os.clock())
 	Resources.LoadResources()
-	SpellHandler.Initialize()
 	World.Initialize()
 end

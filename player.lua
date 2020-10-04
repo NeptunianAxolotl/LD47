@@ -11,12 +11,8 @@ local DOWNHILL_DIR = {0, 1}
 local HEALTH_SPACING = 58
 local DIST_TO_KM = 1/15000
 
-local self = {
-	radius = 8,
-	stunTime = false,
-	animProgress = 0,
-	health = 1,
-}
+local self = {}
+local api = {}
 
 local healthImages = {
 	"health_none",
@@ -131,7 +127,7 @@ local function DoCollision(other, typeMult, dt)
 end
 
 local function CheckTerrainCollision(Terrain, dt)
-	local collide = Terrain.GetTerrainCollision(self.pos, self.radius, true, false, self, dt)
+	local collide = Terrain.GetTerrainCollision(self.pos, self.radius, true, false, api, dt)
 	if not collide then
 		return
 	end
@@ -140,7 +136,7 @@ local function CheckTerrainCollision(Terrain, dt)
 end
 
 local function CheckEnemyCollision(EnemyHandler, dt)
-	local collide = EnemyHandler.DetectCollision(self.pos, self.radius, false, false, self, dt)
+	local collide = EnemyHandler.DetectCollision(self.pos, self.radius, false, false, api, dt)
 	if not collide then
 		return
 	end
@@ -158,22 +154,22 @@ local function UpdateFacing(dt)
 end
 
 local function UpdateSpellcasting(dt)
-	SpellHandler.AddChargeAndCast(self, world, dt * (self.speed + 3))
+	SpellHandler.AddChargeAndCast(api, world, dt * (self.speed + 3))
 end
 
-function self.PickupSpell(spellName, spellLevel)
+function api.PickupSpell(spellName, spellLevel)
 	SpellHandler.PickupSpell(spellName, spellLevel)
 end
 
-function self.SetSpeedMult(speedMult)
+function api.SetSpeedMult(speedMult)
 	self.speedMult = math.max(self.speedMult or 1, speedMult)
 end
 
-function self.IsDead()
+function api.IsDead()
 	return self.isDead
 end
 
-function self.Update(Terrain, EnemyHandler, cameraTransform, dt)
+function api.Update(Terrain, EnemyHandler, cameraTransform, dt)
 	local mouseX, mouseY = cameraTransform:inverseTransformPoint(love.mouse.getX(), love.mouse.getY())
 	
 	if self.isDead then
@@ -193,8 +189,14 @@ function self.Update(Terrain, EnemyHandler, cameraTransform, dt)
 	self.animProgress = Resources.UpdateAnimation("croc", self.animProgress, dt*(self.speed + 1)/12)
 end
 
-function self.GetPhysics()
+function api.GetPhysics()
 	return self.pos, self.velocity, self.speed
+end
+
+
+function api.SetSpeed(speed)
+	self.speed = speed
+	self.velocity = util.SetLength(self.speed, self.velocity)
 end
 
 local function DrawHealth()
@@ -207,7 +209,7 @@ local function DrawHealth()
 	end
 end
 
-function self.DrawInterface()
+function api.DrawInterface()
 	Resources.DrawImage("status_interface", 0, 0)
 	DrawHealth()
 	
@@ -223,7 +225,7 @@ function self.DrawInterface()
 	end
 end
 
-function self.Draw(drawQueue)
+function api.Draw(drawQueue)
 	if not self.isDead then
 		drawQueue:push({y=self.pos[2]; f=function() Resources.DrawIsoAnimation("croc", self.pos[1], self.pos[2], self.animProgress, self.facingDir) end})
 		return
@@ -234,12 +236,18 @@ function self.Draw(drawQueue)
 	end})
 end
 
-function self.Initialize()
-	self.pos = {0, 0}
-	self.velocity = {0, 2}
-	self.speed = 2
-	self.velDir = pi/2
-	self.facingDir = pi/2
+function api.Initialize()
+	self = {
+		radius = 8,
+		stunTime = false,
+		animProgress = 0,
+		health = 6,
+		pos = {0, 0},
+		velocity = {0, 2},
+		speed = 2,
+		velDir = pi/2,
+		facingDir = pi/2,
+	}
 end
 
-return self
+return api

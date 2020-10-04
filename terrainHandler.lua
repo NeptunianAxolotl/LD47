@@ -30,10 +30,7 @@ local CHUNK_HEIGHT = 64 * 32
 local OBSTACLES_PER_CHUNK_MIN = 18
 local OBSTACLES_PER_CHUNK_MAX = 50
 
-local RNG_SEED
-function self.Initialize()
-	RNG_SEED = math.random(0, 2^16)
-end
+local rngSeed
 
 local function detectCollision(obstacles, otherPos, otherRadius, isCreature, projectile, player, dt)
 	--Does the circle described by 'x,y,radius' intersect with any
@@ -107,12 +104,12 @@ local function generateChunk(a, b)
 		return cachedVal
 	end
 	
-	local rng = love.math.newRandomGenerator(RNG_SEED+19391*a+16127*b)
+	local rng = love.math.newRandomGenerator(rngSeed+19391*a+16127*b)
 
 	local left, top = getChunkPositionFromID(a, b)
 	--Chuncks should be made of tiles+doodads (miminally)
 	--Potentially other elements too.
-	--Random but repeatable generation using RNG deterministically seeded by a, b, and RNG_SEED 
+	--Random but repeatable generation using RNG deterministically seeded by a, b, and rngSeed 
 
 	--Generate Obstacles
 	local function Random()
@@ -263,6 +260,16 @@ end
 function self.Draw(drawQueue)
 	self.visibleChunks = self.visibleChunks or GetVisibleChunks()
 	drawChunks(self.visibleChunks, drawQueue)
+end
+
+function self.Initialize()
+	rngSeed = math.random(0, 2^16)
+	self = {
+		visibleChunks = nil,
+	}
+	
+	chunkList = {}
+	chunkCache = {}
 end
 
 return self

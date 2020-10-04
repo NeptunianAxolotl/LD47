@@ -71,9 +71,10 @@ local obstacleDefs = {
 		radius = 70,
 		collideCreature = false,
 		overlapEffect = function (self, player, distSq, dt)
-			if player.speed > 6 then
-				player.speed = player.speed*(1 - 60*dt*0.07)
-				player.velocity = util.SetLength(player.speed, player.velocity)
+			local _, _, playerSpeed = player.GetPhysics()
+			if playerSpeed > 6 then
+				playerSpeed = playerSpeed*(1 - 60*dt*0.07)
+				player.SetSpeed(playerSpeed)
 			end
 		end,
 		minSpawnWeight = 10,

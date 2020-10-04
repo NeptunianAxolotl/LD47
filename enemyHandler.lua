@@ -11,10 +11,8 @@ local OUTER_SPAWN = 1500
 local INNER_SPAWN = 1200
 local START_ANGLE, END_ANGLE = math.pi*0.2, math.pi*0.8
 
-local self = {
-	activeEnemies = IterableMap.New(),
-	spawnCheckAcc = 0,
-}
+local self = {}
+local api = {}
 
 local function SpawnNewEnemies(player)
 	if player.IsDead() then
@@ -35,7 +33,7 @@ local function SpawnNewEnemies(player)
 	end
 end
 
-function self.DetectCollision(otherPos, otherRadius, otherCreatureIndex, projectile, player, dt)
+function api.DetectCollision(otherPos, otherRadius, otherCreatureIndex, projectile, player, dt)
 	local maxIndex, keyByIndex, dataByKey = IterableMap.GetBarbarianData(self.activeEnemies)
 	for i = 1, maxIndex do
 		local v = dataByKey[keyByIndex[i]]
@@ -61,7 +59,7 @@ function self.DetectCollision(otherPos, otherRadius, otherCreatureIndex, project
 	return false
 end
 
-function self.DetectInCircle(otherPos, otherRadius)
+function api.DetectInCircle(otherPos, otherRadius)
     local maxIndex, keyByIndex, dataByKey = IterableMap.GetBarbarianData(self.activeEnemies)
     local outputTable = {}
     for i = 1, maxIndex do
@@ -73,18 +71,25 @@ function self.DetectInCircle(otherPos, otherRadius)
     return outputTable
 end
 
-function self.Update(player, dt)
+function api.Update(player, dt)
 	self.spawnCheckAcc = self.spawnCheckAcc - dt
 	if self.spawnCheckAcc <= 0 then
 		SpawnNewEnemies(player)
 		self.spawnCheckAcc = 0.5 + math.random()*3
 	end
 
-	IterableMap.ApplySelf(self.activeEnemies, "Update", Terrain, self, player, dt)
+	IterableMap.ApplySelf(self.activeEnemies, "Update", Terrain, api, player, dt)
 end
 
-function self.Draw(drawQueue)
+function api.Draw(drawQueue)
 	IterableMap.ApplySelf(self.activeEnemies, "Draw", drawQueue)
 end
 
-return self
+function api.Initialize()
+	self = {
+		activeEnemies = IterableMap.New(),
+		spawnCheckAcc = 0,
+	}
+end
+
+return api
