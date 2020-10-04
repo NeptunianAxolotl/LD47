@@ -3,9 +3,9 @@ return {
 	xScale = 0.18,
 	yScale = 0.18,
 	firstDir = 0,
-	width = 256,
+	width = 400,
 	duration = 0.4,
-	rotate = true,
+	rotate = false,
 	files = {
 		"resources/images/croc_e.png",
 		"resources/images/croc_se.png",
