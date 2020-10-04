@@ -14,6 +14,10 @@ local function NewCreature(self, def)
     self.projIgnoreFresh = {}
     self.projIgnoreStale = {}
 	
+	if def.goalRandomOffsetX then
+		self.randomGoalOffset = util.RandomPointInEllipse(def.goalRandomOffsetX, def.goalRandomOffsetY)
+	end
+	
 	function self.GetPhysics()
 		return self.pos, def.radius
 	end
@@ -60,6 +64,10 @@ local function NewCreature(self, def)
 	
 	function self.AddPosition(posToAdd)
 		self.pos = util.Add(self.pos, posToAdd)
+	end
+	
+	function self.AddSlowTime(toAdd)
+		self.slowTime = math.min(1, (self.slowTime or 0.1) + toAdd)
 	end
 	
 	function self.Draw()

@@ -14,7 +14,7 @@ local self = {}
 
 function self.Update(dt)
 	Terrain.Update(0, 0, dt)
-	Player.Update(Terrain, self.cameraTransform, dt)
+	Player.Update(Terrain, EnemyHandler, self.cameraTransform, dt)
 	
 	local playerPos, playerVelocity, playerSpeed = Player.GetPhysics()
 	local cameraX, cameraY, cameraScale = Camera.UpdateCamera(dt, playerPos, playerVelocity, playerSpeed)

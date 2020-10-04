@@ -6,7 +6,7 @@ local Terrain = require("terrainHandler")
 local CreatureDefs = require("entities/creatureDefs")
 local NewCreature = require("entities/creature")
 
-local SPAWN_OFFSET = {0, 400}
+local SPAWN_OFFSET = {0, 800}
 local OUTER_SPAWN = 1500
 local INNER_SPAWN = 1200
 local START_ANGLE, END_ANGLE = math.pi*0.2, math.pi*0.8

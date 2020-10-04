@@ -332,6 +332,18 @@ function util.RandomPointInAnnulus(innerRadius, outerRadius, startAngle, endAngl
 	return util.PolarToCart(outerRadius*r*r, angle)
 end
 
+function util.RandomPointInEllipse(width, height, startAngle, endAngle)
+	startAngle = startAngle or 0
+	endAngle = endAngle or 2*pi
+	
+	local r = math.random()
+	local angle = startAngle + math.random()*(endAngle - startAngle)
+	local pos = util.PolarToCart(r*r, angle)
+	pos[1] = pos[1]*width
+	pos[2] = pos[2]*height
+	return pos
+end
+
 --------------------------------------------------
 --------------------------------------------------
 -- Group Utilities

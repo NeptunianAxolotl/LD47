@@ -55,13 +55,9 @@ local function UpdatePhysics(mouseX, mouseY, dt)
 	end
 end
 
-local function CheckTerrainCollision(Terrain, dt)
-	local collide = Terrain.GetTerrainCollision(self.pos, self.radius, true, false, self, dt)
-	if not collide then
-		return
-	end
+local function DoCollision(other, dt)
+	local otherPos, otherRadius = other.GetPhysics()
 	
-	local otherPos, otherRadius = collide.GetPhysics()
 	local toOther = util.Unit(util.Subtract(otherPos, self.pos))
 	local toOtherAngle = util.Angle(toOther)
 	
@@ -76,6 +72,10 @@ local function CheckTerrainCollision(Terrain, dt)
 	self.velocity = util.Add(self.velocity, util.Mult(-1*(severityFactor + 0.1), toOther))
 
 	self.speed = (1 - math.max(0.2, math.min(0.7, severityFactor)))*self.speed + 3*severityFactor
+	
+	if other.AddPosition then
+		other.AddPosition(util.Mult(severityFactor*3 + 0.5*self.speed, toOther))
+	end
 	
 	if severityFactor > 0.95 then
 		self.speed = self.speed + 3
@@ -92,6 +92,24 @@ local function CheckTerrainCollision(Terrain, dt)
 	print("Ouch severity", severityFactor)
 end
 
+local function CheckTerrainCollision(Terrain, dt)
+	local collide = Terrain.GetTerrainCollision(self.pos, self.radius, true, false, self, dt)
+	if not collide then
+		return
+	end
+	
+	DoCollision(collide, dt)
+end
+
+local function CheckEnemyCollision(EnemyHandler, dt)
+	local collide = EnemyHandler.DetectCollision(self.pos, self.radius, false, false, self, dt)
+	if not collide then
+		return
+	end
+	
+	DoCollision(collide, dt)
+end
+
 local function UpdateFacing(dt)
 	local dirDiff = util.AngleSubtractShortest(self.velDir, self.facingDir)
 	if self.stunTime then
@@ -105,11 +123,12 @@ local function UpdateSpellcasting(dt)
 	SpellHandler.AddChargeAndCast(self, world, dt * (self.speed + 2))
 end
 
-function self.Update(Terrain, cameraTransform, dt)
+function self.Update(Terrain, EnemyHandler, cameraTransform, dt)
 	local mouseX, mouseY = cameraTransform:inverseTransformPoint(love.mouse.getX(), love.mouse.getY())
 	
 	UpdatePhysics(mouseX, mouseY, dt)
 	CheckTerrainCollision(Terrain, dt)
+	CheckEnemyCollision(EnemyHandler, dt)
 	
 	self.pos = util.Add(self.pos, util.Mult(dt*60, self.velocity))
 	UpdateFacing(dt)
