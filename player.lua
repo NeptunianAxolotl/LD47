@@ -1,15 +1,21 @@
 
 local util = require("include/util")
+local Font = require("include/font")
+
 local Resources = require("resourceHandler")
 local SpellHandler = require("spellHandler")
 local pi = math.pi
 
 local DOWNHILL_DIR = {0, 1}
 
+local HEALTH_SPACING = 58
+local DIST_TO_KM = 1/4000
+
 local self = {
 	radius = 8,
 	stunTime = false,
 	animProgress = 0,
+	level = 3,
 }
 
 local function UpdatePhysics(mouseX, mouseY, dt)
@@ -149,6 +155,24 @@ end
 
 function self.GetPhysics()
 	return self.pos, self.velocity, self.speed
+end
+
+function self.DrawInterface()
+	Resources.DrawImage("status_interface", 0, 0)
+	
+	Resources.DrawImage("health_full", 10, 10)
+	Resources.DrawImage("health_half", 10 + HEALTH_SPACING, 10)
+	Resources.DrawImage("health_none", 10 + 2*HEALTH_SPACING, 10)
+	
+	Font.SetSize(2)
+	love.graphics.setColor(0, 0, 0)
+	love.graphics.print("Level", 8, 10 + HEALTH_SPACING + 20)
+	
+	Resources.DrawImage("shape_" .. self.level, 94, 100)
+	
+	
+	love.graphics.setColor(0, 0, 0)
+	love.graphics.print("Run " .. (math.floor(self.pos[2]*10*DIST_TO_KM)/10) .. "km", 8, 10 + 2*HEALTH_SPACING + 20)
 end
 
 function self.Draw(drawQueue)

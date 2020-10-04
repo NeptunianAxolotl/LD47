@@ -45,6 +45,7 @@ function self.Draw()
 	
 	love.graphics.replaceTransform(IDENTITY_TRANSFORM)
 	SpellHandler.DrawInterface()
+	Player.DrawInterface()
 end
 
 function self.Initialize()

@@ -22,4 +22,5 @@ return {
 	"shotgun_icon",
 	"spell_anim",
 	"shape_n",
+	"health",
 }
