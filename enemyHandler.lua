@@ -17,6 +17,9 @@ local self = {
 }
 
 local function SpawnNewEnemies(player)
+	if player.IsDead() then
+		return
+	end
 	local playerPos, playerVel, playerSpeed = player.GetPhysics()
 	
 	local spawnCentre = util.Add(playerPos, SPAWN_OFFSET)

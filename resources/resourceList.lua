@@ -25,4 +25,6 @@ return {
 	"spell_anim",
 	"shape_n",
 	"health",
+	"dead_croc",
+	"stun",
 }

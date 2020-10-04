@@ -15,7 +15,7 @@ local self = {
 	radius = 8,
 	stunTime = false,
 	animProgress = 0,
-	health = 6,
+	health = 1,
 }
 
 local healthImages = {
@@ -23,6 +23,19 @@ local healthImages = {
 	"health_half",
 	"health_full",
 }
+
+local function ModifyHealth(change)
+	if self.isDead then
+		return
+	end
+	self.health = math.max(0, math.min(6, self.health + change))
+	if self.health == 0 then
+		self.isDead = true
+		self.velocity = {0, 0}
+		self.speed = 0
+		SpellHandler.SetDead()
+	end
+end
 
 local function UpdatePhysics(mouseX, mouseY, dt)
 	local mouseVector = util.Unit(util.Subtract({mouseX, mouseY}, self.pos))
@@ -79,6 +92,8 @@ local function DoCollision(other, typeMult, dt)
 		return
 	end
 	
+	local damageSeverity = (0.6*severityFactor + 0.4)*self.speed*(typeMult*0.5 + 0.5)
+	
 	self.stunTime = severityFactor*2
 	
 	local newVelocity = util.ReflectVector(self.velocity, toOtherAngle + pi/2 + (math.random()*0.8*severityFactor - 0.4*severityFactor))
@@ -107,7 +122,12 @@ local function DoCollision(other, typeMult, dt)
 	self.velocity = util.SetLength(self.speed, self.velocity)
 	self.velDir = util.Angle(self.velocity)
 	
-	print("Ouch severity", severityFactor)
+	--print("Ouch severity", damageSeverity, self.speed)
+	if damageSeverity > 16 then
+		ModifyHealth(-2)
+	elseif damageSeverity > 10 then
+		ModifyHealth(-1)
+	end
 end
 
 local function CheckTerrainCollision(Terrain, dt)
@@ -149,8 +169,17 @@ function self.SetSpeedMult(speedMult)
 	self.speedMult = math.max(self.speedMult or 1, speedMult)
 end
 
+function self.IsDead()
+	return self.isDead
+end
+
 function self.Update(Terrain, EnemyHandler, cameraTransform, dt)
 	local mouseX, mouseY = cameraTransform:inverseTransformPoint(love.mouse.getX(), love.mouse.getY())
+	
+	if self.isDead then
+		self.animProgress = Resources.UpdateAnimation("stun", self.animProgress, dt)
+		return
+	end
 	
 	UpdatePhysics(mouseX, mouseY, dt)
 	CheckTerrainCollision(Terrain, dt)
@@ -186,10 +215,23 @@ function self.DrawInterface()
 	love.graphics.setColor(0, 0, 0)
 	love.graphics.print("Distance " .. (string.format("%.1f", math.floor(self.pos[2]*10*DIST_TO_KM)/10)) .. "km", 8, 10 + HEALTH_SPACING + 14)
 	love.graphics.print("Speed " .. (string.format("%.0f", math.floor(self.speed*60*1000*DIST_TO_KM))) .. "m/s", 8, 10 + HEALTH_SPACING + 14 + 26)
+	
+	if self.isDead then
+		Font.SetSize(1)
+		love.graphics.setColor(1, 0.1, 0)
+		love.graphics.print("Whoops! Press 'r' to restart.", 460, 25)
+	end
 end
 
 function self.Draw(drawQueue)
-	drawQueue:push({y=self.pos[2]; f=function() Resources.DrawIsoAnimation("croc", self.pos[1], self.pos[2], self.animProgress, self.facingDir) end})
+	if not self.isDead then
+		drawQueue:push({y=self.pos[2]; f=function() Resources.DrawIsoAnimation("croc", self.pos[1], self.pos[2], self.animProgress, self.facingDir) end})
+		return
+	end
+	drawQueue:push({y=self.pos[2] + 200; f = function()
+		Resources.DrawImage("dead_croc", self.pos[1], self.pos[2], self.facingDir)
+		Resources.DrawAnimation("stun", self.pos[1], self.pos[2], self.animProgress)
+	end})
 end
 
 function self.Initialize()

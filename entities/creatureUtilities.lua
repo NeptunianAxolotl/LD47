@@ -56,6 +56,9 @@ function creatureUtils.MoveTowardsPlayer(self, def, Terrain, Enemies, player, st
 	local playerPos = player.GetPhysics()
 	self.direction = util.Angle(util.Subtract(playerPos, self.pos))
 	
+	if player.IsDead() then
+		playerPos = util.Add(playerPos, {0, 3000})
+	end
 	if goalOffset then
 		playerPos = util.Add(playerPos, goalOffset)
 	end

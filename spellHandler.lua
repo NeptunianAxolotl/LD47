@@ -36,6 +36,10 @@ local function SpellChargeToAngle()
 	return spellData.startChargeAngle + self.charge*spellData.chargeProgressRange
 end
 
+function self.SetDead()
+	self.isDead = true
+end
+
 function self.CastSpell(name, player, world)
 	IterableMap.Add(self.activeSpells, self.spellTypes[name](player, world))
 end
@@ -126,7 +130,7 @@ function self.DrawInterface()
 		Resources.DrawImage(spellDefs.spellIcon[self.heldSpell], SPELL_HELD_POS[1], SPELL_HELD_POS[2], 0, 1.3)
 	end
 	
-	if self.heldTutorialCounter == 1 then
+	if self.heldTutorialCounter == 1 and not self.isDead then
 		Font.SetSize(1)
 		love.graphics.setColor(1, 0.1, 0)
 		love.graphics.print("You grabbed a spell! Click to Swap or Combine it.", 350, 25)
