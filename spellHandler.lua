@@ -52,6 +52,10 @@ function api.SwapSpell()
 	
 	currentSpellData.spellName, self.heldSpell = self.heldSpell, currentSpellData.spellName
 	currentSpellData.spellLevel, self.heldSpellLevel = self.heldSpellLevel, currentSpellData.spellLevel
+	
+	if self.heldSpell == "cantrip" then
+		self.heldSpell, self.heldSpellLevel = false, false
+	end
 end
 
 function api.PickupSpell(name, level)
@@ -148,7 +152,7 @@ function api.Initialize()
 		local spellData = {
 			startChargeAngle = i*math.pi/4,
 			chargeProgressRange = 9*math.pi/4,
-			spellName = spellDefs.spellList[i%4 + 1],
+			spellName = "cantrip",
 			spellLevel = 1,
 			rotation = (i + 5)*math.pi/4,
 		}

@@ -104,8 +104,8 @@ for i = 1, #spellDefs.spellList do
 		radius = 70,
 		scale = 1.7,
 		collideCreature = false,
-		minSpawnWeight = 8,
-		maxSpawnWeight = 20,
+		minSpawnWeight = spellDefs.probability[spellName],
+		maxSpawnWeight = spellDefs.probability[spellName],
 	}
 end
 
