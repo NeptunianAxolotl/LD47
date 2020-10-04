@@ -29,6 +29,8 @@ local CROC_CENTRE = 95
 local SPELL_HELD_POS = {1010, 52}
 local HELD_ROTATE = 0.8
 
+local SELECTED_COLOR = {0.8, 0.8, 0.97, 1}
+
 local function SpellChargeToAngle()
 	local spellData = self.spellPositions[self.currentSpell]
 	return spellData.startChargeAngle + self.charge*spellData.chargeProgressRange
@@ -90,29 +92,29 @@ function self.Draw(drawQueue)
 	IterableMap.ApplySelf(self.activeSpells, "Draw", drawQueue)
 end
 
-local function DrawSpellLevel(pos, level, rotation, scale)
+local function DrawSpellLevel(pos, level, rotation, scale, selected)
 	if level <= 3 then
-		Resources.DrawImage("shape_" .. (level + 2), pos[1], pos[2], rotation, false, scale)
+		Resources.DrawImage("shape_" .. (level + 2), pos[1], pos[2], rotation, false, scale, selected and SELECTED_COLOR)
 		return
 	end
 	
 	local nests = {}
 	while level > 3 do
-		Resources.DrawImage("shape_5", pos[1], pos[2], rotation, false, scale)
+		Resources.DrawImage("shape_5", pos[1], pos[2], rotation, false, scale, selected and SELECTED_COLOR)
 		scale = scale*0.72
 		level = level - 3
 	end
 	
-	Resources.DrawImage("shape_" .. (level + 2), pos[1], pos[2], rotation, false, scale)
+	Resources.DrawImage("shape_" .. (level + 2), pos[1], pos[2], rotation, false, scale, selected and SELECTED_COLOR)
 end
 
 function self.DrawInterface()
 	Resources.DrawImage("spell_interface", 1280 - 260, 0)
 	for i = 1, SPELL_COUNT do
 		local spellData = self.spellPositions[i]
-		DrawSpellLevel(spellData.pos, spellData.spellLevel, spellData.rotation, 1)
+		DrawSpellLevel(spellData.pos, spellData.spellLevel, spellData.rotation, 1, i == self.currentSpell)
 		if i == self.currentSpell then
-			Resources.DrawAnimation("spell_anim", spellData.pos[1], spellData.pos[2], self.spellAnim, nil, 0.2 + 0.7*self.charge)
+			Resources.DrawAnimation("spell_anim", spellData.pos[1], spellData.pos[2], self.spellAnim, nil, 0.1 + 0.9*self.charge)
 		elseif i%8 + 1 == self.currentSpell and self.charge < 0.1 then
 			Resources.DrawAnimation("spell_anim", spellData.pos[1], spellData.pos[2], self.spellAnim, nil, 0.3 - 3*self.charge)
 		end

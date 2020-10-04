@@ -156,7 +156,7 @@ end
 -- Drawing Functions
 --------------------------------------------------
 
-function self.DrawImage(name, x, y, rotation, alpha, scale)
+function self.DrawImage(name, x, y, rotation, alpha, scale, color)
 	if not self.images[name] then
 		print("Invalid DrawImage ", name)
 		return
@@ -165,7 +165,11 @@ function self.DrawImage(name, x, y, rotation, alpha, scale)
 	rotation = rotation or 0
 	scale = scale or 1
 	
-	love.graphics.setColor(1, 1, 1, alpha or 1)
+	if color then
+		love.graphics.setColor(color)
+	else
+		love.graphics.setColor(1, 1, 1, alpha or 1)
+	end
 	
 	local data = self.images[name]
 	love.graphics.draw(data.image, x, y, rotation, data.xScale*scale, data.yScale*scale, data.xOffset, data.yOffset, 0, 0)
