@@ -58,6 +58,18 @@ function self.DetectCollision(otherPos, otherRadius, otherCreatureIndex, project
 	return false
 end
 
+function self.DetectInCircle(otherPos, otherRadius)
+    local maxIndex, keyByIndex, dataByKey = IterableMap.GetBarbarianData(self.activeEnemies)
+    local outputTable = {}
+    for i = 1, maxIndex do
+		local v = dataByKey[keyByIndex[i]]
+        if v.IsColliding(otherPos, otherRadius, nil, nil, nil, dt) then
+			outputTable[#outputTable+1] = v
+		end
+    end
+    return outputTable
+end
+
 function self.Update(player, dt)
 	self.spawnCheckAcc = self.spawnCheckAcc - dt
 	if self.spawnCheckAcc <= 0 then

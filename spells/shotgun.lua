@@ -13,6 +13,8 @@ local function NewSpell(player, modifiers)
     self.modifiers = modifiers or {}
     self.projectiles = {}
     self.projectileEffects = {damage = 60}
+    self.maxlifetime = 10
+    self.lifetime = 0
     
     for i = 1,nProjectiles do
         self.projectiles[i] = {}
@@ -26,6 +28,9 @@ local function NewSpell(player, modifiers)
 	
 	function self.Update(Terrain, Enemies, dt)
         -- check for spell termination
+        self.lifetime = self.lifetime + dt
+        if self.lifetime > self.maxlifetime then return true end
+        
         local anyAlive = false
         for k in pairs(self.projectiles) do 
             if self.projectiles[k].alive then anyAlive = true end
