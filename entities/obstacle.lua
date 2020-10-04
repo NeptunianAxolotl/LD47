@@ -28,7 +28,6 @@ local function NewObstacle(self, def, rng)
         -- projectile collision
         if (projectile and def.projectileEffect) then
             local realCollide, removeObstacle = def.projectileEffect(self, projectile, distSq, dt)
-            print(removeObstacle)
             return realCollide, removeObstacle
         end
         return true

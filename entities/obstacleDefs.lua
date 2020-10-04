@@ -13,9 +13,7 @@ local obstacleDefs = {
 		collideCreature = true,
         collideProjectile = true,
         projectileEffect = function(self, projectile, distSq, dt)
-            print("foo1")
             if projectile ~= true and projectile.fire and projectile.fire > 0 then
-                print("foo2")
                 return true, true
             else
                 return true, false

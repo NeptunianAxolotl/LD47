@@ -25,6 +25,7 @@ local function NewSpell(player, modifiers)
     self.maxVelocity = 2 * math.pi * self.radius / (self.phaseLength * 60) + 1
     self.playerRef = player
     self.maxlifetime = 5
+    self.projectileEffects = {damage = 120}
     
     self.pos, self.facing = player.GetPhysics()
     self.currentPhase = 0
@@ -37,7 +38,7 @@ local function NewSpell(player, modifiers)
         self.projectiles[i].alive = true
     end
 	
-	function self.Update(Terrain, dt)
+	function self.Update(Terrain, Enemies, dt)
         -- check for spell termination
         self.lifetime = self.lifetime + dt
         if self.lifetime > self.maxlifetime then return true end
@@ -70,9 +71,14 @@ local function NewSpell(player, modifiers)
                 self.projectiles[k].pos = util.Add(currentRelPos,self.pos)
                 
                 -- check collision
-                local collide = Terrain.GetTerrainCollision(self.projectiles[k].pos, 5, false, {}, nil, dt)
+                local collide = Terrain.GetTerrainCollision(self.projectiles[k].pos, 5, false, self.projectileEffects, nil, dt)
                 if collide then
                     self.projectiles[k].alive = false
+                else
+                    collide = Enemies.DetectCollision(self.projectiles[k].pos, 5, false, self.projectileEffects, nil, dt)
+                    if collide then
+                        self.projectiles[k].alive = false
+                    end
                 end
             end
         end

@@ -26,6 +26,10 @@ local function NewCreature(self, def)
 			return true -- Remove
 		end
 		
+        if self.health <= 0 then
+            return true -- Remove
+        end
+        
 		if def.updateFunc then
 			def.updateFunc(self, def, Terrain, Enemies, player, dt)
 		end

@@ -32,11 +32,16 @@ local function SpawnNewEnemies(player)
 	end
 end
 
-function self.DetectCollision(otherPos, otherRadius, otherCreatureIndex, isProjectile, player, dt)
+function self.DetectCollision(otherPos, otherRadius, otherCreatureIndex, projectile, player, dt)
 	local maxIndex, keyByIndex, dataByKey = IterableMap.GetBarbarianData(self.activeEnemies)
 	for i = 1, maxIndex do
 		local v = dataByKey[keyByIndex[i]]
-		if v.IsColliding(otherPos, otherRadius, otherCreatureIndex, isProjectile, player, dt) then
+		if v.IsColliding(otherPos, otherRadius, otherCreatureIndex, projectile, player, dt) then
+            if projectile and projectile ~= true and projectile.damage then
+                if v.health then 
+                    v.health = v.health - projectile.damage
+                end
+            end
 			return v
 		end
 	end

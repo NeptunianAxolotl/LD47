@@ -2,6 +2,7 @@
 local IterableMap = require("include/IterableMap")
 local Terrain = require("terrainHandler")
 local Resources = require("resourceHandler")
+local Enemies = require("enemyHandler")
 
 local self = {
 	activeSpells = IterableMap.New(),
@@ -17,9 +18,9 @@ local CROC_CENTRE = 95
 
 local spellList = {
 	"fireball",
-	"shotgun",
-	"serpent",
-	"wisp"
+    "shotgun",
+    "serpent",
+    "wisp"
 }
 
 local function SpellChargeToAngle()
@@ -41,7 +42,7 @@ function self.AddChargeAndCast(player, world, chargeAdd)
 end
 
 function self.Update(dt)
-	IterableMap.ApplySelf(self.activeSpells, "Update", Terrain, dt)
+	IterableMap.ApplySelf(self.activeSpells, "Update", Terrain, Enemies, dt)
 end
 
 function self.Draw()

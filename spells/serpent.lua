@@ -22,6 +22,7 @@ local function NewSpell(player, modifiers)
     self.projectiles = {}
     self.amplitude = 80
     self.phaseLength = 2
+    self.projectileEffects = {damage = 100}
     
     self.pos, self.velocity = player.GetPhysics()
     self.currentPhase = 0
@@ -37,7 +38,7 @@ local function NewSpell(player, modifiers)
         self.projectiles[i].alive = true
     end
 	
-	function self.Update(Terrain, dt)
+	function self.Update(Terrain, Enemies, dt)
         -- check for spell termination
         local anyAlive = false
         for k in pairs(self.projectiles) do 
@@ -57,9 +58,14 @@ local function NewSpell(player, modifiers)
             self.projectiles[k].pos = util.Add(util.Mult(math.sin(phaseAngle)*self.amplitude*sineMultiplier(k),perpvector), self.pos)
             
             -- check collision
-            local collide = Terrain.GetTerrainCollision(self.projectiles[k].pos, 5, false, {}, nil, dt)
+            local collide = Terrain.GetTerrainCollision(self.projectiles[k].pos, 5, false, self.projectileEffects, nil, dt)
             if collide then
                 self.projectiles[k].alive = false -- I would like serpent to be piercing but for now dont worry
+            else
+                collide = Enemies.DetectCollision(self.projectiles[k].pos, 5, false, self.projectileEffects, nil, dt)
+                if collide then
+                    self.projectiles[k].alive = false
+                end
             end
         end
 	end

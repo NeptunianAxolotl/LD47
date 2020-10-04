@@ -19,6 +19,7 @@ local function NewSpell(player, modifiers)
 	self.pos, self.velocity = player.GetPhysics()
     self.modifiers = modifiers or {}
     self.projectiles = {}
+    self.projectileEffects = {damage = 100, fire = 10}
     
     for i = 1,nProjectiles do
         self.projectiles[i] = {}
@@ -28,7 +29,7 @@ local function NewSpell(player, modifiers)
         self.projectiles[i].alive = true
     end
 	
-	function self.Update(Terrain, dt)
+	function self.Update(Terrain, Enemies, dt)
         -- check for spell termination
         local anyAlive = false
         for k in pairs(self.projectiles) do 
@@ -40,10 +41,17 @@ local function NewSpell(player, modifiers)
             -- move
             self.projectiles[k].pos = util.Add(util.Mult(dt*60, self.projectiles[k].velocity), self.projectiles[k].pos)
             
+            
+            
             -- check collision
-            local collide = Terrain.GetTerrainCollision(self.projectiles[k].pos, 5, false, {fire = 10}, nil, dt)
+            local collide = Terrain.GetTerrainCollision(self.projectiles[k].pos, 5, false, self.projectileEffects, nil, dt)
             if collide then
                 self.projectiles[k].alive = false
+            else
+                collide = Enemies.DetectCollision(self.projectiles[k].pos, 5, false, self.projectileEffects, nil, dt)
+                if collide then
+                    self.projectiles[k].alive = false
+                end
             end
         end
 	end
