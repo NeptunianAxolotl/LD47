@@ -1,5 +1,7 @@
 
+local util = require("include/util")
 local IterableMap = require("include/IterableMap")
+
 local Terrain = require("terrainHandler")
 local Resources = require("resourceHandler")
 local Enemies = require("enemyHandler")
@@ -10,17 +12,26 @@ local self = {
 	charge = 0,
 	spellPositions = {},
 	currentSpell = 7, -- Croc starts vertical because it is funny.
+	spellAnim = 0,
 }
 
-local CHARGE_MULT = 0.1
+local CHARGE_MULT = 0.08
 local SPELL_COUNT = 8
+local SPELL_RADIUS = 70
 local CROC_CENTRE = 95
 
 local spellList = {
 	"fireball",
-    "shotgun",
-    "serpent",
-    "wisp"
+	"shotgun",
+	"serpent",
+	"wisp",
+}
+
+local spellIcon = {
+	fireball = "fireball_icon",
+	shotgun  = "shotgun_icon",
+	serpent  = "snake_icon",
+	wisp     = "wisp_icon",
 }
 
 local function SpellChargeToAngle()
@@ -43,6 +54,7 @@ end
 
 function self.Update(dt)
 	IterableMap.ApplySelf(self.activeSpells, "Update", Terrain, Enemies, dt)
+	self.spellAnim = Resources.UpdateAnimation("spell_anim", self.spellAnim, dt)
 end
 
 function self.Draw(drawQueue)
@@ -51,17 +63,30 @@ end
 
 function self.DrawInterface()
 	Resources.DrawImage("spell_interface", 0, 0)
+	for i = 1, SPELL_COUNT do
+		local spellData = self.spellPositions[i]
+		if i == self.currentSpell then
+			Resources.DrawAnimation("spell_anim", spellData.pos[1], spellData.pos[2], self.spellAnim, nil, 0.2 + 0.7*self.charge)
+		elseif i%8 + 1 == self.currentSpell and self.charge < 0.1 then
+			Resources.DrawAnimation("spell_anim", spellData.pos[1], spellData.pos[2], self.spellAnim, nil, 0.3 - 3*self.charge)
+		end
+		Resources.DrawImage(spellIcon[spellData.spellName], spellData.pos[1], spellData.pos[2])
+	end
+	
 	Resources.DrawImage("spell_croc", CROC_CENTRE, CROC_CENTRE, SpellChargeToAngle())
 end
 
 function self.Initialize()
 	local spellCentre = {CROC_CENTRE, CROC_CENTRE}
 	for i = 1, SPELL_COUNT do
-		self.spellPositions[i] = {
+		local spellData = {
 			startChargeAngle = i*math.pi/4,
 			chargeProgressRange = 9*math.pi/4,
 			spellName = spellList[i%4 + 1],
 		}
+		spellData.pos = util.Add(spellCentre, util.PolarToCart(SPELL_RADIUS, (i - 1)*math.pi/4))
+		
+		self.spellPositions[i] = spellData
 	end
 
 	for i = 1, #spellList do

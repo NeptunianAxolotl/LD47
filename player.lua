@@ -116,7 +116,7 @@ function self.Update(Terrain, cameraTransform, dt)
 	
 	UpdateSpellcasting(dt)
 	
-	self.animProgress = Resources.UpdateAnim("croc", self.animProgress, dt*self.speed/10)
+	self.animProgress = Resources.UpdateAnimation("croc", self.animProgress, dt*self.speed/10)
 end
 
 function self.GetPhysics()

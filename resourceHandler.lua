@@ -60,7 +60,7 @@ local function LoadAnimation(resData)
 	local imageWidth = data.image:getWidth()
 	local imageHeight = data.image:getHeight()
 	
-	data.xOffset = (resData.xOffset or 0.5)*imageWidth
+	data.xOffset = (resData.xOffset or 0.5)*width
 	data.yOffset = (resData.yOffset or 0.5)*imageHeight
 	
 	data.quadWidth = width
@@ -177,7 +177,7 @@ function self.DrawIsoImage(name, x, y, direction)
 	love.graphics.draw(data.image[drawDir], x, y, rotation, data.xScale, data.yScale, data.xOffset, data.yOffset, 0, 0)
 end
 
-function self.UpdateAnim(name, progress, dt)
+function self.UpdateAnimation(name, progress, dt)
 	if not self.animations[name] then
 		print("Invalid UpdateAnimation ", name)
 		return
@@ -185,27 +185,27 @@ function self.UpdateAnim(name, progress, dt)
 	return (progress + dt)%self.animations[name].duration
 end
 
-function self.DrawAnimInternal(data, x, y, progress, rotation)
-	love.graphics.setColor(1, 1, 1, 1)
+function self.DrawAnimInternal(data, x, y, progress, rotation, alpha)
+	love.graphics.setColor(1, 1, 1, alpha or 1)
 	
 	local quadToDraw = math.floor((progress%data.duration) / data.duration * data.frames) + 1
 	
 	love.graphics.draw(data.image, data.quads[quadToDraw], x, y, rotation, data.xScale, data.yScale, data.xOffset, data.yOffset, 0, 0)
 	
 	if self.debugMode then
-		love.graphics.rectangle("line", x, y, data.quadWidth*data.xScale, data.quadHeight*data.yScale, 0, 0)
+		love.graphics.rectangle("line", x - data.xOffset*data.xScale, y - data.yOffset*data.yScale, data.quadWidth*data.xScale, data.quadHeight*data.yScale, 0, 0)
 	end
 end
 
-function self.DrawAnim(name, x, y, progress, rotation)
+function self.DrawAnimation(name, x, y, progress, rotation, alpha)
 	if not self.animations[name] then
 		print("Invalid DrawAnimation ", name)
 		return
 	end
-	self.DrawAnimInternal(self.animations[name], x, y, progress, rotation)
+	self.DrawAnimInternal(self.animations[name], x, y, progress, rotation, alpha)
 end
 
-function self.DrawIsoAnimation(name, x, y, progress, direction)
+function self.DrawIsoAnimation(name, x, y, progress, direction, alpha)
 	if not self.animations[name] then
 		print("Invalid DrawIsoAnimation ", name)
 		return
@@ -221,7 +221,7 @@ function self.DrawIsoAnimation(name, x, y, progress, direction)
 		rotation = -util.AngleToCardinal(direction, drawDir, data.firstDir, data.directionCount)
 	end
 	
-	self.DrawAnimInternal(data.dirAnim[drawDir], x, y, progress, rotation)
+	self.DrawAnimInternal(data.dirAnim[drawDir], x, y, progress, rotation, alpha)
 end
 
 

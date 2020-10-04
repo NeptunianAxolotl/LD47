@@ -16,4 +16,9 @@ return {
 	"rocket_bear",
 	"background_1",
 	"background_2",
+	"fireball_icon",
+	"snake_icon",
+	"wisp_icon",
+	"shotgun_icon",
+	"spell_anim",
 }
