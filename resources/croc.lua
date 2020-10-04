@@ -5,7 +5,7 @@ return {
 	firstDir = 0,
 	width = 400,
 	duration = 0.4,
-	rotate = false,
+	rotate = true,
 	files = {
 		"resources/images/croc_e.png",
 		"resources/images/croc_se.png",
