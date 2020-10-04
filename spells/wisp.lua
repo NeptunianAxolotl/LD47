@@ -15,22 +15,29 @@ end
 
 local function NewSpell(player, modifiers)
 
-    local nProjectiles = 2
-
-	local self = {}
+    modifiers = modifiers or {}
     
-    self.modifiers = modifiers or {}
+    -- properties derived from modifiers
+    local nProjectiles = 2
+    local myDamage = 100
+    local myRadius = 80
+    local myPhaseLength = 2
+    local myDuration = 10
+
+    -- setting up the spell
+	local self = {}
+    self.pos, self.facing = player.GetPhysics()
+    self.modifiers = modifiers
     self.projectiles = {}
-    self.radius = 80
-    self.phaseLength = 2
+    self.maxlifetime = 10
+    self.lifetime = 0
+    self.radius = myRadius
+    self.phaseLength = myPhaseLength
     self.maxVelocity = 2 * math.pi * self.radius / (self.phaseLength * 60) + 1
     self.playerRef = player
-    self.maxlifetime = 10
-    
-    self.pos, self.facing = player.GetPhysics()
     self.currentPhase = 0
-    self.lifetime = 0
-
+    
+    -- setting up the projectiles
     for i = 1,nProjectiles do
         self.projectiles[i] = {}
         self.projectiles[i].pos = self.pos

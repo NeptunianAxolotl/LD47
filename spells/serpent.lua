@@ -15,30 +15,32 @@ local function NewSpell(player, modifiers)
 
     modifiers = modifiers or {}
 
+    -- properties derived from modifiers
     local nProjectiles = 2 + (modifiers.shotgun and modifers.shotgun * 2 or 0)
+    local myDamage = 100 * (modifiers.shotgun and modifiers.shotgun * 0.75 or 1)
+    local myAmplitude = 80
+    local myPhaseLength = 2
+    local baseSpeed = 5
 
+    -- setting up the spell
 	local self = {}
-    
+    self.pos, self.velocity = player.GetPhysics()
     self.modifiers = modifiers
     self.projectiles = {}
-    self.amplitude = 80
-    self.phaseLength = 2
     self.maxlifetime = 10
     self.lifetime = 0
-    
-    self.pos, self.velocity = player.GetPhysics()
+    self.amplitude = myAmplitude
+    self.phaseLength = myPhaseLength
     self.currentPhase = 0
-    
-    local launchVelocity = util.SetLength(5, self.velocity)
-    
-	self.velocity = util.Add(self.velocity, launchVelocity);
-    
+	self.velocity = util.Add(self.velocity, util.SetLength(baseSpeed, self.velocity));
+
+    -- setting up the projectiles
     for i = 1,nProjectiles do
         self.projectiles[i] = {}
         self.projectiles[i].pos = self.pos
         self.projectiles[i].velocity = self.velocity
         self.projectiles[i].alive = true
-        self.projectiles[i].effect = {id = spellutil.newProjID(), damage = 100}
+        self.projectiles[i].effect = {id = spellutil.newProjID(), damage = myDamage}
     end
 	
 	function self.Update(Terrain, Enemies, dt)

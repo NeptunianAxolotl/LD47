@@ -5,21 +5,26 @@ local spellutil = require("spells/spellutil")
 
 local function NewSpell(player, modifiers)
 
-    local sprayAngle = 0.1
-    local nProjectiles = 5
+    modifiers = modifiers or {}
 
+    -- properties derived from modifiers
+    local nProjectiles = 5
+    local sprayAngle = 0.1
+    local myDamage = 60
+    local baseSpeed = 15
+
+    -- setting up the spell
 	local self = {}
-    
-    self.modifiers = modifiers or {}
+    self.modifiers = modifiers
     self.projectiles = {}
-    self.projectileEffects = {damage = 60}
     self.maxlifetime = 10
     self.lifetime = 0
     
+    -- setting up the projectiles
     for i = 1,nProjectiles do
         self.projectiles[i] = {}
         self.projectiles[i].pos, self.projectiles[i].velocity = player.GetPhysics()
-        local launchVelocity = util.SetLength(15, self.projectiles[i].velocity)
+        local launchVelocity = util.SetLength(baseSpeed, self.projectiles[i].velocity)
         launchVelocity = util.RotateVector(launchVelocity, math.random() * sprayAngle * 2 - sprayAngle)
         self.projectiles[i].velocity = util.Add(self.projectiles[i].velocity, launchVelocity);
         self.projectiles[i].alive = true

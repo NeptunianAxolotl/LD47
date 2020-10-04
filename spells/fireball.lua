@@ -12,27 +12,33 @@ end
 
 local function NewSpell(player, modifiers)
 
+    modifiers = modifiers or {}
+
+    -- uniform properties
+    local exploDuration = 0.3 -- graphics only
+
+    -- properties derived from modifiers
     local nProjectiles = 1
     local myDamage = 100
     local myFire = 100
     local exploDamage = 80
     local exploRadius = 150
-    local exploDuration = 0.3 -- graphics only
-
+    local baseSpeed = 15
+    
+    -- setting up the spell
 	local self = {}
-	
 	self.pos, self.velocity = player.GetPhysics()
-    self.modifiers = modifiers or {}
+    self.modifiers = modifiers
     self.projectiles = {}
     self.maxlifetime = 10
     self.lifetime = 0
-    
     self.explosionEffects = {}
     
+    -- setting up the projectiles
     for i = 1,nProjectiles do
         self.projectiles[i] = {}
         self.projectiles[i].pos, self.projectiles[i].velocity = self.pos, self.velocity
-        local launchVelocity = util.SetLength(15*speedMultiplier(i), self.projectiles[i].velocity)
+        local launchVelocity = util.SetLength(baseSpeed*speedMultiplier(i), self.projectiles[i].velocity)
         self.projectiles[i].velocity = util.Add(self.projectiles[i].velocity, launchVelocity);
         self.projectiles[i].alive = true
         self.projectiles[i].effect = {id = spellutil.newProjID(), damage = myDamage, fire = myFire}
