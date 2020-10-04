@@ -125,9 +125,6 @@ local function generateChunk(a, b)
 	end
 	
 	local chunk = {
-		colour = rng:random(),
-		left = left,
-		top = top,
 		obstacles = obstacles,
 	}
 	hCache[b] = chunk
@@ -166,10 +163,6 @@ function self.GetTerrainCollision(pos, radius, isCreature, projectile, player, d
 	return detectCollision(generateChunk(getChunkIDFromPosition(pos[1], pos[2])).obstacles, pos, radius, isCreature, projectile, player, dt)
 end
 
-function self.GetTerrainBiome(x, y)
-	--Grass/Rivers/Roads/Lavaflows/Snow/Ice etc could all have different physics properties for the player/spells/enemies.
-end
-
 local function getChunksForIDs(chunkIDs)
 	local chunks = {}
 	for i,v in ipairs(chunkIDs) do
@@ -178,29 +171,25 @@ local function getChunksForIDs(chunkIDs)
 	return chunks
 end
 
-local function drawChunk(chunk)
-	love.graphics.setColor(chunk.colour, chunk.colour, chunk.colour)
-	love.graphics.setColor(63/255, 45/255, 10/255)
-	--love.graphics.rectangle('fill', chunk.left, chunk.top, CHUNK_WIDTH, CHUNK_HEIGHT)
-	love.graphics.setColor(1, 0, 1)
+local function drawChunk(chunk, drawQueue)
 	for i = 1, #chunk.obstacles do
-		chunk.obstacles[i].Draw()
+		chunk.obstacles[i].Draw(drawQueue)
 	end
 end
 
-local function drawChunks(visibleChunks)
+local function drawChunks(visibleChunks, drawQueue)
 	--print(#visibleChunks)
 	for i, v in ipairs(visibleChunks) do
-		drawChunk(v)
+		drawChunk(v, drawQueue)
 	end
 end
 
-function self.Draw()
+function self.Draw(drawQueue)
 	local left, top = love.graphics.inverseTransformPoint(0,0)
 	local right, bottom = love.graphics.inverseTransformPoint(love.graphics.getDimensions())
 	local visibleChunkIDs = getChunksIDsForRegion(top, left, bottom, right)
 	local visibleChunks = getChunksForIDs(visibleChunkIDs)
-	drawChunks(visibleChunks)
+	drawChunks(visibleChunks, drawQueue)
 end
 
 return self

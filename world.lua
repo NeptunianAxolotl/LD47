@@ -6,6 +6,8 @@ local DrawOverlappingBackground = require("utilities/backgroundUtilities")
 local SpellHandler = require("spellHandler")
 local EnemyHandler = require("enemyHandler")
 
+local PriorityQueue = require("include/PriorityQueue")
+
 local IDENTITY_TRANSFORM = love.math.newTransform()
 
 local self = {}
@@ -26,10 +28,17 @@ end
 function self.Draw()
 	love.graphics.replaceTransform(self.cameraTransform)
 	DrawOverlappingBackground()
-	Terrain.Draw()
-	Player.Draw()
-	SpellHandler.Draw()
-	EnemyHandler.Draw()
+	local drawQueue = PriorityQueue.new(function(l, r) return l.y < r.y end)
+	Terrain.Draw(drawQueue)
+	Player.Draw(drawQueue)
+	SpellHandler.Draw(drawQueue)
+	EnemyHandler.Draw(drawQueue)
+	
+	while true do
+		local d = drawQueue:pop()
+		if not d then break end
+		d.f()
+	end
 	
 	love.graphics.replaceTransform(IDENTITY_TRANSFORM)
 	SpellHandler.DrawInterface()

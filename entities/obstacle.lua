@@ -39,10 +39,11 @@ local function NewObstacle(self, def, rng)
 		end
 	end
 	
-	function self.Draw()
-		Resources.DrawImage(def.imageName, self.pos[1], self.pos[2])
+	function self.Draw(drawQueue)
+		
+		drawQueue:push({y=self.pos[2]; f=function() Resources.DrawImage(def.imageName, self.pos[1], self.pos[2]) end})
 		if DRAW_DEBUG then
-			love.graphics.circle('line',self.pos[1], self.pos[2], def.radius)
+			drawQueue:push({y=2^20; f=function() love.graphics.circle('line',self.pos[1], self.pos[2], def.radius) end})
 		end
 	end
 	

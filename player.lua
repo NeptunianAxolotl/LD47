@@ -123,8 +123,8 @@ function self.GetPhysics()
 	return self.pos, self.velocity, self.speed
 end
 
-function self.Draw()
-	Resources.DrawIsoAnimation("croc", self.pos[1], self.pos[2], self.animProgress, self.facingDir)
+function self.Draw(drawQueue)
+	drawQueue:push({y=self.pos[2]; f=function() Resources.DrawIsoAnimation("croc", self.pos[1], self.pos[2], self.animProgress, self.facingDir) end})
 end
 
 function self.Initialize()

@@ -56,12 +56,15 @@ local function NewSpell(player, modifiers)
         end
 	end
 	
-	function self.Draw()
+	function self.Draw(drawQueue)
 		for k in pairs(self.projectiles) do
-            if self.projectiles[k].alive then
-                Resources.DrawIsoImage("fireball", self.projectiles[k].pos[1], self.projectiles[k].pos[2], util.Angle(self.projectiles[k].velocity))
-            end
-        end
+			if self.projectiles[k].alive then
+				drawQueue:push({
+					y=self.projectiles[k].pos[2],
+					f=function() Resources.DrawIsoImage("fireball", self.projectiles[k].pos[1], self.projectiles[k].pos[2], util.Angle(self.projectiles[k].velocity)) end,
+				})
+			end
+		end
 	end
 	
 	return self
