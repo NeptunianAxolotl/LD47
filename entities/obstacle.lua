@@ -4,9 +4,9 @@ local Resources = require("resourceHandler")
 
 local DRAW_DEBUG = true
 
-local function NewObstacle(self, def)
+local function NewObstacle(self, rng, def)
 	-- pos
-	self.health = def.health + math.random()*def.healthRange
+	self.health = def.health + rng:random()*def.healthRange
 	
 	function self.GetPhysics()
 		return self.pos, def.radius

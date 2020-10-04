@@ -283,21 +283,21 @@ function util.WeightsToDistribution(weights)
 	return normWeights
 end
 
-function util.GenerateBoundedRandomWeight(bounds)
+function util.GenerateBoundedRandomWeight(rng, bounds)
 	local weights = {}
 	for i = 1, #bounds do
-		weights[i] = bounds[i][1] + math.random()*(bounds[i][2] - bounds[i][1])
+		weights[i] = bounds[i][1] + rng:random()*(bounds[i][2] - bounds[i][1])
 	end
 	return weights
 end
 
-function util.GenerateDistributionFromBoundedRandomWeights(bounds)
-	local weights = util.GenerateBoundedRandomWeight(bounds)
+function util.GenerateDistributionFromBoundedRandomWeights(rng, bounds)
+	local weights = util.GenerateBoundedRandomWeight(rng, bounds)
 	return util.WeightsToDistribution(weights)
 end
 
-function util.SampleDistribution(distribution)
-	local value = math.random()
+function util.SampleDistribution(rng, distribution)
+	local value = rng:random()
 	for i = 1, #distribution do
 		if value < distribution[i] then
 			return i
