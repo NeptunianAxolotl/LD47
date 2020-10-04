@@ -30,7 +30,7 @@ local function UpdatePhysics(mouseX, mouseY, dt)
 		end
 	end
 	
-	local maxTurnRate = dt*60*math.min(0.085, 0.035 + math.sqrt(self.speed)*0.02)
+	local maxTurnRate = dt*60*math.min(0.085, 0.05 + math.sqrt(self.speed)*0.0185)
 	self.velDir = self.velDir + util.SignPreserveMax(dirDiff, mouseControl*maxTurnRate)
 	
 	local downhillFactor = util.Dot(self.velocity, DOWNHILL_DIR)
