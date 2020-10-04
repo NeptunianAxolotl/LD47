@@ -6,7 +6,7 @@ local self = {
 }
 
 --------------------------------------------------
--- Loading Functions
+-- Images
 --------------------------------------------------
 
 local function LoadImage(resData)
@@ -17,6 +17,8 @@ local function LoadImage(resData)
 		image = image,
 		xScale = resData.xScale or 1,
 		yScale = resData.yScale or 1,
+		imageWidth = imageWidth,
+		imageHeight = imageHeight,
 	}
 	data.xOffset = (resData.xOffset or 0.5)*imageWidth
 	data.yOffset = (resData.yOffset or 0.5)*imageHeight
@@ -39,7 +41,7 @@ local function LoadIsoImage(resData)
 		xScale = resData.xScale or 1,
 		yScale = resData.yScale or 1,
 		firstDir = resData.firstDir or 0,
-		imageCount = #resData.files,
+		directionCount = #resData.files,
 		rotate = resData.rotate,
 	}
 	data.xOffset = (resData.xOffset or 0.5)*imageWidth
@@ -53,7 +55,6 @@ local function LoadAnimation(resData)
 	
 	data.quads = {}
 	data.duration = resData.duration
-	
 	
 	local width = resData.width
 	local imageWidth = data.image:getWidth()
@@ -75,6 +76,35 @@ local function LoadAnimation(resData)
 	return data
 end
 
+local function LoadIsoAnimation(resData)
+	local dirAnim = {}
+	for i = 1, #resData.files do
+		dirAnim[i] = LoadAnimation({
+			file = resData.files[i],
+			width = resData.width,
+			duration = resData.duration,
+			xScale = resData.xScale,
+			yScale = resData.yScale,
+			xOffset = resData.xOffset,
+			yOffset = resData.yOffset,
+		})
+	end
+	
+	local data = {
+		dirAnim = dirAnim,
+		duration = resData.duration,
+		firstDir = resData.firstDir or 0,
+		directionCount = #resData.files,
+		rotate = resData.rotate,
+	}
+	
+	return data
+end
+
+--------------------------------------------------
+-- Sound
+--------------------------------------------------
+
 local function LoadSound(resData)
 
 end
@@ -91,6 +121,8 @@ local function LoadResource(name)
 		self.images[name] = LoadIsoImage(res)
 	elseif res.form == "animation" then
 		self.animations[name] = LoadAnimation(res)
+	elseif res.form == "iso_animation" then
+		self.animations[name] = LoadIsoAnimation(res)
 	elseif res.form == "sound" then
 		self.sounds[name] = LoadSound(res)
 	else
@@ -112,14 +144,6 @@ end
 --------------------------------------------------
 -- Drawing Functions
 --------------------------------------------------
-
-function self.UpdateAnim(name, progress, dt)
-	if not self.animations[name] then
-		print("Invalid UpdateAnimation ", name)
-		return
-	end
-	return (progress + dt)%self.animations[name].duration
-end
 
 function self.DrawImage(name, x, y, rotation)
 	if not self.images[name] then
@@ -143,32 +167,63 @@ function self.DrawIsoImage(name, x, y, direction)
 	love.graphics.setColor(1, 1, 1, 1)
 	
 	local data = self.images[name]
-	local drawDir = util.DirectionToCardinal(direction, data.firstDir, data.imageCount)
+	local drawDir = util.DirectionToCardinal(direction, data.firstDir, data.directionCount)
 	
 	local rotation = 0
 	if data.rotate then
-		rotation = -util.AngleToCardinal(direction, drawDir, data.firstDir, data.imageCount)
+		rotation = -util.AngleToCardinal(direction, drawDir, data.firstDir, data.directionCount)
 	end
 	
 	love.graphics.draw(data.image[drawDir], x, y, rotation, data.xScale, data.yScale, data.xOffset, data.yOffset, 0, 0)
 end
 
-function self.DrawAnim(name, x, y, progress)
+function self.UpdateAnim(name, progress, dt)
 	if not self.animations[name] then
-		print("Invalid DrawAnimation ", name)
+		print("Invalid UpdateAnimation ", name)
 		return
 	end
-	
+	return (progress + dt)%self.animations[name].duration
+end
+
+function self.DrawAnimInternal(data, x, y, progress, rotation)
 	love.graphics.setColor(1, 1, 1, 1)
 	
-	local data = self.dataations[name]
 	local quadToDraw = math.floor((progress%data.duration) / data.duration * data.frames) + 1
-	love.graphics.draw(data.image, data.quads[quadToDraw], x, y, 0, data.xScale, data.yScale, data.xOffset, data.yOffset, 0, 0)
+	
+	love.graphics.draw(data.image, data.quads[quadToDraw], x, y, rotation, data.xScale, data.yScale, data.xOffset, data.yOffset, 0, 0)
 	
 	if self.debugMode then
 		love.graphics.rectangle("line", x, y, data.quadWidth*data.xScale, data.quadHeight*data.yScale, 0, 0)
 	end
 end
+
+function self.DrawAnim(name, x, y, progress, rotation)
+	if not self.animations[name] then
+		print("Invalid DrawAnimation ", name)
+		return
+	end
+	self.DrawAnimInternal(self.animations[name], x, y, progress, rotation)
+end
+
+function self.DrawIsoAnimation(name, x, y, progress, direction)
+	if not self.animations[name] then
+		print("Invalid DrawIsoAnimation ", name)
+		return
+	end
+	
+	love.graphics.setColor(1, 1, 1, 1)
+	
+	local data = self.animations[name]
+	local drawDir = util.DirectionToCardinal(direction, data.firstDir, data.directionCount)
+	
+	local rotation = 0
+	if data.rotate then
+		rotation = -util.AngleToCardinal(direction, drawDir, data.firstDir, data.directionCount)
+	end
+	
+	self.DrawAnimInternal(data.dirAnim[drawDir], x, y, progress, rotation)
+end
+
 
 --------------------------------------------------
 -- Drawing Functions

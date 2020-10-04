@@ -9,6 +9,7 @@ local DOWNHILL_DIR = {0, 1}
 local self = {
 	radius = 8,
 	stunTime = false,
+	animProgress = 0,
 }
 
 local function UpdatePhysics(mouseX, mouseY, dt)
@@ -116,6 +117,8 @@ function self.Update(Terrain, cameraTransform, dt)
 	UpdateFacing(dt)
 	
 	UpdateSpellcasting(dt)
+	
+	self.animProgress = Resources.UpdateAnim("croc", self.animProgress, dt*self.speed/10)
 end
 
 function self.GetPhysics()
@@ -123,7 +126,7 @@ function self.GetPhysics()
 end
 
 function self.Draw()
-	Resources.DrawIsoImage("test_iso_image", self.pos[1], self.pos[2], self.facingDir)
+	Resources.DrawIsoAnimation("croc", self.pos[1], self.pos[2], self.animProgress, self.facingDir)
 end
 
 function self.Initialize()
