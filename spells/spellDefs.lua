@@ -26,6 +26,7 @@ local probability = {
 	serpent  = 1,
 	wisp     = 1,
     haste    = 1,
+    seeker    = 1,
 }
 
 return {
