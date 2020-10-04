@@ -1,5 +1,7 @@
 local util = {}
 
+local utilRng = love.math.newRandomGenerator()
+
 local sqrt = math.sqrt
 local pi = math.pi
 local cos = math.cos
@@ -283,7 +285,8 @@ function util.WeightsToDistribution(weights)
 	return normWeights
 end
 
-function util.GenerateBoundedRandomWeight(rng, bounds)
+function util.GenerateBoundedRandomWeight(bounds, rngIn)
+	local rng = rngIn or utilRng
 	local weights = {}
 	for i = 1, #bounds do
 		weights[i] = bounds[i][1] + rng:random()*(bounds[i][2] - bounds[i][1])
@@ -291,12 +294,13 @@ function util.GenerateBoundedRandomWeight(rng, bounds)
 	return weights
 end
 
-function util.GenerateDistributionFromBoundedRandomWeights(rng, bounds)
-	local weights = util.GenerateBoundedRandomWeight(rng, bounds)
+function util.GenerateDistributionFromBoundedRandomWeights(bounds, rngIn)
+	local weights = util.GenerateBoundedRandomWeight(bounds, rngIn)
 	return util.WeightsToDistribution(weights)
 end
 
-function util.SampleDistribution(rng, distribution)
+function util.SampleDistribution(distribution, rngIn)
+	local rng = rngIn or utilRng
 	local value = rng:random()
 	for i = 1, #distribution do
 		if value < distribution[i] then

@@ -4,7 +4,7 @@ local Resources = require("resourceHandler")
 
 local DRAW_DEBUG = true
 
-local function NewObstacle(self, rng, def)
+local function NewObstacle(self, def, rng)
 	-- pos
 	self.health = def.health + rng:random()*def.healthRange
 	
