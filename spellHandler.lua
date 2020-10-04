@@ -17,7 +17,7 @@ local self = {
 	spellAnim = 0,
 }
 
-local CHARGE_MULT = 0.08
+local CHARGE_MULT = 0.11
 local SPELL_COUNT = 8
 local SPELL_RADIUS = 70
 local CROC_CENTRE = 95

@@ -68,8 +68,8 @@ function self.Update(player, dt)
 	IterableMap.ApplySelf(self.activeEnemies, "Update", Terrain, self, player, dt)
 end
 
-function self.Draw()
-	IterableMap.ApplySelf(self.activeEnemies, "Draw")
+function self.Draw(drawQueue)
+	IterableMap.ApplySelf(self.activeEnemies, "Draw", drawQueue)
 end
 
 return self

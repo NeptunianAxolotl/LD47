@@ -120,7 +120,7 @@ local function UpdateFacing(dt)
 end
 
 local function UpdateSpellcasting(dt)
-	SpellHandler.AddChargeAndCast(self, world, dt * (self.speed + 2))
+	SpellHandler.AddChargeAndCast(self, world, dt * (self.speed + 3))
 end
 
 function self.ReplaceSpell(spellName)

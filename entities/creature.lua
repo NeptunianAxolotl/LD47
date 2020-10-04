@@ -70,8 +70,10 @@ local function NewCreature(self, def)
 		self.slowTime = math.min(1, (self.slowTime or 0.1) + toAdd)
 	end
 	
-	function self.Draw()
-		Resources.DrawIsoImage(def.imageName, self.pos[1], self.pos[2], self.direction)
+	function self.Draw(drawQueue)
+		drawQueue:push({y=self.pos[2]; f=function()
+			Resources.DrawIsoImage(def.imageName, self.pos[1], self.pos[2], self.direction)
+		end})
 		if DRAW_DEBUG then
 			love.graphics.circle('line',self.pos[1], self.pos[2], def.radius)
 		end
