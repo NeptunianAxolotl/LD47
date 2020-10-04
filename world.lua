@@ -3,6 +3,7 @@ local Player = require("player")
 local Terrain = require("terrainHandler")
 local Camera = require("utilities/cameraUtilities")
 local SpellHandler = require("spellHandler")
+local EnemyHandler = require("enemyHandler")
 
 local self = {}
 
@@ -16,6 +17,7 @@ function self.Update(dt)
 	self.cameraTransform:setTransformation(windowX/2, 150, 0, cameraScale, cameraScale, cameraX, cameraY)
 	
 	SpellHandler.Update(dt)
+	EnemyHandler.Update(Player, dt)
 end
 
 function self.Draw()
@@ -23,6 +25,7 @@ function self.Draw()
 	Terrain.Draw()
 	Player.Draw()
 	SpellHandler.Draw()
+	EnemyHandler.Draw()
 end
 
 function self.Initialize()

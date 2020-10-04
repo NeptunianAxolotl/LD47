@@ -1,9 +1,10 @@
 return {
-	form = "rocket_bear",
+	form = "iso_image",
 	xScale = 0.18,
 	yScale = 0.18,
 	firstDir = 0,
-	rotate = true,
+	yOffset = 0.75,
+	rotate = false,
 	files = {
 		"resources/images/rocketbear_e.png",
 		"resources/images/rocketbear_se.png",
