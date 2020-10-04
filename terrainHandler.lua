@@ -100,13 +100,16 @@ local function generateChunk(a, b)
 	--Random but repeatable generation using RNG deterministically seeded by a, b, and RNG_SEED 
 
 	--Generate Obstacles
+	local function Random()
+		return rng:random()
+	end
 	
 	local obstacles = {}
 	local numObstacles = rng:random(OBSTACLES_PER_CHUNK_MIN, OBSTACLES_PER_CHUNK_MAX)
 	
-	local spawnDistribution = util.GenerateDistributionFromBoundedRandomWeights(ObstacleDefs.spawnWeights, rng)
+	local spawnDistribution = util.GenerateDistributionFromBoundedRandomWeights(ObstacleDefs.spawnWeights, Random)
 	for i = 1, numObstacles do
-		local obstacleDef = ObstacleDefs.defs[util.SampleDistribution(spawnDistribution, rng)]
+		local obstacleDef = ObstacleDefs.defs[util.SampleDistribution(spawnDistribution, Random)]
 		local radius = math.max(obstacleDef.placeBlockRadius, obstacleDef.radius)
 		local obstaclePos = {
 			left + radius + rng:random()*(CHUNK_WIDTH  - radius*2),
