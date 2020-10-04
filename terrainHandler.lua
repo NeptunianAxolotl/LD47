@@ -177,7 +177,7 @@ end
 
 local function drawChunk(chunk)
 	love.graphics.setColor(chunk.colour, chunk.colour, chunk.colour)
-	love.graphics.setColor(60/255, 40/255, 1/255)
+	love.graphics.setColor(63/255, 45/255, 10/255)
 	love.graphics.rectangle('fill', chunk.left, chunk.top, CHUNK_WIDTH, CHUNK_HEIGHT)
 	love.graphics.setColor(1, 0, 1)
 	for i = 1, #chunk.obstacles do
