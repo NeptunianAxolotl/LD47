@@ -55,7 +55,7 @@ function api.SwapSpell()
 	
 	if self.heldSpell == "cantrip" then
 		self.heldSpell, self.heldSpellLevel = false, false
-	end
+end
 end
 
 function api.PickupSpell(name, level)

@@ -6,6 +6,7 @@ local spellList = {
 	"serpent",
 	"wisp",
     "haste",
+    "seeker",
 }
 
 local spellIcon = {
@@ -15,6 +16,7 @@ local spellIcon = {
 	serpent  = "snake_icon",
 	wisp     = "wisp_icon",
     haste    = "haste_icon",
+    seeker   = "seeker_icon",
 }
 
 local probability = {

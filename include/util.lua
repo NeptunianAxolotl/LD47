@@ -116,7 +116,7 @@ function util.Normal(v1, v2)
 end
 
 function util.GetAngleBetweenUnitVectors(u, v)
-	return math.acos(Dot(u, v))
+	return math.acos(util.Dot(u, v))
 end
 
 -- Get the average position between two vectors

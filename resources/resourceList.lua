@@ -22,6 +22,7 @@ return {
 	"shotgun_icon",
     "haste_icon",
     "cantrip_icon",
+    "seeker_icon",
 	"spell_anim",
 	"shape_n",
 	"health",
