@@ -23,40 +23,66 @@ local function NewSpell(player, modifiers)
     self.radius = 80
     self.phaseLength = 2
     self.maxVelocity = 2 * math.pi * self.radius / (self.phaseLength * 60) + 1
+    self.playerRef = player
+    self.maxlifetime = 5
     
     self.pos, self.facing = player.GetPhysics()
     self.currentPhase = 0
+    self.lifetime = 0
 
     for i = 1,nProjectiles do
         self.projectiles[i] = {}
         self.projectiles[i].pos = self.pos
         self.projectiles[i].velocity = self.velocity
+        self.projectiles[i].alive = true
     end
 	
 	function self.Update(Terrain, dt)
+        -- check for spell termination
+        self.lifetime = self.lifetime + dt
+        if self.lifetime > self.maxlifetime then return true end
+        
+        local anyAlive = false
+        for k in pairs(self.projectiles) do 
+            if self.projectiles[k].alive then anyAlive = true end
+        end
+        if not anyAlive then return true end
+
+        -- physics update
         local previousCentrePos = self.pos
-		--self.pos = new player pos
+		self.pos = self.playerRef.GetPhysics()
         self.currentPhase = math.fmod(self.currentPhase + dt, self.phaseLength)
         local phaseAngle = self.currentPhase / self.phaseLength * 2 * math.pi
         for k in pairs(self.projectiles) do
-            local currentRelPos = util.Subtract(self.projectiles[k].pos, previousCentrePos)
-            local wantedRelPos = {}
-            local startvec = util.SetLength(self.radius, self.facing)
-            local wantedRelPos  = util.RotateVector(startvec, phaseAngle + phaseModifier(k))
-            local wantedChange = util.Subtract(wantedRelPos, currentRelPos)
-            local maxDistance = self.maxVelocity * dt * 60
-            if util.Dist(wantedChange[1], wantedChange[2], 0, 0) <= maxDistance then
-                currentRelPos = wantedRelPos
-            else
-                currentRelPos = util.Add(util.SetLength(maxDistance,wantedChange),currentRelPos)
+            if self.projectiles[k].alive then
+                -- move
+                local currentRelPos = util.Subtract(self.projectiles[k].pos, previousCentrePos)
+                local wantedRelPos = {}
+                local startvec = util.SetLength(self.radius, self.facing)
+                local wantedRelPos  = util.RotateVector(startvec, phaseAngle + phaseModifier(k))
+                local wantedChange = util.Subtract(wantedRelPos, currentRelPos)
+                local maxDistance = self.maxVelocity * dt * 60
+                if util.Dist(wantedChange[1], wantedChange[2], 0, 0) <= maxDistance then
+                    currentRelPos = wantedRelPos
+                else
+                    currentRelPos = util.Add(util.SetLength(maxDistance,wantedChange),currentRelPos)
+                end
+                self.projectiles[k].pos = util.Add(currentRelPos,self.pos)
+                
+                -- check collision
+                local collide = Terrain.GetTerrainCollision(self.projectiles[k].pos, 5, false, true, nil, dt)
+                if collide then
+                    self.projectiles[k].alive = false
+                end
             end
-            self.projectiles[k].pos = util.Add(currentRelPos,self.pos)
         end
 	end
 	
 	function self.Draw()
 		for k in pairs(self.projectiles) do
-            Resources.DrawImage("rock_1", self.projectiles[k].pos[1], self.projectiles[k].pos[2])
+            if self.projectiles[k].alive then
+                Resources.DrawImage("rock_1", self.projectiles[k].pos[1], self.projectiles[k].pos[2])
+            end
         end
 	end
 	
