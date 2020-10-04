@@ -15,7 +15,6 @@ local self = {
 	radius = 8,
 	stunTime = false,
 	animProgress = 0,
-	level = 3,
 }
 
 local function UpdatePhysics(mouseX, mouseY, dt)
@@ -134,8 +133,16 @@ local function UpdateSpellcasting(dt)
 	SpellHandler.AddChargeAndCast(self, world, dt * (self.speed + 3))
 end
 
-function self.ReplaceSpell(spellName)
-	SpellHandler.ReplaceSpell(spellName)
+function self.PickupSpell(spellName, spellLevel)
+	SpellHandler.PickupSpell(spellName, spellLevel)
+end
+
+function self.SetSpeedMult(speedMult)
+	self.speedMult = speedMult
+end
+
+function self.GetSpeedMult()
+	return self.speedMult or 1
 end
 
 function self.Update(Terrain, EnemyHandler, cameraTransform, dt)
@@ -166,13 +173,7 @@ function self.DrawInterface()
 	
 	Font.SetSize(2)
 	love.graphics.setColor(0, 0, 0)
-	love.graphics.print("Level", 8, 10 + HEALTH_SPACING + 20)
-	
-	Resources.DrawImage("shape_" .. self.level, 94, 100)
-	
-	
-	love.graphics.setColor(0, 0, 0)
-	love.graphics.print("Run " .. (math.floor(self.pos[2]*10*DIST_TO_KM)/10) .. "km", 8, 10 + 2*HEALTH_SPACING + 20)
+	love.graphics.print("Distance " .. (string.format("%.1f", math.floor(self.pos[2]*10*DIST_TO_KM)/10)) .. "km", 8, 10 + HEALTH_SPACING + 20)
 end
 
 function self.Draw(drawQueue)

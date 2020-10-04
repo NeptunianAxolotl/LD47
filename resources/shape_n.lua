@@ -6,8 +6,8 @@ for i = 3, 8 do
 		form = "image",
 		name = "shape_" .. i,
 		file = "resources/images/shape_" .. i .. ".png",
-		xScale = 0.5,
-		yScale = 0.5,
+		xScale = 0.65,
+		yScale = 0.65,
 		yOffset = 0.6
 	}
 end

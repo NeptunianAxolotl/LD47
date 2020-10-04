@@ -15,6 +15,8 @@ local self = {
 	spellPositions = {},
 	currentSpell = 7, -- Croc starts vertical because it is funny.
 	spellAnim = 0,
+	heldSpell = false,
+	heldSpellLevel = false,
 }
 
 local CHARGE_MULT = 0.11
@@ -31,8 +33,18 @@ function self.CastSpell(name, player, world)
 	IterableMap.Add(self.activeSpells, self.spellTypes[name](player, world))
 end
 
-function self.ReplaceSpell(name)
-	self.spellPositions[self.currentSpell].spellName = name
+function self.SwapSpell()
+	if not self.heldSpell then
+		return
+	end
+	local currentSpellData = self.spellPositions[self.currentSpell]
+	currentSpellData.spellName, self.heldSpell = self.heldSpell, currentSpellData.spellName
+	currentSpellData.spellLevel, self.heldSpellLevel = self.heldSpellLevel, currentSpellData.spellLevel
+end
+
+function self.PickupSpell(name, level)
+	self.heldSpell = name
+	self.heldSpellLevel = level
 end
 
 function self.AddChargeAndCast(player, world, chargeAdd)
@@ -57,7 +69,7 @@ function self.DrawInterface()
 	Resources.DrawImage("spell_interface", 1280 - 260, 0)
 	for i = 1, SPELL_COUNT do
 		local spellData = self.spellPositions[i]
-		Resources.DrawImage("shape_" .. spellData.spellLevel, spellData.pos[1], spellData.pos[2], spellData.rotation)
+		Resources.DrawImage("shape_" .. (spellData.spellLevel + 2), spellData.pos[1], spellData.pos[2], spellData.rotation)
 		if i == self.currentSpell then
 			Resources.DrawAnimation("spell_anim", spellData.pos[1], spellData.pos[2], self.spellAnim, nil, 0.2 + 0.7*self.charge)
 		elseif i%8 + 1 == self.currentSpell and self.charge < 0.1 then
@@ -76,7 +88,7 @@ function self.Initialize()
 			startChargeAngle = i*math.pi/4,
 			chargeProgressRange = 9*math.pi/4,
 			spellName = spellDefs.spellList[i%4 + 1],
-			spellLevel = math.random(3, 8),
+			spellLevel = 1,
 			rotation = (i + 5)*math.pi/4,
 		}
 		spellData.pos = util.Add(spellCentre, util.PolarToCart(SPELL_RADIUS, (i - 1)*math.pi/4))

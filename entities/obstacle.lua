@@ -21,7 +21,7 @@ local function NewObstacle(self, def, rng)
 			return
 		end
 		if player and def.spellName then
-			player.ReplaceSpell(def.spellName)
+			player.PickupSpell(def.spellName, self.spellLevel or 1)
 			return false, true
 		end
 		
