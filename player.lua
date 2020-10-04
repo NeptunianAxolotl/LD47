@@ -101,8 +101,8 @@ local function UpdateFacing(dt)
 end
 
 local function UpdateSpellcasting(dt)
-	if math.random() < 0.05 then
-		SpellHandler.CastSpell("serpent", self)
+	if math.random() < 0.02 then
+		SpellHandler.CastSpell("wisp", self)
 	end
 end
 

@@ -11,6 +11,7 @@ local spellList = {
 	"fireball",
     "shotgun",
     "serpent",
+    "wisp"
 }
 
 function self.CastSpell(name, player, world)

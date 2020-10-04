@@ -3,7 +3,7 @@ local util = require("include/util")
 local Resources = require("resourceHandler")
 
 local function sineMultiplier(i)
-    local multiplier = 1
+    local multiplier = math.floor((i+1)/2)
     if math.fmod(i,2) == 0 then
         multiplier = -multiplier
     end
