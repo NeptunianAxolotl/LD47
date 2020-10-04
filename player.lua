@@ -68,7 +68,12 @@ local function DoCollision(other, typeMult, dt)
 	
 	self.stunTime = severityFactor*2
 	
-	self.velocity = util.ReflectVector(self.velocity, toOtherAngle + pi/2 + (math.random()*0.8*severityFactor - 0.4*severityFactor))
+	local newVelocity = util.ReflectVector(self.velocity, toOtherAngle + pi/2 + (math.random()*0.8*severityFactor - 0.4*severityFactor))
+	if typeMult >= 1 then
+		self.velocity = newVelocity
+	else
+		self.velocity = util.Average(self.velocity, newVelocity, typeMult)
+	end
 	self.velocity = util.Add(self.velocity, util.Mult(-1*(severityFactor + 0.1), toOther))
 
 	self.speed = (1 - math.max(0.2, math.min(0.7, severityFactor)))*self.speed + 3*severityFactor
@@ -107,7 +112,7 @@ local function CheckEnemyCollision(EnemyHandler, dt)
 		return
 	end
 	
-	DoCollision(collide, 0.02, dt)
+	DoCollision(collide, 0.45, dt)
 end
 
 local function UpdateFacing(dt)
