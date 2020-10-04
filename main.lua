@@ -27,6 +27,9 @@ function love.keypressed(key, scancode, isRepeat)
 	if key == 'r' then
 		World.Initialize()
 	end
+	if key == 'escape' then
+	
+	end
 end
 
 function love.mousepressed(x, y, button, istouch, presses)
@@ -60,6 +63,8 @@ end
 -- Loading
 --------------------------------------------------
 function love.load(arg)
+	love.window.maximize()
+
 	if arg[#arg] == "-debug" then require("mobdebug").start() end
 	local major, minor, revision, codename = love.getVersion()
 	io.stdout:setvbuf('no')

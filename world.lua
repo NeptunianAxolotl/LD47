@@ -8,8 +8,6 @@ local EnemyHandler = require("enemyHandler")
 
 local PriorityQueue = require("include/PriorityQueue")
 
-local IDENTITY_TRANSFORM = love.math.newTransform()
-
 local self = {}
 
 function self.MousePressed()
@@ -47,13 +45,16 @@ function self.Draw()
 		d.f()
 	end
 	
-	love.graphics.replaceTransform(IDENTITY_TRANSFORM)
+	local windowX, windowY = love.window.getMode()
+	self.interfaceTransform:setTransformation(0, 0, 0, windowX/1920, windowX/1920, 0, 0)
+	love.graphics.replaceTransform(self.interfaceTransform)
 	SpellHandler.DrawInterface()
 	Player.DrawInterface()
 end
 
 function self.Initialize()
 	self.cameraTransform = love.math.newTransform()
+	self.interfaceTransform = love.math.newTransform()
 	Player.Initialize()
 	Terrain.Initialize()
 	SpellHandler.Initialize()

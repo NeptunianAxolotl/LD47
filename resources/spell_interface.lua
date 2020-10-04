@@ -5,8 +5,8 @@ return {
 		file = "resources/images/spell_interface.png",
 		xOffset = 0,
 		yOffset = 0,
-		xScale = 0.65,
-		yScale = 0.65,
+		xScale = 0.85,
+		yScale = 0.85,
 	},
 	{
 		form = "image",
@@ -14,7 +14,7 @@ return {
 		file = "resources/images/programmer_art.png",
 		xOffset = 0,
 		yOffset = 0,
-		xScale = 0.65,
-		yScale = 0.65,
+		xScale = 0.85,
+		yScale = 0.85,
 	},
 }

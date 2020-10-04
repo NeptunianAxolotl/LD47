@@ -15,9 +15,9 @@ local api = {}
 
 local CHARGE_MULT = 0.11
 local SPELL_COUNT = 8
-local SPELL_RADIUS = 74
-local CROC_CENTRE = 95
-local SPELL_HELD_POS = {1010, 52}
+local SPELL_RADIUS = 94
+local CROC_CENTRE = 125
+local SPELL_HELD_POS = {1530, 70}
 local HELD_ROTATE = 0.8
 
 local SELECTED_COLOR = {0.8, 0.8, 0.97, 1}
@@ -108,7 +108,7 @@ local function DrawSpellLevel(pos, level, rotation, scale, selected)
 end
 
 function api.DrawInterface()
-	Resources.DrawImage("spell_interface", 1280 - 260, 0)
+	Resources.DrawImage("spell_interface", 1920 - 340, 0)
 	for i = 1, SPELL_COUNT do
 		local spellData = self.spellPositions[i]
 		DrawSpellLevel(spellData.pos, spellData.spellLevel, spellData.rotation, 1, i == self.currentSpell)
@@ -126,12 +126,12 @@ function api.DrawInterface()
 	end
 	
 	if self.heldTutorialCounter == 1 and not self.isDead then
-		Font.SetSize(1)
+		Font.SetSize(0)
 		love.graphics.setColor(1, 0.1, 0)
-		love.graphics.print("You grabbed a spell! Click to Swap or Combine it.", 350, 25)
+		love.graphics.print("You grabbed a spell! Click to Swap or Combine it.", 550, 25)
 	end
 	
-	Resources.DrawImage("spell_croc", 1280 - CROC_CENTRE, CROC_CENTRE, SpellChargeToAngle())
+	Resources.DrawImage("spell_croc", 1920 - CROC_CENTRE, CROC_CENTRE, SpellChargeToAngle())
 end
 
 function api.Initialize()
@@ -147,7 +147,7 @@ function api.Initialize()
 		heldSpellRotate = 0,
 		heldTutorialCounter = 0,
 	}
-	local spellCentre = {1280 - CROC_CENTRE, CROC_CENTRE}
+	local spellCentre = {1920 - CROC_CENTRE, CROC_CENTRE}
 	for i = 1, SPELL_COUNT do
 		local spellData = {
 			startChargeAngle = i*math.pi/4,

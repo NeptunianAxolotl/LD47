@@ -8,7 +8,7 @@ local pi = math.pi
 
 local DOWNHILL_DIR = {0, 1}
 
-local HEALTH_SPACING = 58
+local HEALTH_SPACING = 65
 local DIST_TO_KM = 1/15000
 
 local self = {}
@@ -219,9 +219,9 @@ function api.DrawInterface()
 	love.graphics.print("Speed " .. (string.format("%.0f", math.floor(self.speed*60*1000*DIST_TO_KM))) .. "m/s", 8, 10 + HEALTH_SPACING + 14 + 26)
 	
 	if self.isDead then
-		Font.SetSize(1)
+		Font.SetSize(0)
 		love.graphics.setColor(1, 0.1, 0)
-		love.graphics.print("Whoops! Press 'r' to restart.", 460, 25)
+		love.graphics.print("Whoops! Press 'r' to restart.", 710, 25)
 	end
 end
 
