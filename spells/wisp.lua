@@ -1,6 +1,7 @@
 
 local util = require("include/util")
 local Resources = require("resourceHandler")
+local spellutil = require("spells/spellutil")
 
 local lookup = {0, math.pi, math.pi / 2, 3 / 2 * math.pi}
 
@@ -24,8 +25,7 @@ local function NewSpell(player, modifiers)
     self.phaseLength = 2
     self.maxVelocity = 2 * math.pi * self.radius / (self.phaseLength * 60) + 1
     self.playerRef = player
-    self.maxlifetime = 5
-    self.projectileEffects = {damage = 120}
+    self.maxlifetime = 10
     
     self.pos, self.facing = player.GetPhysics()
     self.currentPhase = 0
@@ -36,6 +36,8 @@ local function NewSpell(player, modifiers)
         self.projectiles[i].pos = self.pos
         self.projectiles[i].velocity = self.velocity
         self.projectiles[i].alive = true
+        self.projectiles[i].effect = {id = spellutil.newProjID(), damage = 50}
+        self.projectiles[i].lives = 5
     end
 	
 	function self.Update(Terrain, Enemies, dt)
@@ -71,13 +73,18 @@ local function NewSpell(player, modifiers)
                 self.projectiles[k].pos = util.Add(currentRelPos,self.pos)
                 
                 -- check collision
-                local collide = Terrain.GetTerrainCollision(self.projectiles[k].pos, 5, false, self.projectileEffects, nil, dt)
+                local collide = Terrain.GetTerrainCollision(self.projectiles[k].pos, 5, false, self.projectiles[k].effect, nil, dt)
                 if collide then
-                    self.projectiles[k].alive = false
+                    -- self.projectiles[k].alive = false 
+                    -- Consider whether wisp should be destroyed by obstacles.
                 else
-                    collide = Enemies.DetectCollision(self.projectiles[k].pos, 5, false, self.projectileEffects, nil, dt)
+                    collide = Enemies.DetectCollision(self.projectiles[k].pos, 15, false, self.projectiles[k].effect, nil, dt)
                     if collide then
-                        self.projectiles[k].alive = false
+                        self.projectiles[k].lives = self.projectiles[k].lives - 1
+                        print(self.projectiles[k].lives)
+                        if self.projectiles[k].lives <= 0 then
+                            self.projectiles[k].alive = false
+                        end
                     end
                 end
             end

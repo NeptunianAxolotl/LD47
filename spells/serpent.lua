@@ -1,6 +1,7 @@
 
 local util = require("include/util")
 local Resources = require("resourceHandler")
+local spellutil = require("spells/spellutil")
 
 local function sineMultiplier(i)
     local multiplier = math.floor((i+1)/2)
@@ -22,7 +23,6 @@ local function NewSpell(player, modifiers)
     self.projectiles = {}
     self.amplitude = 80
     self.phaseLength = 2
-    self.projectileEffects = {damage = 100}
     
     self.pos, self.velocity = player.GetPhysics()
     self.currentPhase = 0
@@ -36,6 +36,7 @@ local function NewSpell(player, modifiers)
         self.projectiles[i].pos = self.pos
         self.projectiles[i].velocity = self.velocity
         self.projectiles[i].alive = true
+        self.projectiles[i].effect = {id = spellutil.newProjID(), damage = 100}
     end
 	
 	function self.Update(Terrain, Enemies, dt)
@@ -58,13 +59,14 @@ local function NewSpell(player, modifiers)
             self.projectiles[k].pos = util.Add(util.Mult(math.sin(phaseAngle)*self.amplitude*sineMultiplier(k),perpvector), self.pos)
             
             -- check collision
-            local collide = Terrain.GetTerrainCollision(self.projectiles[k].pos, 5, false, self.projectileEffects, nil, dt)
+            local collide = Terrain.GetTerrainCollision(self.projectiles[k].pos, 5, false, self.projectiles[k].effect, nil, dt)
             if collide then
-                self.projectiles[k].alive = false -- I would like serpent to be piercing but for now dont worry
+                -- self.projectiles[k].alive = false
+                -- Consider whether serpent should pierce projectiles.
             else
-                collide = Enemies.DetectCollision(self.projectiles[k].pos, 5, false, self.projectileEffects, nil, dt)
+                collide = Enemies.DetectCollision(self.projectiles[k].pos, 5, false, self.projectiles[k].effect, nil, dt)
                 if collide then
-                    self.projectiles[k].alive = false
+                    -- Do nothing, serpent pierces enemies
                 end
             end
         end

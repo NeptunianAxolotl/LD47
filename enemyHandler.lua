@@ -36,9 +36,25 @@ function self.DetectCollision(otherPos, otherRadius, otherCreatureIndex, project
 	local maxIndex, keyByIndex, dataByKey = IterableMap.GetBarbarianData(self.activeEnemies)
 	for i = 1, maxIndex do
 		local v = dataByKey[keyByIndex[i]]
+
+        if projectile and projectile ~= true and projectile.id then 
+            -- check to see if this projectile is on the ignore list
+            for a, b in pairs(v.projIgnoreFresh) do
+                if b == projectile.id then 
+                    return false 
+                end
+            end
+            for a, b in pairs(v.projIgnoreStale) do
+                if b == projectile.id then 
+                    return false 
+                end
+            end
+        end
+
 		if v.IsColliding(otherPos, otherRadius, otherCreatureIndex, projectile, player, dt) then
-            if projectile and projectile ~= true and projectile.damage then
-                if v.health then 
+            if projectile and projectile ~= true then
+                if projectile.id then v.projIgnoreFresh[#v.projIgnoreFresh+1] = projectile.id end
+                if projectile.damage and v.health then
                     v.health = v.health - projectile.damage
                 end
             end

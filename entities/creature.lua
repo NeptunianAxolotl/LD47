@@ -4,10 +4,15 @@ local Resources = require("resourceHandler")
 
 local DRAW_DEBUG = true
 
+local PROJ_TIMEOUT = 0.6
+
 local function NewCreature(self, def)
 	-- pos
 	self.health = def.health + math.random()*def.healthRange
 	self.direction = 0
+    self.projIgnoreTime = 0
+    self.projIgnoreFresh = {}
+    self.projIgnoreStale = {}
 	
 	function self.GetPhysics()
 		return self.pos, def.radius
@@ -33,6 +38,13 @@ local function NewCreature(self, def)
 		if def.updateFunc then
 			def.updateFunc(self, def, Terrain, Enemies, player, dt)
 		end
+        
+        self.projIgnoreTime = self.projIgnoreTime + dt
+        if self.projIgnoreTime > (PROJ_TIMEOUT / 2) then
+            self.projIgnoreTime = self.projIgnoreTime - PROJ_TIMEOUT
+            self.projIgnoreStale = self.projIgnoreFresh
+            self.projIgnoreFresh = {}
+        end
 	end
 	
 	function self.AddPosition(posToAdd)

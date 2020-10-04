@@ -1,6 +1,7 @@
 
 local util = require("include/util")
 local Resources = require("resourceHandler")
+local spellutil = require("spells/spellutil")
 
 local function NewSpell(player, modifiers)
 
@@ -20,6 +21,7 @@ local function NewSpell(player, modifiers)
         launchVelocity = util.RotateVector(launchVelocity, math.random() * sprayAngle * 2 - sprayAngle)
         self.projectiles[i].velocity = util.Add(self.projectiles[i].velocity, launchVelocity);
         self.projectiles[i].alive = true
+        self.projectiles[i].effect = {id = spellutil.newProjID(), damage = 60}
     end
 	
 	function self.Update(Terrain, Enemies, dt)
@@ -35,11 +37,11 @@ local function NewSpell(player, modifiers)
             self.projectiles[k].pos = util.Add(util.Mult(dt*60, self.projectiles[k].velocity), self.projectiles[k].pos)
             
             -- check collision
-            local collide = Terrain.GetTerrainCollision(self.projectiles[k].pos, 5, false, self.projectileEffects, nil, dt)
+            local collide = Terrain.GetTerrainCollision(self.projectiles[k].pos, 5, false, self.projectiles[k].effect, nil, dt)
             if collide then
                 self.projectiles[k].alive = false
             else
-                collide = Enemies.DetectCollision(self.projectiles[k].pos, 5, false, self.projectileEffects, nil, dt)
+                collide = Enemies.DetectCollision(self.projectiles[k].pos, 5, false, self.projectiles[k].effect, nil, dt)
                 if collide then
                     self.projectiles[k].alive = false
                 end

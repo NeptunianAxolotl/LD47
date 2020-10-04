@@ -1,6 +1,6 @@
-
 local util = require("include/util")
 local Resources = require("resourceHandler")
+local spellutil = require("spells/spellutil")
 
 local function speedMultiplier(i)
     local multiplier = math.floor(i/2) * 0.2
@@ -19,7 +19,6 @@ local function NewSpell(player, modifiers)
 	self.pos, self.velocity = player.GetPhysics()
     self.modifiers = modifiers or {}
     self.projectiles = {}
-    self.projectileEffects = {damage = 100, fire = 10}
     
     for i = 1,nProjectiles do
         self.projectiles[i] = {}
@@ -27,6 +26,7 @@ local function NewSpell(player, modifiers)
         local launchVelocity = util.SetLength(15*speedMultiplier(i), self.projectiles[i].velocity)
         self.projectiles[i].velocity = util.Add(self.projectiles[i].velocity, launchVelocity);
         self.projectiles[i].alive = true
+        self.projectiles[i].effect = {id = spellutil.newProjID(), damage = 100, fire = 10}
     end
 	
 	function self.Update(Terrain, Enemies, dt)
@@ -41,14 +41,12 @@ local function NewSpell(player, modifiers)
             -- move
             self.projectiles[k].pos = util.Add(util.Mult(dt*60, self.projectiles[k].velocity), self.projectiles[k].pos)
             
-            
-            
             -- check collision
-            local collide = Terrain.GetTerrainCollision(self.projectiles[k].pos, 5, false, self.projectileEffects, nil, dt)
+            local collide = Terrain.GetTerrainCollision(self.projectiles[k].pos, 5, false, self.projectiles[k].effect, nil, dt)
             if collide then
                 self.projectiles[k].alive = false
             else
-                collide = Enemies.DetectCollision(self.projectiles[k].pos, 5, false, self.projectileEffects, nil, dt)
+                collide = Enemies.DetectCollision(self.projectiles[k].pos, 5, false, self.projectiles[k].effect, nil, dt)
                 if collide then
                     self.projectiles[k].alive = false
                 end
