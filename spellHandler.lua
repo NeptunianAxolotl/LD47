@@ -1,5 +1,6 @@
 
 local IterableMap = require("include/IterableMap")
+local Terrain = require("terrainHandler")
 
 local self = {
 	activeSpells = IterableMap.New(),
@@ -17,7 +18,7 @@ function self.CastSpell(name, player, world)
 end
 
 function self.Update(dt)
-	IterableMap.ApplySelf(self.activeSpells, "Update", dt)
+	IterableMap.ApplySelf(self.activeSpells, "Update", Terrain, dt)
 end
 
 function self.Draw()

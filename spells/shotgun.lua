@@ -20,7 +20,7 @@ local function NewSpell(player, modifiers)
         self.projectiles[i].velocity = util.Add(self.projectiles[i].velocity, launchVelocity);
     end
 	
-	function self.Update(dt)
+	function self.Update(Terrain, dt)
         for k in pairs(self.projectiles) do
             self.projectiles[k].pos = util.Add(util.Mult(dt*60, self.projectiles[k].velocity), self.projectiles[k].pos)
         end

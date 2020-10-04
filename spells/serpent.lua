@@ -34,7 +34,7 @@ local function NewSpell(player, modifiers)
         self.projectiles[i].velocity = self.velocity
     end
 	
-	function self.Update(dt)
+	function self.Update(Terrain, dt)
 		self.pos = util.Add(util.Mult(dt*60, self.velocity), self.pos)
         self.currentPhase = math.fmod(self.currentPhase + dt, self.phaseLength)
         local phaseAngle = self.currentPhase / self.phaseLength * 2 * math.pi

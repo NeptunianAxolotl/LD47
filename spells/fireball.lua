@@ -12,7 +12,7 @@ local function NewSpell(player, modifiers)
     
 	self.velocity = util.Add(self.velocity, launchVelocity);
 	
-	function self.Update(dt)
+	function self.Update(Terrain, dt)
 		self.pos = util.Add(util.Mult(dt*60, self.velocity), self.pos)
 	end
 	
