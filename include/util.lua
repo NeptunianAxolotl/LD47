@@ -311,6 +311,25 @@ function util.SampleDistribution(distribution, rngIn)
 	return #distribution
 end
 
+function util.RandomPointInCircle(radius, startAngle, endAngle)
+	startAngle = startAngle or 0
+	endAngle = endAngle or 2*pi
+	
+	local r = math.random()
+	local angle = startAngle + math.random()*(endAngle - startAngle)
+	return util.PolarToCart(r*r, angle)
+end
+
+function util.RandomPointInAnnulus(innerRadius, outerRadius, startAngle, endAngle)
+	startAngle = startAngle or 0
+	endAngle = endAngle or 2*pi
+	
+	local minRadiusProp = math.sqrt(innerRadius/outerRadius)
+	local r = minRadiusProp + math.random()*(1 - minRadiusProp)
+	local angle = startAngle + math.random()*(endAngle - startAngle)
+	return util.PolarToCart(r*r, angle)
+end
+
 --------------------------------------------------
 --------------------------------------------------
 -- Group Utilities

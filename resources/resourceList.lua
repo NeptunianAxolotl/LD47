@@ -10,4 +10,5 @@ return {
 	"rock_2",
 	"bush_1",
 	"grass_1",
+	"rocket_bear",
 }
