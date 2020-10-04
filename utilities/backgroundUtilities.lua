@@ -12,7 +12,7 @@ local backgrounds = {
 	{
 		name = "background_2",
 		size = 4500,
-		alpha = 1,
+		alpha = 0.7,
 		xOffset = math.random()*4500,
 		yOffset = math.random()*4500,
 	},
@@ -22,10 +22,9 @@ local function DrawBackground(def, left, top, right, bottom)
 	local floorLeft = math.floor((left - def.xOffset) / def.size)*def.size + def.xOffset
 	local floorTop  = math.floor((top  - def.yOffset) / def.size)*def.size + def.yOffset
 
-	love.graphics.setColor(1, 1, 1, def.alpha)
 	for x = floorLeft, right, def.size do
 		for y = floorTop, bottom, def.size do
-			Resources.DrawImage(def.name, x, y)
+			Resources.DrawImage(def.name, x, y, false, def.alpha)
 		end
 	end
 end
