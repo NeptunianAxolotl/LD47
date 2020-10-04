@@ -90,11 +90,27 @@ function self.Draw(drawQueue)
 	IterableMap.ApplySelf(self.activeSpells, "Draw", drawQueue)
 end
 
+local function DrawSpellLevel(pos, level, rotation, scale)
+	if level <= 3 then
+		Resources.DrawImage("shape_" .. (level + 2), pos[1], pos[2], rotation, false, scale)
+		return
+	end
+	
+	local nests = {}
+	while level > 3 do
+		Resources.DrawImage("shape_5", pos[1], pos[2], rotation, false, scale)
+		scale = scale*0.72
+		level = level - 3
+	end
+	
+	Resources.DrawImage("shape_" .. (level + 2), pos[1], pos[2], rotation, false, scale)
+end
+
 function self.DrawInterface()
 	Resources.DrawImage("spell_interface", 1280 - 260, 0)
 	for i = 1, SPELL_COUNT do
 		local spellData = self.spellPositions[i]
-		Resources.DrawImage("shape_" .. (spellData.spellLevel + 2), spellData.pos[1], spellData.pos[2], spellData.rotation)
+		DrawSpellLevel(spellData.pos, spellData.spellLevel, spellData.rotation, 1)
 		if i == self.currentSpell then
 			Resources.DrawAnimation("spell_anim", spellData.pos[1], spellData.pos[2], self.spellAnim, nil, 0.2 + 0.7*self.charge)
 		elseif i%8 + 1 == self.currentSpell and self.charge < 0.1 then
@@ -104,7 +120,7 @@ function self.DrawInterface()
 	end
 	
 	if self.heldSpell then
-		Resources.DrawImage("shape_" .. (self.heldSpellLevel + 2), SPELL_HELD_POS[1], SPELL_HELD_POS[2], self.heldSpellRotate, 1.3)
+		DrawSpellLevel(SPELL_HELD_POS, self.heldSpellLevel, self.heldSpellRotate, 1.3)
 		Resources.DrawImage(spellDefs.spellIcon[self.heldSpell], SPELL_HELD_POS[1], SPELL_HELD_POS[2], 0, 1.3)
 	end
 	
