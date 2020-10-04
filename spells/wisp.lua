@@ -17,12 +17,16 @@ local function NewSpell(player, modifiers)
 
     modifiers = modifiers or {}
     
+    -- uniform properties
+    local baseN = 2
+    
     -- properties derived from modifiers
-    local nProjectiles = 2
-    local myDamage = 100
-    local myRadius = 80
-    local myPhaseLength = 2
+    local nProjectiles = 2 + (modifiers.shotgun and modifers.shotgun * 2 or 0)
+    local myDamage = 100 * (nProjectiles+baseN)/(nProjectiles*2)
+    local myRadius = 80 + (modifiers.fireball and modifiers.fireball * 30 or 0)
+    local myPhaseLength = 2 * (modifiers.wisp and 0.6 + 0.4 / modifers.wisp or 1)
     local myDuration = 10
+    local myLives = 5 + (modifiers.serpent and modifiers.serpent * 2 or 0)
 
     -- setting up the spell
 	local self = {}
@@ -44,7 +48,7 @@ local function NewSpell(player, modifiers)
         self.projectiles[i].velocity = self.velocity
         self.projectiles[i].alive = true
         self.projectiles[i].effect = {id = spellutil.newProjID(), damage = 50}
-        self.projectiles[i].lives = 5
+        self.projectiles[i].lives = myLives
     end
 	
 	function self.Update(Terrain, Enemies, dt)

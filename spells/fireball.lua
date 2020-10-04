@@ -16,14 +16,16 @@ local function NewSpell(player, modifiers)
 
     -- uniform properties
     local exploDuration = 0.3 -- graphics only
+    local baseN = 1
 
     -- properties derived from modifiers
-    local nProjectiles = 1
-    local myDamage = 100
+    local nProjectiles = 1 + (modifiers.shotgun and modifiers.shotgun or 0)
+    local myDamage = 100 * (nProjectiles+baseN)/(nProjectiles*2)
     local myFire = 100
-    local exploDamage = 80
-    local exploRadius = 150
-    local baseSpeed = 15
+    local exploDamage = 80 * (nProjectiles+baseN)/(nProjectiles*2)
+    local exploRadius = 150 * (modifiers.fireball and 1+(modifiers.fireball*0.25) or 1)
+    local baseSpeed = 15 * (modifiers.wisp and 0.5 + 0.5 / modifers.wisp or 1)
+    local myLives = 1 + (modifiers.serpent and modifiers.serpent or 0)
     
     -- setting up the spell
 	local self = {}
@@ -43,6 +45,7 @@ local function NewSpell(player, modifiers)
         self.projectiles[i].alive = true
         self.projectiles[i].effect = {id = spellutil.newProjID(), damage = myDamage, fire = myFire}
         self.projectiles[i].exploEffect = {damage = exploDamage}
+        self.projectiles[i].lives = myLives
     end
 	
 	function self.Update(Terrain, Enemies, dt)
@@ -80,7 +83,10 @@ local function NewSpell(player, modifiers)
                     collided = Enemies.DetectCollision(self.projectiles[k].pos, 5, false, self.projectiles[k].effect.id, nil, dt)
                     if collided then
                         collided.ProjectileImpact(self.projectiles[k].effect)
-                        self.projectiles[k].alive = false
+                        self.projectiles[k].lives = self.projectiles[k].lives - 1
+                        if self.projectiles[k].lives <= 0 then
+                            self.projectiles[k].alive = false
+                        end
                     end
                 end
                 

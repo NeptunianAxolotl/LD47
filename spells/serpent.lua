@@ -14,13 +14,16 @@ end
 local function NewSpell(player, modifiers)
 
     modifiers = modifiers or {}
+    
+    -- uniform properties
+    local baseN = 2
 
     -- properties derived from modifiers
     local nProjectiles = 2 + (modifiers.shotgun and modifers.shotgun * 2 or 0)
-    local myDamage = 100 * (modifiers.shotgun and modifiers.shotgun * 0.75 or 1)
-    local myAmplitude = 80
-    local myPhaseLength = 2
-    local baseSpeed = 5
+    local myDamage = 100 * (nProjectiles+baseN)/(nProjectiles*2)
+    local myAmplitude = 80 + (modifiers.fireball and modifiers.fireball * 20 or 0)
+    local myPhaseLength = 2 * (modifiers.serpent and modifiers.serpent * 0.8 or 1)
+    local baseSpeed = 5 * (modifiers.wisp and 0.5 + 0.5 / modifers.wisp or 1)
 
     -- setting up the spell
 	local self = {}

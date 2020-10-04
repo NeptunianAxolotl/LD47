@@ -6,12 +6,16 @@ local spellutil = require("spells/spellutil")
 local function NewSpell(player, modifiers)
 
     modifiers = modifiers or {}
+    
+    -- uniform properties
+    local baseN = 5
 
     -- properties derived from modifiers
-    local nProjectiles = 5
-    local sprayAngle = 0.1
-    local myDamage = 60
-    local baseSpeed = 15
+    local nProjectiles = 5 + (modifiers.shotgun and modifers.shotgun * 3 or 0) + (modifiers.fireball and modifers.fireball or 0)
+    local sprayAngle = 0.1 + (modifiers.fireball and modifiers.fireball * 0.05 or 0)
+    local myDamage = 60 * (nProjectiles+baseN)/(nProjectiles*2)
+    local baseSpeed = 15 * (modifiers.wisp and 0.5 + 0.5 / modifers.wisp or 1)
+    local myLives = 1 + (modifiers.serpent and modifiers.serpent or 0)
 
     -- setting up the spell
 	local self = {}
@@ -29,6 +33,7 @@ local function NewSpell(player, modifiers)
         self.projectiles[i].velocity = util.Add(self.projectiles[i].velocity, launchVelocity);
         self.projectiles[i].alive = true
         self.projectiles[i].effect = {id = spellutil.newProjID(), damage = 60}
+        self.projectiles[i].lives = myLives
     end
 	
 	function self.Update(Terrain, Enemies, dt)
@@ -55,7 +60,10 @@ local function NewSpell(player, modifiers)
                 collided = Enemies.DetectCollision(self.projectiles[k].pos, 5, false, self.projectiles[k].effect.id, nil, dt)
                 if collided then
                     collided.ProjectileImpact(self.projectiles[k].effect)
-                    self.projectiles[k].alive = false
+                    self.projectiles[k].lives = self.projectiles[k].lives - 1
+                    if self.projectiles[k].lives <= 0 then
+                        self.projectiles[k].alive = false
+                    end
                 end
             end
         end
