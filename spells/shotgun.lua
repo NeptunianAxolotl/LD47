@@ -34,7 +34,7 @@ local function NewSpell(player, modifiers)
             self.projectiles[k].pos = util.Add(util.Mult(dt*60, self.projectiles[k].velocity), self.projectiles[k].pos)
             
             -- check collision
-            local collide = Terrain.GetTerrainCollision(self.projectiles[k].pos, 5, false, true, nil, dt)
+            local collide = Terrain.GetTerrainCollision(self.projectiles[k].pos, 5, false, {}, nil, dt)
             if collide then
                 self.projectiles[k].alive = false
             end

@@ -57,7 +57,7 @@ local function NewSpell(player, modifiers)
             self.projectiles[k].pos = util.Add(util.Mult(math.sin(phaseAngle)*self.amplitude*sineMultiplier(k),perpvector), self.pos)
             
             -- check collision
-            local collide = Terrain.GetTerrainCollision(self.projectiles[k].pos, 5, false, true, nil, dt)
+            local collide = Terrain.GetTerrainCollision(self.projectiles[k].pos, 5, false, {}, nil, dt)
             if collide then
                 self.projectiles[k].alive = false -- I would like serpent to be piercing but for now dont worry
             end

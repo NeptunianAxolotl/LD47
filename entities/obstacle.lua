@@ -12,19 +12,26 @@ local function NewObstacle(self, def, rng)
 		return self.pos, def.radius
 	end
 	
-	function self.IsColliding(otherPos, otherRadius, isCreature, isProjectile, player, dt)
-		if not ((isCreature and def.collideCreature) or (isProjectile and def.collideProjectile) or (player and def.overlapEffect)) then
+	function self.IsColliding(otherPos, otherRadius, isCreature, projectile, player, dt)
+		if not ((isCreature and def.collideCreature) or (projectile and def.collideProjectile) or (player and def.overlapEffect)) then
 			return
 		end
 		local collide, distSq = util.IntersectingCircles(self.pos, def.radius, otherPos, otherRadius)
 		if not collide then
 			return
 		end
-		if not (player and def.overlapEffect) then
-			return true
+        -- player collision
+		if (player and def.overlapEffect) then
+            local realCollide, removeObstacle = def.overlapEffect(self, player, distSq, dt)
+            return realCollide, removeObstacle
 		end
-		local realCollide, removeObstacle = def.overlapEffect(self, player, distSq, dt)
-		return realCollide, removeObstacle
+        -- projectile collision
+        if (projectile and def.projectileEffect) then
+            local realCollide, removeObstacle = def.projectileEffect(self, projectile, distSq, dt)
+            print(removeObstacle)
+            return realCollide, removeObstacle
+        end
+        return true
 	end
 	
 	function self.IsBlockingPlacement(otherPos, otherDef)

@@ -35,19 +35,22 @@ function self.Initialize()
 	RNG_SEED = math.random(0, 2^16)
 end
 
-local function detectCollision(obstacles, otherPos, otherRadius, isCreature, isProjectile, player, dt)
+local function detectCollision(obstacles, otherPos, otherRadius, isCreature, projectile, player, dt)
 	--Does the circle described by 'x,y,radius' intersect with any
 	--of the objects in the 'obstacles' list?
 	local collided = false
 	for i = 1, #obstacles do
 		local v = obstacles[i]
-		local collide, removeObstacle = v.IsColliding(otherPos, otherRadius, isCreature, isProjectile, player, dt)
-		if collide then
-			collided = v
-		elseif removeObstacle then
-			obstacles[i] = obstacles[#obstacles]
-			obstacles[#obstacles] = nil
-		end
+        if v then
+            local collide, removeObstacle = v.IsColliding(otherPos, otherRadius, isCreature, projectile, player, dt)
+            if collide then
+                collided = v
+            end
+            if removeObstacle then
+                obstacles[i] = obstacles[#obstacles]
+                obstacles[#obstacles] = nil
+            end
+        end
 	end
 	return collided
 end
@@ -156,11 +159,11 @@ function self.Update(playerX, playerY, dt)
 	-- Include and deal with individual behaviours for dynamic feature (a burning tree, an exploding bomb etc..) here.
 end
 
-function self.GetTerrainCollision(pos, radius, isCreature, isProjectile, player, dt)
+function self.GetTerrainCollision(pos, radius, isCreature, projectile, player, dt)
 	-- Other things, such as the player, enemies, and active spell effects, may call the terrain
 	-- to check whether they are colliding with any mechanical part of it.
 	--TODO: Additional chunks need to be checked, if the 'radius' overlaps with the edge of the chunk that 'x','y' is in.
-	return detectCollision(generateChunk(getChunkIDFromPosition(pos[1], pos[2])).obstacles, pos, radius, isCreature, isProjectile, player, dt)
+	return detectCollision(generateChunk(getChunkIDFromPosition(pos[1], pos[2])).obstacles, pos, radius, isCreature, projectile, player, dt)
 end
 
 function self.GetTerrainBiome(x, y)

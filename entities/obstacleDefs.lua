@@ -11,6 +11,16 @@ local obstacleDefs = {
 		placeBlockRadius = 50,
 		radius = 32,
 		collideCreature = true,
+        collideProjectile = true,
+        projectileEffect = function(self, projectile, distSq, dt)
+            print("foo1")
+            if projectile ~= true and projectile.fire and projectile.fire > 0 then
+                print("foo2")
+                return true, true
+            else
+                return true, false
+            end
+        end,
 		minSpawnWeight = 10,
 		maxSpawnWeight = 30,
 	},
@@ -23,6 +33,7 @@ local obstacleDefs = {
 		placeBlockRadius = 10,
 		radius = 30,
 		collideCreature = true,
+        collideProjectile = true,
 		minSpawnWeight = 10,
 		maxSpawnWeight = 30,
 	},
@@ -35,6 +46,7 @@ local obstacleDefs = {
 		placeBlockRadius = 60,
 		radius = 70,
 		collideCreature = true,
+        collideProjectile = true,
 		minSpawnWeight = 2,
 		maxSpawnWeight = 15,
 	},
