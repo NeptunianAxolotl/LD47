@@ -76,6 +76,10 @@ local obstacleDefs = {
 				playerSpeed = playerSpeed*(1 - 60*dt*0.07)
 				player.SetSpeed(playerSpeed)
 			end
+			if not self.imageOverride then
+				player.ModifyHealth(1)
+			end
+			self.imageOverride = "bush_1_flat"
 		end,
 		minSpawnWeight = 10,
 		maxSpawnWeight = 20,

@@ -20,7 +20,7 @@ local healthImages = {
 	"health_full",
 }
 
-local function ModifyHealth(change)
+function api.ModifyHealth(change)
 	if self.isDead then
 		return
 	end
@@ -88,7 +88,7 @@ local function DoCollision(other, typeMult, dt)
 		return
 	end
 	
-	local damageSeverity = (0.6*severityFactor + 0.4)*self.speed*(typeMult*0.5 + 0.5)
+	local damageSeverity = (0.6*severityFactor + 0.4)*self.speed*(typeMult*0.4 + 0.6)
 	
 	self.stunTime = severityFactor*2
 	
@@ -119,10 +119,10 @@ local function DoCollision(other, typeMult, dt)
 	self.velDir = util.Angle(self.velocity)
 	
 	--print("Ouch severity", damageSeverity, self.speed)
-	if damageSeverity > 16 then
-		ModifyHealth(-2)
-	elseif damageSeverity > 10 then
-		ModifyHealth(-1)
+	if damageSeverity > 14 then
+		api.ModifyHealth(-2)
+	elseif damageSeverity > 8 then
+		api.ModifyHealth(-1)
 	end
 end
 
