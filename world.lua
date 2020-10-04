@@ -12,6 +12,10 @@ local IDENTITY_TRANSFORM = love.math.newTransform()
 
 local self = {}
 
+function self.MousePressed()
+	SpellHandler.SwapSpell()
+end
+
 function self.Update(dt)
 	Player.Update(Terrain, EnemyHandler, self.cameraTransform, dt)
 	

@@ -174,7 +174,7 @@ function self.DrawInterface()
 	
 	Font.SetSize(2)
 	love.graphics.setColor(0, 0, 0)
-	love.graphics.print("Distance " .. (string.format("%.1f", math.floor(self.pos[2]*10*DIST_TO_KM)/10)) .. "km", 8, 10 + HEALTH_SPACING + 20)
+	love.graphics.print("Distance " .. (string.format("%.1f", math.floor(self.pos[2]*10*DIST_TO_KM)/10)) .. "km", 8, 10 + HEALTH_SPACING + 14)
 end
 
 function self.Draw(drawQueue)

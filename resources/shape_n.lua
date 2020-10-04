@@ -8,7 +8,7 @@ for i = 3, 8 do
 		file = "resources/images/shape_" .. i .. ".png",
 		xScale = 0.65,
 		yScale = 0.65,
-		yOffset = 0.6
+		yOffset = 0.64
 	}
 end
 

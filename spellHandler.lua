@@ -1,6 +1,7 @@
 
 local util = require("include/util")
 local IterableMap = require("include/IterableMap")
+local Font = require("include/font")
 
 local spellDefs = require("spells/spellDefs")
 
@@ -17,12 +18,16 @@ local self = {
 	spellAnim = 0,
 	heldSpell = false,
 	heldSpellLevel = false,
+	heldSpellRotate = 0,
+	heldTutorialCounter = 0,
 }
 
 local CHARGE_MULT = 0.11
 local SPELL_COUNT = 8
-local SPELL_RADIUS = 70
+local SPELL_RADIUS = 74
 local CROC_CENTRE = 95
+local SPELL_HELD_POS = {1010, 52}
+local HELD_ROTATE = 0.8
 
 local function SpellChargeToAngle()
 	local spellData = self.spellPositions[self.currentSpell]
@@ -37,7 +42,17 @@ function self.SwapSpell()
 	if not self.heldSpell then
 		return
 	end
+	if self.heldTutorialCounter == 1 then
+		self.heldTutorialCounter = false
+	end
+	
 	local currentSpellData = self.spellPositions[self.currentSpell]
+	if currentSpellData.spellName == self.heldSpell then
+		currentSpellData.spellLevel = currentSpellData.spellLevel + self.heldSpellLevel
+		self.heldSpell, self.heldSpellLevel = false, false
+		return
+	end
+	
 	currentSpellData.spellName, self.heldSpell = self.heldSpell, currentSpellData.spellName
 	currentSpellData.spellLevel, self.heldSpellLevel = self.heldSpellLevel, currentSpellData.spellLevel
 end
@@ -45,6 +60,10 @@ end
 function self.PickupSpell(name, level)
 	self.heldSpell = name
 	self.heldSpellLevel = level
+	
+	if self.heldTutorialCounter then
+		self.heldTutorialCounter = 1
+	end
 end
 
 function self.AddChargeAndCast(player, world, chargeAdd)
@@ -59,6 +78,12 @@ end
 function self.Update(dt)
 	IterableMap.ApplySelf(self.activeSpells, "Update", Terrain, Enemies, dt)
 	self.spellAnim = Resources.UpdateAnimation("spell_anim", self.spellAnim, dt)
+	
+	if self.heldSpell then
+		self.heldSpellRotate = (self.heldSpellRotate + dt*HELD_ROTATE)%(2*math.pi)
+	else
+		self.heldSpellRotate = 0
+	end
 end
 
 function self.Draw(drawQueue)
@@ -76,6 +101,17 @@ function self.DrawInterface()
 			Resources.DrawAnimation("spell_anim", spellData.pos[1], spellData.pos[2], self.spellAnim, nil, 0.3 - 3*self.charge)
 		end
 		Resources.DrawImage(spellDefs.spellIcon[spellData.spellName], spellData.pos[1], spellData.pos[2])
+	end
+	
+	if self.heldSpell then
+		Resources.DrawImage("shape_" .. (self.heldSpellLevel + 2), SPELL_HELD_POS[1], SPELL_HELD_POS[2], self.heldSpellRotate, 1.3)
+		Resources.DrawImage(spellDefs.spellIcon[self.heldSpell], SPELL_HELD_POS[1], SPELL_HELD_POS[2], 0, 1.3)
+	end
+	
+	if self.heldTutorialCounter == 1 then
+		Font.SetSize(1)
+		love.graphics.setColor(1, 0.1, 0)
+		love.graphics.print("You grabbed a spell! Click to Swap or Combine it.", 350, 25)
 	end
 	
 	Resources.DrawImage("spell_croc", 1280 - CROC_CENTRE, CROC_CENTRE, SpellChargeToAngle())
