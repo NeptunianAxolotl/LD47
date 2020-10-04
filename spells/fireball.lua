@@ -84,7 +84,6 @@ local function NewSpell(player, modifiers)
                     for t in pairs(enemysplash) do
                         enemysplash[t].ProjectileImpact(self.projectiles[k].exploEffect)
                     end
-                    print("making explosion effect")
                     self.explosionEffects[#self.explosionEffects+1] = {timer = exploDuration, x = self.projectiles[k].pos[1], y = self.projectiles[k].pos[2]}
                 end
             end
