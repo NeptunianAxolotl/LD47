@@ -138,6 +138,7 @@ function self.PickupSpell(spellName, spellLevel)
 end
 
 function self.SetSpeedMult(speedMult)
+    print(speedMult)
 	self.speedMult = speedMult
 end
 

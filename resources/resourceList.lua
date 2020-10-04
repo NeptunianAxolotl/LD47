@@ -20,6 +20,7 @@ return {
 	"snake_icon",
 	"wisp_icon",
 	"shotgun_icon",
+    "haste_icon",
 	"spell_anim",
 	"shape_n",
 	"health",

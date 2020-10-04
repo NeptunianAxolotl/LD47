@@ -77,7 +77,7 @@ local function NewSpell(player, modifiers)
 					f=function() Resources.DrawIsoImage("fireball", self.projectiles[k].pos[1], self.projectiles[k].pos[2], util.Angle(self.projectiles[k].velocity)) end,
 				})
 			end
-	end
+        end
 	end
 	
 	return self

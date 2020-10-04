@@ -4,6 +4,7 @@ local spellList = {
 	"shotgun",
 	"serpent",
 	"wisp",
+    "haste",
 }
 
 local spellIcon = {
@@ -11,6 +12,7 @@ local spellIcon = {
 	shotgun  = "shotgun_icon",
 	serpent  = "snake_icon",
 	wisp     = "wisp_icon",
+    haste    = "haste_icon",
 }
 
 return {
