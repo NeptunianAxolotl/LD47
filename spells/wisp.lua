@@ -33,7 +33,7 @@ local function NewSpell(player, modifiers)
         self.projectiles[i].velocity = self.velocity
     end
 	
-	function self.Update(dt)
+	function self.Update(Terrain, dt)
         local previousCentrePos = self.pos
 		--self.pos = new player pos
         self.currentPhase = math.fmod(self.currentPhase + dt, self.phaseLength)
@@ -42,7 +42,7 @@ local function NewSpell(player, modifiers)
             local currentRelPos = util.Subtract(self.projectiles[k].pos, previousCentrePos)
             local wantedRelPos = {}
             local startvec = util.SetLength(self.radius, self.facing)
-            wantedRelPos[1], wantedRelPos[2] = util.RotateVector(startvec[1],startvec[2], phaseAngle + phaseModifier(k))
+            local wantedRelPos  = util.RotateVector(startvec, phaseAngle + phaseModifier(k))
             local wantedChange = util.Subtract(wantedRelPos, currentRelPos)
             local maxDistance = self.maxVelocity * dt * 60
             if util.Dist(wantedChange[1], wantedChange[2], 0, 0) <= maxDistance then
