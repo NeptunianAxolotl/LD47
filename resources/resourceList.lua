@@ -12,4 +12,6 @@ return {
 	"bush_1",
 	"grass_1",
 	"rocket_bear",
+	"background_1",
+	"background_2",
 }

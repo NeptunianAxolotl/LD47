@@ -2,6 +2,7 @@
 local Player = require("player")
 local Terrain = require("terrainHandler")
 local Camera = require("utilities/cameraUtilities")
+local DrawOverlappingBackground = require("utilities/backgroundUtilities")
 local SpellHandler = require("spellHandler")
 local EnemyHandler = require("enemyHandler")
 
@@ -22,6 +23,7 @@ end
 
 function self.Draw()
 	love.graphics.replaceTransform(self.cameraTransform)
+	DrawOverlappingBackground()
 	Terrain.Draw()
 	Player.Draw()
 	SpellHandler.Draw()
