@@ -43,9 +43,8 @@ local function UpdatePhysics(mouseX, mouseY, dt)
 		downhillFactor = downhillFactor/10
 	end
 	
-	self.speed = math.max(0, self.speed + dt*60*0.012*downhillFactor)
+	self.speed = math.max(0, self.speed + dt*60*0.012*downhillFactor + ((self.speedMult or 1) - 1)*12*dt)
 	self.speed = math.max(0, self.speed - dt*60*(0.003*self.speed^1.5 + 0.05*self.speed*dirChange^3))
-	
 	
 	self.velocity = util.Add(util.Mult(dt*60*(0.1 - 0.09*(self.speed/(self.speed + 15))), DOWNHILL_DIR), util.PolarToCart(self.speed, self.velDir))
 	self.speed, self.velDir = util.CartToPolar(self.velocity)
@@ -138,7 +137,6 @@ function self.PickupSpell(spellName, spellLevel)
 end
 
 function self.SetSpeedMult(speedMult)
-    print(speedMult)
 	self.speedMult = speedMult
 end
 
