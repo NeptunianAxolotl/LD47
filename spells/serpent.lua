@@ -59,14 +59,16 @@ local function NewSpell(player, modifiers)
             self.projectiles[k].pos = util.Add(util.Mult(math.sin(phaseAngle)*self.amplitude*sineMultiplier(k),perpvector), self.pos)
             
             -- check collision
-            local collide = Terrain.GetTerrainCollision(self.projectiles[k].pos, 5, false, self.projectiles[k].effect, nil, dt)
-            if collide then
+            local collided = Terrain.GetTerrainCollision(self.projectiles[k].pos, 5, false, self.projectiles[k].effect.id, nil, dt)
+            if collided then
+                collided.ProjectileImpact(self.projectiles[k].effect)
                 -- self.projectiles[k].alive = false
-                -- Consider whether serpent should pierce projectiles.
+                -- Consider whether serpent should pierce obstacles.
             else
-                collide = Enemies.DetectCollision(self.projectiles[k].pos, 5, false, self.projectiles[k].effect, nil, dt)
-                if collide then
-                    -- Do nothing, serpent pierces enemies
+                collided = Enemies.DetectCollision(self.projectiles[k].pos, 5, false, self.projectiles[k].effect.id, nil, dt)
+                if collided then
+                    collided.ProjectileImpact(self.projectiles[k].effect)
+                    -- Do not destroy projectile, serpent pierces enemies
                 end
             end
         end

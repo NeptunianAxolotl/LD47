@@ -24,7 +24,7 @@ local function NewCreature(self, def)
 		end
 		return util.IntersectingCircles(self.pos, def.radius, otherPos, otherRadius)
 	end
-	
+
 	function self.Update(Terrain, Enemies, player, dt)
 		local playerPos = player.GetPhysics()
 		if playerPos[2] > self.pos[2] + def.despawnDistance then
@@ -46,6 +46,17 @@ local function NewCreature(self, def)
             self.projIgnoreFresh = {}
         end
 	end
+    
+    function self.ProjectileImpact(projEffect)
+        if projEffect then
+            if projEffect.id then
+                self.projIgnoreFresh[#self.projIgnoreFresh+1] = projEffect.id
+            end
+            if projEffect.damage then
+                self.health = self.health - projEffect.damage
+            end
+        end
+    end
 	
 	function self.AddPosition(posToAdd)
 		self.pos = util.Add(self.pos, posToAdd)

@@ -6,17 +6,17 @@ local obstacleDefs = {
 		name = "tree_1",
 		imageName = "tree_1",
 		health = 50,
-		healthRange = 70,
+		healthRange = 40,
 		placeRadius = 110,
 		placeBlockRadius = 50,
 		radius = 32,
 		collideCreature = true,
         collideProjectile = true,
-        projectileEffect = function(self, projectile, distSq, dt)
-            if projectile ~= true and projectile.fire and projectile.fire > 0 then
-                return true, true
+        projectileCalc = function(projEffect)
+            if projEffect and projEffect.fire and projEffect.fire > 0 then
+                return projEffect.fire
             else
-                return true, false
+                return 0
             end
         end,
 		minSpawnWeight = 10,

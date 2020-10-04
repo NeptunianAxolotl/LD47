@@ -25,20 +25,21 @@ local function NewObstacle(self, def, rng)
             local realCollide, removeObstacle = def.overlapEffect(self, player, distSq, dt)
             return realCollide, removeObstacle
 		end
-        -- projectile collision
-        if (projectile and def.projectileEffect) then
-            local realCollide, removeObstacle = def.projectileEffect(self, projectile, distSq, dt)
-            return realCollide, removeObstacle
-        end
         return true
 	end
+    
+    function self.ProjectileImpact(projEffect)
+        if projEffect and def.projectileCalc then
+            self.health = self.health - def.projectileCalc(projEffect)
+        end
+    end
 	
 	function self.IsBlockingPlacement(otherPos, otherDef)
 		if util.IntersectingCircles(self.pos, def.placeBlockRadius, otherPos, otherDef.placeRadius) then
 			return true
 		end
 	end
-	
+    
 	function self.Draw(drawQueue)
 		
 		drawQueue:push({y=self.pos[2]; f=function() Resources.DrawImage(def.imageName, self.pos[1], self.pos[2]) end})

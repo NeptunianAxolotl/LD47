@@ -73,13 +73,15 @@ local function NewSpell(player, modifiers)
                 self.projectiles[k].pos = util.Add(currentRelPos,self.pos)
                 
                 -- check collision
-                local collide = Terrain.GetTerrainCollision(self.projectiles[k].pos, 5, false, self.projectiles[k].effect, nil, dt)
-                if collide then
+                local collided = Terrain.GetTerrainCollision(self.projectiles[k].pos, 5, false, self.projectiles[k].effect.id, nil, dt)
+                if collided then
+                    collided.ProjectileImpact(self.projectiles[k].effect)
                     -- self.projectiles[k].alive = false 
                     -- Consider whether wisp should be destroyed by obstacles.
                 else
-                    collide = Enemies.DetectCollision(self.projectiles[k].pos, 15, false, self.projectiles[k].effect, nil, dt)
-                    if collide then
+                    collided = Enemies.DetectCollision(self.projectiles[k].pos, 15, false, self.projectiles[k].effect.id, nil, dt)
+                    if collided then
+                        collided.ProjectileImpact(self.projectiles[k].effect)
                         self.projectiles[k].lives = self.projectiles[k].lives - 1
                         if self.projectiles[k].lives <= 0 then
                             self.projectiles[k].alive = false
