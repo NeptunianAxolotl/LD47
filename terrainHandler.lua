@@ -23,11 +23,12 @@ local chunkCache = {}
 local TILE_WIDTH = 64
 local TILE_HEIGHT = 64
 
-local CHUNK_WIDTH_TILES = 40
-local CHUNK_HEIGHT_TILES = 40
+local CHUNK_WIDTH_TILES = 32
+local CHUNK_HEIGHT_TILES = 32
 
 local CHUNK_DRAW_HOR_RANGE = 80
-local CHUNK_DRAW_RANGE = 300 -- stops tall sprites from popping at the bottom of the screen.
+local CHUNK_DRAW_TOP_RANGE = 40
+local CHUNK_DRAW_BOT_RANGE = 300 -- stops tall sprites from popping at the bottom of the screen.
 
 local CHUNK_WIDTH = TILE_WIDTH * CHUNK_WIDTH_TILES
 local CHUNK_HEIGHT = TILE_HEIGHT * CHUNK_HEIGHT_TILES
@@ -72,6 +73,13 @@ local function getChunkIDFromPosition(x, y)
 	local b = math.floor(y/CHUNK_HEIGHT)
 	local a = math.floor((x/CHUNK_WIDTH) - (b%2==0 and 0.5 or 0))
 	return a, b
+end
+
+local function getChunkIDFromPositionForBothParities(x, y)
+	local b = math.floor(y/CHUNK_HEIGHT)
+	local a_0 = math.floor((x/CHUNK_WIDTH) - 0.5)
+	local a_1 = math.floor(x/CHUNK_WIDTH)
+	return a_0, a_1, b
 end
 
 local function getChunkPositionFromID(a, b)
@@ -128,13 +136,17 @@ end
 
 
 local function getChunksIDsForRegion(top, left, bottom, right)
-	local lt_a, lt_b = getChunkIDFromPosition(left - CHUNK_DRAW_HOR_RANGE, top - CHUNK_DRAW_HOR_RANGE)
-	local rb_a, rb_b = getChunkIDFromPosition(right, bottom + CHUNK_DRAW_RANGE)
-
+	local lt_a_0, lt_a_1, lt_b = getChunkIDFromPositionForBothParities(left - CHUNK_DRAW_HOR_RANGE, top - CHUNK_DRAW_BOT_RANGE)
+	local rb_a_0, rb_a_1, rb_b = getChunkIDFromPositionForBothParities(right + CHUNK_DRAW_HOR_RANGE, bottom + CHUNK_DRAW_BOT_RANGE)
+	
 	local chunkIDs = {}
-	for a = lt_a-1, rb_a+1 do
-		for b = lt_b, rb_b do
-			chunkIDs[#chunkIDs+1] = {a; b}
+	for b = lt_b, rb_b do
+		local lt_a, rb_a = lt_a_0, rb_a_0
+		if b%2 ~= 0 then
+			lt_a, rb_a = lt_a_1, rb_a_1
+		end
+		for a = lt_a, rb_a do
+			chunkIDs[#chunkIDs+1] = {a, b}
 		end
 	end
 	return chunkIDs
@@ -177,6 +189,7 @@ local function drawChunk(chunk)
 end
 
 local function drawChunks(visibleChunks)
+	--print(#visibleChunks)
 	for i, v in ipairs(visibleChunks) do
 		drawChunk(v)
 	end
