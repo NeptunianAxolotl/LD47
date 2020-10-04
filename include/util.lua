@@ -261,7 +261,10 @@ end
 -- Circles
 
 function util.IntersectingCircles(pos1, radius1, pos2, radius2)
-	return util.DistVectors(pos1, pos2) <= radius1 + radius2
+	local dist = util.DistVectors(pos1, pos2)
+	if dist <= radius1 + radius2 then
+		return true, dist
+	end
 end
 
 --------------------------------------------------

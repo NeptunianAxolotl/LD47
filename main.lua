@@ -39,6 +39,11 @@ function love.update(dt)
 	if dt > 0.08 then
 		dt = 0.08
 	end
+	
+	if dt > 1/50 then
+		print(1/dt)
+	end
+	
 	acc = acc + dt
 	if acc < 1/4000 then
 		return

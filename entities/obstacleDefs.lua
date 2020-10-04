@@ -1,4 +1,6 @@
 
+local util = require("include/util")
+
 local obstacleDefs = {
 	{
 		name = "tree_1",
@@ -8,6 +10,7 @@ local obstacleDefs = {
 		placeRadius = 110,
 		placeBlockRadius = 50,
 		radius = 32,
+		collideCreature = true,
 		minSpawnWeight = 10,
 		maxSpawnWeight = 30,
 	},
@@ -19,6 +22,7 @@ local obstacleDefs = {
 		placeRadius = 40,
 		placeBlockRadius = 10,
 		radius = 30,
+		collideCreature = true,
 		minSpawnWeight = 10,
 		maxSpawnWeight = 30,
 	},
@@ -28,10 +32,41 @@ local obstacleDefs = {
 		health = 80,
 		healthRange = 70,
 		placeRadius = 80,
-		placeBlockRadius = 50,
+		placeBlockRadius = 60,
 		radius = 70,
+		collideCreature = true,
 		minSpawnWeight = 2,
 		maxSpawnWeight = 15,
+	},
+	{
+		name = "grass_1",
+		imageName = "grass_1",
+		health = 80,
+		healthRange = 70,
+		placeRadius = 80,
+		placeBlockRadius = 50,
+		radius = 30,
+		collideCreature = false,
+		minSpawnWeight = 8,
+		maxSpawnWeight = 20,
+	},
+	{
+		name = "mud_1",
+		imageName = "bush_1",
+		health = 80,
+		healthRange = 70,
+		placeRadius = 80,
+		placeBlockRadius = 80,
+		radius = 70,
+		collideCreature = false,
+		overlapEffect = function (self, player, centreDist, dt)
+			if player.speed > 6 then
+				player.speed = player.speed*(1 - 60*dt*0.07)
+				player.velocity = util.SetLength(player.speed, player.velocity)
+			end
+		end,
+		minSpawnWeight = 10,
+		maxSpawnWeight = 20,
 	},
 }
 

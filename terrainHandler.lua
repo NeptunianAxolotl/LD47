@@ -26,33 +26,42 @@ local TILE_HEIGHT = 64
 local CHUNK_WIDTH_TILES = 40
 local CHUNK_HEIGHT_TILES = 40
 
+local CHUNK_DRAW_HOR_RANGE = 80
 local CHUNK_DRAW_RANGE = 300 -- stops tall sprites from popping at the bottom of the screen.
 
 local CHUNK_WIDTH = TILE_WIDTH * CHUNK_WIDTH_TILES
 local CHUNK_HEIGHT = TILE_HEIGHT * CHUNK_HEIGHT_TILES
 
-local OBSTACLES_PER_CHUNK_MIN = 14
-local OBSTACLES_PER_CHUNK_MAX = 40
+local OBSTACLES_PER_CHUNK_MIN = 18
+local OBSTACLES_PER_CHUNK_MAX = 50
 
 local RNG_SEED
 function self.Initialize()
 	RNG_SEED = math.random(0, 2^16)
 end
 
-local function detectCollision(obstacles, otherPos, otherRadius)
+local function detectCollision(obstacles, otherPos, otherRadius, isCreature, isProjectile, player, dt)
 	--Does the circle described by 'x,y,radius' intersect with any
 	--of the objects in the 'obstacles' list?
-	for i, v in ipairs(obstacles) do
-		if v.IsColliding(otherPos, otherRadius) then
-			return v
+	local collided = false
+	for i = 1, #obstacles do
+		local v = obstacles[i]
+		local collide, removeObstacle = v.IsColliding(otherPos, otherRadius, isCreature, isProjectile, player, dt)
+		if collide then
+			collided = v
+		elseif removeObstacle then
+			obstacles[i] = obstacles[#obstacles]
+			obstacles[#obstacles] = nil
 		end
 	end
+	return collided
 end
 
 local function detectPlacementCollision(obstacles, colPos, colDef)
 	--Does the circle described by 'x,y,radius' intersect with any
 	--of the objects in the 'obstacles' list?
-	for i, v in ipairs(obstacles) do
+	for i = 1, #obstacles do
+		local v = obstacles[i]
 		if v.IsBlockingPlacement(colPos, colDef) then
 			return true
 		end
@@ -120,8 +129,8 @@ end
 
 
 local function getChunksIDsForRegion(top, left, bottom, right)
-	local lt_a, lt_b = getChunkIDFromPosition(left - CHUNK_DRAW_RANGE, top - CHUNK_DRAW_RANGE)
-	local rb_a, rb_b = getChunkIDFromPosition(right + CHUNK_DRAW_RANGE, bottom + CHUNK_DRAW_RANGE)
+	local lt_a, lt_b = getChunkIDFromPosition(left - CHUNK_DRAW_HOR_RANGE, top - CHUNK_DRAW_HOR_RANGE)
+	local rb_a, rb_b = getChunkIDFromPosition(right, bottom + CHUNK_DRAW_RANGE)
 
 	local chunkIDs = {}
 	for a = lt_a-1, rb_a+1 do
@@ -139,11 +148,11 @@ function self.Update(playerX, playerY, dt)
 	-- Include and deal with individual behaviours for dynamic feature (a burning tree, an exploding bomb etc..) here.
 end
 
-function self.GetTerrainCollision(pos, radius)
+function self.GetTerrainCollision(pos, radius, isCreature, isProjectile, player, dt)
 	-- Other things, such as the player, enemies, and active spell effects, may call the terrain
 	-- to check whether they are colliding with any mechanical part of it.
 	--TODO: Additional chunks need to be checked, if the 'radius' overlaps with the edge of the chunk that 'x','y' is in.
-	return detectCollision(generateChunk(getChunkIDFromPosition(pos[1], pos[2])).obstacles, pos, radius)
+	return detectCollision(generateChunk(getChunkIDFromPosition(pos[1], pos[2])).obstacles, pos, radius, isCreature, isProjectile, player, dt)
 end
 
 function self.GetTerrainBiome(x, y)
@@ -163,8 +172,8 @@ local function drawChunk(chunk)
 	love.graphics.setColor(100/255, 153/255, 0)
 	love.graphics.rectangle('fill', chunk.left, chunk.top, CHUNK_WIDTH, CHUNK_HEIGHT)
 	love.graphics.setColor(1, 0, 1)
-	for i,v in ipairs(chunk.obstacles) do
-		v.Draw()
+	for i = 1, #chunk.obstacles do
+		chunk.obstacles[i].Draw()
 	end
 end
 

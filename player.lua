@@ -55,7 +55,7 @@ local function UpdatePhysics(mouseX, mouseY, dt)
 end
 
 local function CheckTerrainCollision(Terrain, dt)
-	local collide = Terrain.GetTerrainCollision(self.pos, self.radius)
+	local collide = Terrain.GetTerrainCollision(self.pos, self.radius, true, false, self, dt)
 	if not collide then
 		return
 	end

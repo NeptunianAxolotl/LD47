@@ -8,4 +8,6 @@ return {
 	"tree_1",
 	"rock_1",
 	"rock_2",
+	"bush_1",
+	"grass_1",
 }
