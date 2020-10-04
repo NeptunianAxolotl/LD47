@@ -102,18 +102,7 @@ local function UpdateFacing(dt)
 end
 
 local function UpdateSpellcasting(dt)
-    if math.random() < 0.0025 then
-		SpellHandler.CastSpell("fireball", self)
-	end
-    if math.random() < 0.0025 then
-		SpellHandler.CastSpell("shotgun", self)
-	end
-    if math.random() < 0.0025 then
-		SpellHandler.CastSpell("serpent", self)
-	end
-	if math.random() < 0.0025 then
-		SpellHandler.CastSpell("wisp", self)
-	end
+	SpellHandler.AddChargeAndCast(self, world, dt * (self.speed + 2))
 end
 
 function self.Update(Terrain, cameraTransform, dt)

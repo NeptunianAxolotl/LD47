@@ -4,6 +4,8 @@
 return {
 	"test_anim",
 	"fireball",
+	"spell_interface",
+	"spell_croc",
 	"croc",
 	"test_iso_image",
 	"tree_1",

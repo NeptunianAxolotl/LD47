@@ -6,6 +6,8 @@ local DrawOverlappingBackground = require("utilities/backgroundUtilities")
 local SpellHandler = require("spellHandler")
 local EnemyHandler = require("enemyHandler")
 
+local IDENTITY_TRANSFORM = love.math.newTransform()
+
 local self = {}
 
 function self.Update(dt)
@@ -28,6 +30,9 @@ function self.Draw()
 	Player.Draw()
 	SpellHandler.Draw()
 	EnemyHandler.Draw()
+	
+	love.graphics.replaceTransform(IDENTITY_TRANSFORM)
+	SpellHandler.DrawInterface()
 end
 
 function self.Initialize()
