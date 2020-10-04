@@ -28,8 +28,10 @@ local function NewCreature(self, def)
 		return realCollide, removeObstacle
 	end
 	
-	function self.Update(Terain, dt)
-		
+	function self.Update(Terrain, player, dt)
+		if def.updateFunc then
+			def.updateFunc(self, Terrain, player, dt)
+		end
 	end
 	
 	function self.Draw()

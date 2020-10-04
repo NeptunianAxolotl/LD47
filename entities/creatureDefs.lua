@@ -1,5 +1,6 @@
 
 local util = require("include/util")
+local creatureUtil = require("entities/creatureUtilities")
 
 local creatureDefs = {
 	{
@@ -10,6 +11,10 @@ local creatureDefs = {
 		radius = 32,
 		minSpawnWeight = 10,
 		maxSpawnWeight = 30,
+		updateFunc = function (self, Terrain, player, dt)
+			local playerPos = player.GetPhysics()
+			self.direction = util.Angle(util.Subtract(playerPos, self.pos))
+		end
 	},
 }
 
