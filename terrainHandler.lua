@@ -20,18 +20,12 @@ local self = {}
 
 local chunkCache = {}
 
-local TILE_WIDTH = 64
-local TILE_HEIGHT = 64
-
-local CHUNK_WIDTH_TILES = 32
-local CHUNK_HEIGHT_TILES = 32
-
 local CHUNK_DRAW_HOR_RANGE = 80
 local CHUNK_DRAW_TOP_RANGE = 40
 local CHUNK_DRAW_BOT_RANGE = 300 -- stops tall sprites from popping at the bottom of the screen.
 
-local CHUNK_WIDTH = TILE_WIDTH * CHUNK_WIDTH_TILES
-local CHUNK_HEIGHT = TILE_HEIGHT * CHUNK_HEIGHT_TILES
+local CHUNK_WIDTH = 64 * 32
+local CHUNK_HEIGHT = 64 * 32
 
 local OBSTACLES_PER_CHUNK_MIN = 18
 local OBSTACLES_PER_CHUNK_MAX = 50
