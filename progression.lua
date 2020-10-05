@@ -330,8 +330,8 @@ local distanceKeyframes = {
 		shield        = {1,   1},
 	},
 	{
-		dist          = 120,
-		lushFactor    = 40,
+		dist          = 110,
+		lushFactor    = 50,
 		
 		obstacleCount = {2,   35},
 		spellCount    = {1.5, 2.5},
@@ -353,6 +353,76 @@ local distanceKeyframes = {
 		bunny_car     = {2,   8},
 		bear_car      = {0,   3},
 		spider        = {0,   0.5},
+		croc_enemy    = {0,   0},
+		
+		cantrip       = {0,   0},
+		fireball      = {1,   1},
+		shotgun       = {1,   1},
+		serpent       = {1,   1},
+		wisp          = {1,   1},
+		haste         = {1,   1},
+		seeker        = {1,   1},
+		shield        = {1,   1},
+	},
+	{
+		dist          = 125,
+		lushFactor    = 0,
+		
+		obstacleCount = {2,   35},
+		spellCount    = {1.5, 2.5},
+		
+		tree          = {1,   2},
+		smallRock     = {2,   3},
+		bigRock       = {1.5,   2},
+		grass_1       = {1,   3},
+		grass_2       = {1,   3},
+		bush          = {2,   6},
+		healthBush    = {2,   5},
+		web           = {0,   0},
+		
+		spawnTime     = {25,   5},
+		spawnCount    = {12,   18},
+		
+		bunny         = {0,   0},
+		rocket_bear   = {0,   4},
+		bunny_car     = {2,   8},
+		bear_car      = {0,   3},
+		spider        = {0,   0.5},
+		croc_enemy    = {0,   0},
+		
+		cantrip       = {0,   0},
+		fireball      = {1,   1},
+		shotgun       = {1,   1},
+		serpent       = {1,   1},
+		wisp          = {1,   1},
+		haste         = {1,   1},
+		seeker        = {1,   1},
+		shield        = {1,   1},
+	},
+	{
+		dist          = 130,
+		lushFactor    = 0,
+		
+		obstacleCount = {5,   12},
+		spellCount    = {0, 0},
+		
+		tree          = {0,   0},
+		smallRock     = {2,   3},
+		bigRock       = {1.5,   2},
+		grass_1       = {1,   3},
+		grass_2       = {1,   3},
+		bush          = {2,   6},
+		healthBush    = {2,   5},
+		web           = {0,   0},
+		
+		spawnTime     = {8,   8},
+		spawnCount    = {15,   20},
+		
+		bunny         = {0,   0},
+		rocket_bear   = {0,   1},
+		bunny_car     = {0,   1},
+		bear_car      = {0,   0.1},
+		spider        = {0,   0},
 		croc_enemy    = {0,   0},
 		
 		cantrip       = {0,   0},
@@ -436,7 +506,7 @@ local function IntAndRand(factor, first, second, name)
 end
 
 function progression.GetBackgroundColor(cameraDistance)
-	local first, second, factor = Interpolate(cameraDistance*DISTANCE_MULT)
+	local first, second, factor = Interpolate((cameraDistance - (self.resetDist or 0))*DISTANCE_MULT)
 	
 	local lushFactor = IntAndRand(factor, first, second, "lushFactor")/100
 	
@@ -447,12 +517,12 @@ function progression.GetBackgroundColor(cameraDistance)
 end
 
 function progression.GetChunkObstacleCount(chunkDistance, Random)
-	local first, second, factor = Interpolate(chunkDistance*DISTANCE_MULT)
+	local first, second, factor = Interpolate((chunkDistance - (self.resetDist or 0))*DISTANCE_MULT)
 	return math.floor(IntAndRand(factor, first, second, "obstacleCount"))
 end
 
 function progression.GetObstacleSpawnWeights(chunkDistance)
-	local first, second, factor = Interpolate(chunkDistance*DISTANCE_MULT)
+	local first, second, factor = Interpolate((chunkDistance - (self.resetDist or 0))*DISTANCE_MULT)
 	return {
 		tree_1    = IntAndRand(factor, first, second, "tree"),
 		rock_1    = IntAndRand(factor, first, second, "smallRock"),
@@ -466,12 +536,12 @@ function progression.GetObstacleSpawnWeights(chunkDistance)
 end
 
 function progression.GetChunkSpellCount(chunkDistance, Random)
-	local first, second, factor = Interpolate(chunkDistance*DISTANCE_MULT)
+	local first, second, factor = Interpolate((chunkDistance - (self.resetDist or 0))*DISTANCE_MULT)
 	return math.floor(IntAndRand(factor, first, second, "spellCount"))
 end
 
 function progression.GetSpellSpawnWeights(chunkDistance)
-	local first, second, factor = Interpolate(chunkDistance*DISTANCE_MULT)
+	local first, second, factor = Interpolate((chunkDistance - (self.resetDist or 0))*DISTANCE_MULT)
 	return {
 		cantrip   = IntAndRand(factor, first, second, "cantrip"),
 		fireball  = IntAndRand(factor, first, second, "fireball"),
@@ -485,18 +555,18 @@ function progression.GetSpellSpawnWeights(chunkDistance)
 end
 
 function progression.GetNextEnemySpawnTime(playerDistance, enemyCount)
-	local first, second, factor = Interpolate(playerDistance*DISTANCE_MULT)
+	local first, second, factor = Interpolate((playerDistance - (self.resetDist or 0))*DISTANCE_MULT)
 	return IntAndRand(factor, first, second, "spawnTime")
 end
 
 function progression.GetEnemySpawnCount(playerDistance, enemyCount)
-	local first, second, factor = Interpolate(playerDistance*DISTANCE_MULT)
+	local first, second, factor = Interpolate((playerDistance - (self.resetDist or 0))*DISTANCE_MULT)
 	local count = math.floor(IntAndRand(factor, first, second, "spawnCount"))
 	return math.max(count*0.1 , count - 0.7*enemyCount)
 end
 
 function progression.GetEnemySpawnWeights(playerDistance, enemyCount)
-	local first, second, factor = Interpolate(playerDistance*DISTANCE_MULT)
+	local first, second, factor = Interpolate((playerDistance - (self.resetDist or 0))*DISTANCE_MULT)
 	return {
 		bunny       = IntAndRand(factor, first, second, "bunny"),
 		rocket_bear = IntAndRand(factor, first, second, "rocket_bear"),
@@ -540,17 +610,25 @@ function progression.SetBossHealth(newHealth, isDead, maxHealth)
 	
 	self.bossHealth = newHealth
 	self.bossMaxHealth = maxHealth or self.bossMaxHealth or newHealth
-	self.bossIsDead = isDead
+	
+	if isDead then
+		self.bossHealth = nil
+		self.bossMaxHealth = nil
+		self.resetDist = self.lastPlayerDist
+	end
 end
 
 function progression.BossExists()
-	return self.bossHealth and not self.bossIsDead
+	return self.bossHealth
 end
 
 ------------------------------------------------------------------
 ------------------------------------------------------------------
 
 function progression.Update(playerDistance, dt)
+	self.lastPlayerDist = playerDistance -- This is the only line that sees unmodified distances
+	playerDistance = playerDistance - (self.resetDist or 0)
+	
 	if not self.musicPlaying then
 		SoundHandler.PlaySound("fulltrack", true)
 		self.musicPlaying = true
@@ -565,11 +643,10 @@ function progression.Update(playerDistance, dt)
 			self.bossAlpha = self.bossAlpha + dt*0.5
 		end
 	end
-	
 end
 
 function progression.DrawInterface()
-	if self.bossHealth and not self.bossIsDead then
+	if self.bossHealth then
 		DrawBossHealth()
 	end
 end
