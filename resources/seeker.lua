@@ -1,7 +1,7 @@
 return {
 	form = "iso_animation",
-	xScale = 0.22,
-	yScale = 0.22,
+	xScale = 0.25,
+	yScale = 0.25,
 	firstDir = 0,
 	width = 400,
 	duration = 0.2,

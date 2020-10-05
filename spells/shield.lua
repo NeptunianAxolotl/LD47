@@ -19,14 +19,15 @@ local shieldSize = 35
 local function NewSpell(player, modifies, level)
 
     modifiers = modifiers or {}
+    level = level or 1
     
     -- uniform properties
     local baseN = 2
     
     -- properties derived from modifiers
     local nProjectiles = 2 
-    local myRadius = 80
-    local myPhaseLength = 2
+    local myRadius = 45
+    local myPhaseLength = 2 * math.max((1 - 0.04 * (level-1)),0.5)
     local myDuration = 10
     local myLives = 2 + (level-1)
 
@@ -36,8 +37,9 @@ local function NewSpell(player, modifies, level)
     self.modifiers = modifiers
     self.projectiles = {}
     self.lifetime = myDuration
-    self.radius = myRadius
-    self.phaseLength = myPhaseLength
+    self.phaseLength = myPhaseLength 
+    self.sizeMult = 1 + math.min((0.1 * (level-1)),1)
+    self.radius = myRadius + shieldSize * self.sizeMult
     self.maxVelocity = 2 * math.pi * self.radius / (self.phaseLength * 60) + 1
     self.playerRef = player
     self.currentPhase = 0
@@ -67,7 +69,7 @@ local function NewSpell(player, modifies, level)
         local previousCentrePos = self.pos
 		self.pos = self.playerRef.GetPhysics()
         self.currentPhase = math.fmod(self.currentPhase + dt, self.phaseLength)
-        local phaseAngle = self.currentPhase / self.phaseLength * 2 * math.pi
+        local phaseAngle = - self.currentPhase / self.phaseLength * 2 * math.pi
         for k in pairs(self.projectiles) do
             if self.projectiles[k].alive then
                 -- move
@@ -85,7 +87,7 @@ local function NewSpell(player, modifies, level)
                 self.projectiles[k].pos = util.Add(currentRelPos,self.pos)
                 
                 -- check collision
-                local collided = Projectiles.DetectCollision(self.projectiles[k].pos, 5)
+                local collided = Projectiles.DetectCollision(self.projectiles[k].pos, shieldSize * self.sizeMult)
                 if collided then
                     collided.Kill(true)
                     self.projectiles[k].lives = self.projectiles[k].lives - 1
@@ -105,20 +107,20 @@ local function NewSpell(player, modifies, level)
                     drawQueue:push({
                         y=self.projectiles[k].pos[2],
                         f=function() 
-                            Resources.DrawAnimation("shield", self.projectiles[k].pos[1], self.projectiles[k].pos[2], self.lifetime) 
-                            -- love.graphics.setColor(0,0,1)
-                            -- love.graphics.setLineWidth(2)
-                            -- love.graphics.circle("line", self.projectiles[k].pos[1], self.projectiles[k].pos[2], shieldSize) 
+                            Resources.DrawAnimation("shield", self.projectiles[k].pos[1], self.projectiles[k].pos[2], self.lifetime, nil, nil, self.sizeMult) 
+                            love.graphics.setColor(0,0,1)
+                            love.graphics.setLineWidth(2)
+                            love.graphics.circle("line", self.projectiles[k].pos[1], self.projectiles[k].pos[2], shieldSize * self.sizeMult) 
                         end,
                     })
                 else
                     drawQueue:push({
                         y=self.projectiles[k].pos[2],
                         f=function() 
-                            Resources.DrawAnimation("shield_damaged", self.projectiles[k].pos[1], self.projectiles[k].pos[2], self.lifetime) 
-                            -- love.graphics.setColor(0,0,1)
-                            -- love.graphics.setLineWidth(2)
-                            -- love.graphics.circle("line", self.projectiles[k].pos[1], self.projectiles[k].pos[2], shieldSize) 
+                            Resources.DrawAnimation("shield_damaged", self.projectiles[k].pos[1], self.projectiles[k].pos[2], self.lifetime, nil, nil, self.sizeMult) 
+                            love.graphics.setColor(0,0,1)
+                            love.graphics.setLineWidth(2)
+                            love.graphics.circle("line", self.projectiles[k].pos[1], self.projectiles[k].pos[2], shieldSize * self.sizeMult) 
                         end,
                     })
                 end

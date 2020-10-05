@@ -2,7 +2,7 @@ local util = require("include/util")
 local Resources = require("resourceHandler")
 local spellutil = require("spells/spellutil")
 
-local colrad = 10
+local colrad = 20
 
 local function NewSpell(player, modifies, level)
     

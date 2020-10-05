@@ -13,6 +13,8 @@ local function phaseModifier(i)
     return modifier
 end
 
+local wispSize = 25
+
 local function NewSpell(player, modifies, level)
 
     modifiers = modifiers or {}
@@ -23,8 +25,8 @@ local function NewSpell(player, modifies, level)
     -- properties derived from modifiers
     local nProjectiles = 2 
     local myDamage = 100 * (1 + 0.1 * (level-1))
-    local myRadius = 80
-    local myPhaseLength = 2
+    local myRadius = 130
+    local myPhaseLength = 2 * math.max((1 - 0.04 * (level-1)),0.5)
     local myDuration = 10
     local myLives = 5 + (level-1)
 
@@ -34,8 +36,9 @@ local function NewSpell(player, modifies, level)
     self.modifiers = modifiers
     self.projectiles = {}
     self.lifetime = myDuration
-    self.radius = myRadius
-    self.phaseLength = myPhaseLength
+    self.phaseLength = myPhaseLength 
+    self.sizeMult = 1 + math.min((0.1 * (level-1)),1)
+    self.radius = myRadius + wispSize * self.sizeMult
     self.maxVelocity = 2 * math.pi * self.radius / (self.phaseLength * 60) + 1
     self.playerRef = player
     self.currentPhase = 0
@@ -83,13 +86,13 @@ local function NewSpell(player, modifies, level)
                 self.projectiles[k].pos = util.Add(currentRelPos,self.pos)
                 
                 -- check collision
-                local collided = Terrain.GetTerrainCollision(self.projectiles[k].pos, 5, false, self.projectiles[k].effect.id, nil, dt)
+                local collided = Terrain.GetTerrainCollision(self.projectiles[k].pos, wispSize * self.sizeMult, false, self.projectiles[k].effect.id, nil, dt)
                 if collided then
                     collided.ProjectileImpact(self.projectiles[k].effect)
                     -- self.projectiles[k].alive = false 
                     -- Consider whether wisp should be destroyed by obstacles.
                 else
-                    collided = Enemies.DetectCollision(self.projectiles[k].pos, 15, false, self.projectiles[k].effect.id, nil, dt)
+                    collided = Enemies.DetectCollision(self.projectiles[k].pos, wispSize * self.sizeMult, false, self.projectiles[k].effect.id, nil, dt)
                     if collided then
                         collided.ProjectileImpact(self.projectiles[k].effect)
                         self.projectiles[k].lives = self.projectiles[k].lives - 1
@@ -107,7 +110,12 @@ local function NewSpell(player, modifies, level)
 			if self.projectiles[k].alive then
 				drawQueue:push({
 					y=self.projectiles[k].pos[2],
-					f=function() Resources.DrawAnimation("wisp", self.projectiles[k].pos[1], self.projectiles[k].pos[2], self.lifetime)  end,
+					f=function() 
+                        Resources.DrawAnimation("wisp", self.projectiles[k].pos[1], self.projectiles[k].pos[2], self.lifetime, nil, nil, self.sizeMult)  
+                        love.graphics.setColor(0,0,1)
+                        love.graphics.setLineWidth(2)
+                        love.graphics.circle("line", self.projectiles[k].pos[1], self.projectiles[k].pos[2], shieldSize * self.sizeMult) 
+                    end,
 				})
 			end
 		end

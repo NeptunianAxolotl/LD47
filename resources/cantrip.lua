@@ -1,7 +1,7 @@
 return {
 	form = "iso_image",
-	xScale = 0.35,
-	yScale = 0.35,
+	xScale = 0.7,
+	yScale = 0.7,
 	firstDir = 0,
 	rotate = true,
 	files = {
