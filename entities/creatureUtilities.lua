@@ -43,7 +43,7 @@ local function Collision(self, def, other, collideMult, dt)
 end
 
 function creatureUtils.DoCollisions(self, def, Terrain, Enemies, player, dt)
-	local collideTerrain = Terrain.GetTerrainCollision(self.pos, def.radius + 20, true, false, false, dt)
+	local collideTerrain = (not def.ignoreTerrain) and Terrain.GetTerrainCollision(self.pos, def.radius + 20, true, false, false, dt)
 	if collideTerrain then
 		Collision(self, def, collideTerrain, 50, dt)
 	end
@@ -54,13 +54,13 @@ function creatureUtils.DoCollisions(self, def, Terrain, Enemies, player, dt)
 	end
 end
 
-function creatureUtils.ShootBulletAtPlayer(self, Projectiles, player, bulletType, speed, inaccuracy, r, dt)
+function creatureUtils.ShootBulletAtPlayer(self, Projectiles, player, bulletType, speed, inaccuracy, usePlayerVelocity, dt)
 	if player.IsDead() then
 		return
 	end
 	local playerPos, playerVel, playerSpeed = player.GetPhysics()
 	local aimVector = util.Subtract(util.Add(util.RandomPointInCircle(inaccuracy), playerPos), self.pos)
-	aimVector[1] = aimVector[1]*0.8 -- Shoot mostly up
+	aimVector[1] = aimVector[1]*0.95 -- Shoot mostly up
 	
 	local shootVelocity = util.SetLength(speed, aimVector)
 	if usePlayerVelocity then

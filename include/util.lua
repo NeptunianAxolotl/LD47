@@ -323,7 +323,7 @@ function util.RandomPointInCircle(radius, startAngle, endAngle)
 	
 	local r = math.random()
 	local angle = startAngle + math.random()*(endAngle - startAngle)
-	return util.PolarToCart(radius*r*r, angle)
+	return util.PolarToCart(radius*math.sqrt(r), angle)
 end
 
 function util.RandomPointInAnnulus(innerRadius, outerRadius, startAngle, endAngle)
@@ -333,7 +333,7 @@ function util.RandomPointInAnnulus(innerRadius, outerRadius, startAngle, endAngl
 	local minRadiusProp = math.sqrt(innerRadius/outerRadius)
 	local r = minRadiusProp + math.random()*(1 - minRadiusProp)
 	local angle = startAngle + math.random()*(endAngle - startAngle)
-	return util.PolarToCart(outerRadius*r*r, angle)
+	return util.PolarToCart(outerRadius*math.sqrt(r), angle)
 end
 
 function util.RandomPointInEllipse(width, height, startAngle, endAngle)
@@ -342,7 +342,7 @@ function util.RandomPointInEllipse(width, height, startAngle, endAngle)
 	
 	local r = math.random()
 	local angle = startAngle + math.random()*(endAngle - startAngle)
-	local pos = util.PolarToCart(r*r, angle)
+	local pos = util.PolarToCart(math.sqrt(r), angle)
 	pos[1] = pos[1]*width
 	pos[2] = pos[2]*height
 	return pos

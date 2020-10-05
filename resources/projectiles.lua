@@ -19,4 +19,11 @@ return {
 		duration = 0.4,
 		yOffset = 0.5,
 	},
+	{
+		name = "web_shot",
+		file = "resources/images/web_shot.png",
+		form = "image",
+		xScale = 0.5,
+		yScale = 0.5,
+	},
 }

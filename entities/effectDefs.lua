@@ -82,6 +82,16 @@ local effectDefs = {
 		spawnOffset = {0, 0},
 		duration = "inherit",
 	},
+	web_explode = {
+		image = "fireball_explode",
+		interface = false,
+		alphaScale = true,
+		color = {0.7, 0.8, 0.8},
+		inFront = 50,
+		scale = 0.08,
+		spawnOffset = {0, 0},
+		duration = "inherit",
+	},
 }
 
 

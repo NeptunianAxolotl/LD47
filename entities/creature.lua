@@ -41,6 +41,10 @@ local function NewCreature(self, def)
         end
 		self.oldPos = self.pos
         
+		if def.animationName then
+			 self.animTime = Resources.UpdateAnimation(def.animationName, self.animTime or 0, dt)
+		end
+		
 		if def.updateFunc then
 			def.updateFunc(self, def, Terrain, Enemies, Projectiles, player, dt)
 		end
@@ -77,10 +81,14 @@ local function NewCreature(self, def)
 	end
 	
 	function self.Draw(drawQueue)
-		drawQueue:push({y=self.pos[2]; f=function()
-			Resources.DrawIsoImage(def.imageName, self.pos[1], self.pos[2], self.drawDir or self.direction)
-			if def.turretImage then
-				Resources.DrawIsoImage(def.turretImage, self.pos[1], self.pos[2], self.turretDirection)
+		drawQueue:push({y=self.pos[2] + (def.drawInFront or 0); f=function()
+			if def.animationName then
+				Resources.DrawIsoAnimation(def.animationName, self.pos[1], self.pos[2], self.animTime or 0, self.drawDir or self.direction)
+			else
+				Resources.DrawIsoImage(def.imageName, self.pos[1], self.pos[2], self.drawDir or self.direction)
+				if def.turretImage then
+					Resources.DrawIsoImage(def.turretImage, self.pos[1], self.pos[2], self.turretDirection)
+				end
 			end
 		end})
 		if DRAW_DEBUG then

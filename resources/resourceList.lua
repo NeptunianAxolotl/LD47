@@ -45,4 +45,6 @@ return {
 	"dust",
 	"car_blue",
 	"bear_car",
+	"spider",
+	"web",
 }

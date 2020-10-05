@@ -55,7 +55,9 @@ local function NewProjectile(self, def)
 		end
 		
 		if player.IsColliding(self.pos, def.radius) then
-			player.ModifyHealth(def.damage)
+			if def.damage then
+				player.ModifyHealth(def.damage)
+			end
 			if def.onKill then
 				def.onKill(self, def, Terrain, Enemies, player, dt)
 			end
@@ -65,7 +67,9 @@ local function NewProjectile(self, def)
 			return true
 		end
 		
-		self.animTime = Resources.UpdateAnimation(def.imageName, self.animTime, dt)
+		if self.animationName then
+			self.animTime = Resources.UpdateAnimation(def.imageName, self.animTime, dt)
+		end
 		
 		self.pos = util.Add(self.pos, util.Mult(dt*60, self.velocity))
 	end
@@ -77,7 +81,11 @@ local function NewProjectile(self, def)
 	
 	function self.Draw(drawQueue)
 		drawQueue:push({y=self.pos[2] + 120; f=function()
-			Resources.DrawAnimation(def.imageName, self.pos[1], self.pos[2], self.animTime, self.direction)
+			if self.animationName then
+				Resources.DrawAnimation(def.animationName, self.pos[1], self.pos[2], self.animTime, self.direction)
+			else
+				Resources.DrawImage(def.imageName, self.pos[1], self.pos[2], self.direction)
+			end
 		end})
 		if DRAW_DEBUG then
 			love.graphics.circle('line',self.pos[1], self.pos[2], def.radius)

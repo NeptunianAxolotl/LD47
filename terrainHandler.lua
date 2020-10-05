@@ -93,6 +93,10 @@ local function getExistingChunk(a, b)
 	return false
 end
 
+local function addObstacleToChunk(chunk, obstacleDef, pos)
+	chunk.obstacles[#chunk.obstacles + 1] = NewObstacle({pos = pos}, obstacleDef, chunk.rng)
+end
+
 local function generateChunk(a, b)
 	if not chunkCache[b] then
 		chunkCache[b] = {}
@@ -151,13 +155,13 @@ local function generateChunk(a, b)
 	
 	local chunk = {
 		obstacles = obstacles,
+		rng = rng,
 	}
 	hCache[a] = chunk
 	
 	chunkList[#chunkList + 1] = {a, b}
 	return chunk
 end
-
 
 local function getChunksIDsForRegion(top, left, bottom, right)
 	local lt_a_0, lt_a_1, lt_b = getChunkIDFromPositionForBothParities(left - CHUNK_DRAW_HOR_RANGE, top - CHUNK_DRAW_BOT_RANGE)
@@ -183,6 +187,16 @@ function api.GetTerrainCollision(pos, radius, isCreature, isProjectile, player, 
 	local chunk = getExistingChunk(getChunkIDFromPosition(pos[1], pos[2]))
 	if chunk then
 		return detectCollision(chunk.obstacles, pos, radius, isCreature, isProjectile, player, dt)
+	end
+end
+
+function api.AddObstacle(name, pos)
+	-- Other things, such as the player, enemies, and active spell effects, may call the terrain
+	-- to check whether they are colliding with any mechanical part of it.
+	--TODO: Additional chunks need to be checked, if the 'radius' overlaps with the edge of the chunk that 'x','y' is in.
+	local chunk = getExistingChunk(getChunkIDFromPosition(pos[1], pos[2]))
+	if chunk then
+		return addObstacleToChunk(chunk, ObstacleDefs.defs[ObstacleDefs.keyToIndex[name]], pos)
 	end
 end
 

@@ -3,10 +3,10 @@ local util = require("include/util")
 local creatureUtil = require("entities/creatureUtilities")
 local EffectHandler = require("effectsHandler")
 
-local START_ANGLE, END_ANGLE = math.pi*0.1, math.pi*0.9
+local START_ANGLE, END_ANGLE = math.pi*0.2, math.pi*0.8
 
 local SPAWN_OFFSET = {0, 800}
-local BEAR_SPAWN_OFFSET = {0, 0}
+local BEAR_SPAWN_OFFSET = {0, 500}
 
 local creatureDefs = {
 	{
@@ -36,7 +36,7 @@ local creatureDefs = {
 			end
 		end,
 		getSpawnOffset = function(player)
-			return util.Add(BEAR_SPAWN_OFFSET, util.RandomPointInAnnulus(2000, 2800, START_ANGLE, END_ANGLE))
+			return util.Add(BEAR_SPAWN_OFFSET, util.RandomPointInAnnulus(2400, 3200, START_ANGLE, END_ANGLE))
 		end,
 	},
 	{
@@ -66,7 +66,7 @@ local creatureDefs = {
 			end
 		end,
 		getSpawnOffset = function(player)
-			return util.Add(BEAR_SPAWN_OFFSET, util.RandomPointInAnnulus(2000, 2800, START_ANGLE, END_ANGLE))
+			return util.Add(BEAR_SPAWN_OFFSET, util.RandomPointInAnnulus(2400, 3200, START_ANGLE, END_ANGLE))
 		end,
 	},
 	{
@@ -107,7 +107,7 @@ local creatureDefs = {
 			creatureUtil.SetLimitedTurnDrawDir(self, def, dt)
 		end,
 		getSpawnOffset = function(player)
-			return util.Add(SPAWN_OFFSET, util.RandomPointInAnnulus(1500, 1700, START_ANGLE, END_ANGLE))
+			return util.Add(SPAWN_OFFSET, util.RandomPointInAnnulus(1800, 2400, START_ANGLE, END_ANGLE))
 		end,
 	},
 	{
@@ -116,7 +116,7 @@ local creatureDefs = {
 		turretImage = "bear_car",
 		health = 80,
 		healthRange = 70,
-		radius = 70,
+		radius = 65,
 		speed = 8,
 		reloadTime = 10,
 		burstRate = 1.8,
@@ -132,7 +132,7 @@ local creatureDefs = {
 		posChangeFactor = 0.3,
 		updateFunc = function (self, def, Terrain, Enemies, Projectiles, player, dt)
 			local playerPos, playerVel, playerSpeed = player.GetPhysics()
-			self.wantedSpeed = playerSpeed*2.2 + 10
+			self.wantedSpeed = playerSpeed*2.2 + 14
 			
 			local myGoalOffset = util.SetLength(350 + 1500*(playerSpeed/(playerSpeed + 8)), def.goalOffset)
 			
@@ -148,7 +148,46 @@ local creatureDefs = {
 			creatureUtil.SetLimitedTurnDrawDir(self, def, dt)
 		end,
 		getSpawnOffset = function(player)
-			return util.Add(SPAWN_OFFSET, util.RandomPointInAnnulus(1800, 2200, START_ANGLE, END_ANGLE))
+			return util.Add(SPAWN_OFFSET, util.RandomPointInAnnulus(1800, 2400, START_ANGLE, END_ANGLE))
+		end,
+	},
+	{
+		name = "spider",
+		animationName = "spider",
+		health = 50,
+		healthRange = 70,
+		radius = 60,
+		speed = 0.1,
+		drawInFront = 60,
+		reloadTime = 4,
+		burstRate = 0.25,
+		burstCount = 3,
+		despawnDistance = 500,
+		maxTurnRate = 0.32,
+		stopRange = 10,
+		goalOffset = {0, 500},
+		goalRandomOffsetX = 2000,
+		goalRandomOffsetY = 500,
+		slowTimeMult = 0.2,
+		speedChangeFactor = 0.7,
+		posChangeFactor = 0.3,
+		updateFunc = function (self, def, Terrain, Enemies, Projectiles, player, dt)
+			local playerPos, playerVel, playerSpeed = player.GetPhysics()
+			self.wantedSpeed = playerSpeed*1.7 + 20
+			
+			local myGoalOffset = util.SetLength(350 + 1500*(playerSpeed/(playerSpeed + 8)), def.goalOffset)
+			
+			creatureUtil.MoveTowardsPlayer(self, def, Terrain, Enemies, player, def.stopRange, myGoalOffset, dt)
+			creatureUtil.DoCollisions(self, def, Terrain, Enemies, player, dt)
+			
+			if creatureUtil.UpdateReload(self, def, dt) then
+				creatureUtil.ShootBulletAtPlayer(self, Projectiles, player, "spider_web", math.random()*6 + 2.5, 450, 1.1, dt)
+			end
+			
+			creatureUtil.SetLimitedTurnDrawDir(self, def, dt)
+		end,
+		getSpawnOffset = function(player)
+			return util.Add(BEAR_SPAWN_OFFSET, util.RandomPointInAnnulus(1800, 2400, math.pi*0.4, math.pi*0.6))
 		end,
 	},
 }

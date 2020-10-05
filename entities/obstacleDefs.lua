@@ -90,7 +90,7 @@ local obstacleDefs = {
 		overlapEffect = function (self, player, distSq, dt)
 			local _, _, playerSpeed = player.GetPhysics()
 			if playerSpeed > 6 then
-				playerSpeed = playerSpeed*(1 - 60*dt*0.07)
+				playerSpeed = playerSpeed*(1 - 60*dt*0.05)
 				player.SetSpeed(playerSpeed)
 			end
 			self.imageOverride = "bush_1_flat"
@@ -111,13 +111,34 @@ local obstacleDefs = {
 		overlapEffect = function (self, player, distSq, dt)
 			local _, _, playerSpeed = player.GetPhysics()
 			if playerSpeed > 6 then
-				playerSpeed = playerSpeed*(1 - 60*dt*0.07)
+				playerSpeed = playerSpeed*(1 - 60*dt*0.05)
 				player.SetSpeed(playerSpeed)
 			end
 			if not self.imageOverride then
 				player.ModifyHealth(1)
 			end
 			self.imageOverride = "bush_1_flat"
+		end,
+	},
+	{
+		name = "web",
+		imageName = "web",
+		health = 80,
+		healthRange = 70,
+		placeRadius = 80,
+		placeBlockRadius = 80,
+		radius = 160,
+		drawInFront = -800,
+		minSize = 0.85,
+		maxSize = 1.15,
+		collideCreature = false,
+		collideProjectile = false,
+		overlapEffect = function (self, player, distSq, dt)
+			local _, _, playerSpeed = player.GetPhysics()
+			if playerSpeed > 4 then
+				playerSpeed = playerSpeed*(1 - 60*dt*0.07)
+				player.SetSpeed(playerSpeed)
+			end
 		end,
 	},
 }
@@ -143,8 +164,10 @@ for i = 1, #spellDefs.spellList do
 end
 
 local indexToKey = {}
+local keyToIndex = {}
 for i = 1, #obstacleDefs do
 	indexToKey[i] = obstacleDefs[i].name
+	keyToIndex[obstacleDefs[i].name] = i
 end
 
 local spellIndexToKey = {}
@@ -155,6 +178,7 @@ end
 return {
 	defs = obstacleDefs,
 	indexToKey = indexToKey,
+	keyToIndex = keyToIndex,
 	spellSpawnDefs = spellSpawnDefs,
 	spellIndexToKey = spellIndexToKey,
 }

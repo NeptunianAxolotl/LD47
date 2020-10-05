@@ -4,9 +4,9 @@ local EffectHandler = require("effectsHandler")
 
 local creatureDefs = {
 	bunny_bullet = {
-		imageName = "bullet",
+		animationName = "bullet",
 		radius = 16,
-		spawnOffset = {0, -25},
+		spawnOffset = {0, -36},
 		life = 3.5,
 		damage = -1,
 		hitEffect = "bunny_bullet_hit",
@@ -15,7 +15,7 @@ local creatureDefs = {
 		end,
 	},
 	rocket = {
-		imageName = "rocket",
+		animationName = "rocket",
 		radius = 24,
 		spawnOffset = {0, -90},
 		life = 4,
@@ -49,6 +49,19 @@ local creatureDefs = {
 			if util.DistVectors(playerPos, self.pos) < def.hitRadius then
 				player.ModifyHealth(-1)
 			end
+		end,
+	},
+	spider_web = {
+		imageName = "web_shot",
+		radius = 24,
+		spawnOffset = {0, -10},
+		life = 1.2,
+		updateFunc = function (self, def, Terrain, Enemies, player, dt)
+			
+		end,
+		onKill = function (self, def, Terrain, Enemies, player, dt)
+			EffectHandler.Spawn("web_explode", self.pos)
+			Terrain.AddObstacle("web", self.pos)
 		end,
 	},
 }

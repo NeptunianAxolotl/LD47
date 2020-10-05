@@ -36,6 +36,7 @@ function progression.GetObstacleSpawnWeights(chunkDistance)
 		grass_2   = 1,
 		mud_1     = 1,
 		mud_heart = 1,
+		web       = 0,
 	}
 end
 
@@ -57,11 +58,11 @@ function progression.GetSpellSpawnWeights(chunkDistance)
 end
 
 function progression.GetNextEnemySpawnTime(playerDistance, enemyCount)
-	return 4 + math.random()*6
+	return 4 + math.random()*10
 end
 
 function progression.GetEnemySpawnCount(playerDistance, enemyCount)
-	return math.random(5, 8)
+	return math.random(1, 1)
 end
 
 function progression.GetEnemySpawnWeights(playerDistance, enemyCount)
@@ -69,7 +70,8 @@ function progression.GetEnemySpawnWeights(playerDistance, enemyCount)
 		rocket_bear = 1,
 		bunny_car   = 1,
 		bear_car    = 1,
-		bunny       = 3,
+		bunny       = 1,
+		spider      = 100,
 	}
 end
 

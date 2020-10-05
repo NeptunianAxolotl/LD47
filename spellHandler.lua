@@ -156,7 +156,7 @@ function api.Initialize()
 			startChargeAngle = i*math.pi/4,
 			chargeProgressRange = 9*math.pi/4,
 			spellName = "cantrip",
-			spellLevel = 1,
+			spellLevel = i,
 			modifiers = {},
 			rotation = (i + 5)*math.pi/4,
 		}

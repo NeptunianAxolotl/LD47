@@ -53,7 +53,7 @@ local function NewObstacle(self, def, rng)
 	end
 	
 	function self.Draw(drawQueue)
-		drawQueue:push({y=self.pos[2]; f=function()
+		drawQueue:push({y=self.pos[2] + (def.drawInFront or 0); f=function()
 			if def.spellName then
 				Resources.DrawAnimation("spell_anim", self.pos[1], self.pos[2], self.animDt or 0, false, 0.8, (def.scale or 1)*self.sizeMult)
 			end
