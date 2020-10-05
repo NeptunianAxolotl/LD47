@@ -18,7 +18,7 @@ function self.Update(dt)
 	Player.Update(Terrain, EnemyHandler, self.cameraTransform, dt)
 	
 	local playerPos, playerVelocity, playerSpeed = Player.GetPhysics()
-	local cameraX, cameraY, cameraScale = Camera.UpdateCamera(dt, playerPos, playerVelocity, playerSpeed, Player.IsDead() and 0.96 or 0.8)
+	local cameraX, cameraY, cameraScale = Camera.UpdateCamera(dt, playerPos, playerVelocity, playerSpeed, Player.IsDead() and 0.96 or 0.85)
 	local windowX, windowY = love.window.getMode()
 	self.cameraTransform:setTransformation(windowX/2, 150, 0, cameraScale*windowY/1080, cameraScale*windowY/1080, cameraX, cameraY)
 	
