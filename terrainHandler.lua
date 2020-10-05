@@ -14,6 +14,7 @@
 local util = require("include/util")
 local ObstacleDefs = require("entities/obstacleDefs")
 local NewObstacle = require("entities/obstacle")
+local Progression = require("progression")
 
 local api = {}
 local self = {}
@@ -27,9 +28,6 @@ local CHUNK_DRAW_BOT_RANGE = 300 -- stops tall sprites from popping at the botto
 
 local CHUNK_WIDTH = 64 * 32
 local CHUNK_HEIGHT = 64 * 32
-
-local OBSTACLES_PER_CHUNK_MIN = 18
-local OBSTACLES_PER_CHUNK_MAX = 50
 
 local rngSeed
 
@@ -113,17 +111,18 @@ local function generateChunk(a, b)
 	--Random but repeatable generation using RNG deterministically seeded by a, b, and rngSeed 
 
 	--Generate Obstacles
-	local function Random()
-		return rng:random()
+	local function Random(...)
+		return rng:random(...)
 	end
 	
 	local obstacles = {}
-	local numObstacles = rng:random(OBSTACLES_PER_CHUNK_MIN, OBSTACLES_PER_CHUNK_MAX)
+	local numObstacles = Progression.GetChunkObstacleCount(top, Random)
+	local spellCount = Progression.GetChunkSpellCount(top, Random)
+
+	local spellDistribution = util.WeightsToDistribution(util.TableKeysToList(Progression.GetSpellSpawnWeights(top), ObstacleDefs.spellIndexToKey))
 	
-	local addSpell = rng:random() < 1
-	if addSpell then
-		local spawnDistribution = util.GenerateDistributionFromBoundedRandomWeights(ObstacleDefs.spellSpawnWeights, Random)
-		local obstacleDef = ObstacleDefs.spellSpawnDefs[util.SampleDistribution(spawnDistribution, Random)]
+	for i = 1, spellCount do
+		local obstacleDef = ObstacleDefs.spellSpawnDefs[util.SampleDistribution(spellDistribution, Random)]
 		local radius = math.max(obstacleDef.placeBlockRadius, obstacleDef.radius)
 		local obstaclePos = {
 			left + radius + rng:random()*(CHUNK_WIDTH  - radius*2),
@@ -135,7 +134,8 @@ local function generateChunk(a, b)
 		end
 	end
 	
-	local spawnDistribution = util.GenerateDistributionFromBoundedRandomWeights(ObstacleDefs.spawnWeights, Random)
+	local spawnDistribution = util.WeightsToDistribution(util.TableKeysToList(Progression.GetObstacleSpawnWeights(top), ObstacleDefs.indexToKey))
+	
 	for i = 1, numObstacles do
 		local obstacleDef = ObstacleDefs.defs[util.SampleDistribution(spawnDistribution, Random)]
 		local radius = math.max(obstacleDef.placeBlockRadius, obstacleDef.radius)

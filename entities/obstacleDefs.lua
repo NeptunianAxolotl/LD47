@@ -22,8 +22,6 @@ local obstacleDefs = {
                 return 0
             end
         end,
-		minSpawnWeight = 10,
-		maxSpawnWeight = 30,
 	},
 	{
 		name = "rock_1",
@@ -37,8 +35,6 @@ local obstacleDefs = {
 		maxSize = 1.5,
 		collideCreature = true,
 		collideProjectile = false,
-		minSpawnWeight = 10,
-		maxSpawnWeight = 30,
 	},
 	{
 		name = "rock_2",
@@ -52,8 +48,6 @@ local obstacleDefs = {
 		maxSize = 1.2,
 		collideCreature = true,
 		collideProjectile = true,
-		minSpawnWeight = 2,
-		maxSpawnWeight = 15,
 	},
 	{
 		name = "grass_1",
@@ -67,8 +61,6 @@ local obstacleDefs = {
 		maxSize = 1.15,
 		collideCreature = false,
 		collideProjectile = false,
-		minSpawnWeight = 4,
-		maxSpawnWeight = 10,
 	},
 	{
 		name = "grass_2",
@@ -82,8 +74,6 @@ local obstacleDefs = {
 		maxSize = 1.15,
 		collideCreature = false,
 		collideProjectile = false,
-		minSpawnWeight = 4,
-		maxSpawnWeight = 10,
 	},
 	{
 		name = "mud_1",
@@ -105,8 +95,6 @@ local obstacleDefs = {
 			end
 			self.imageOverride = "bush_1_flat"
 		end,
-		minSpawnWeight = 10,
-		maxSpawnWeight = 20,
 	},
 	{
 		name = "mud_heart",
@@ -131,24 +119,15 @@ local obstacleDefs = {
 			end
 			self.imageOverride = "bush_1_flat"
 		end,
-		minSpawnWeight = 0.1,
-		maxSpawnWeight = 4,
 	},
 }
 
-local spawnWeights = {}
-for i = 1, #obstacleDefs do
-	spawnWeights[i] = {
-		obstacleDefs[i].minSpawnWeight,
-		obstacleDefs[i].maxSpawnWeight,
-	}
-end
 
 local spellSpawnDefs = {}
 for i = 1, #spellDefs.spellList do
 	local spellName = spellDefs.spellList[i]
 	spellSpawnDefs[i] = {
-		name = "spell_" .. i,
+		name = spellName,
 		imageName = spellDefs.spellIcon[spellName],
 		spellName = spellName,
 		health = 80,
@@ -160,22 +139,22 @@ for i = 1, #spellDefs.spellList do
 		maxSize = 1,
 		scale = 1.7,
 		collideCreature = false,
-		minSpawnWeight = spellDefs.probability[spellName],
-		maxSpawnWeight = spellDefs.probability[spellName],
 	}
 end
 
-local spellSpawnWeights = {}
+local indexToKey = {}
+for i = 1, #obstacleDefs do
+	indexToKey[i] = obstacleDefs[i].name
+end
+
+local spellIndexToKey = {}
 for i = 1, #spellSpawnDefs do
-	spellSpawnWeights[i] = {
-		spellSpawnDefs[i].minSpawnWeight,
-		spellSpawnDefs[i].maxSpawnWeight,
-	}
+	spellIndexToKey[i] = spellSpawnDefs[i].name
 end
 
 return {
 	defs = obstacleDefs,
-	spawnWeights = spawnWeights,
+	indexToKey = indexToKey,
 	spellSpawnDefs = spellSpawnDefs,
-	spellSpawnWeights = spellSpawnWeights,
+	spellIndexToKey = spellIndexToKey,
 }

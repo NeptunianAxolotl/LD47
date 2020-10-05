@@ -363,6 +363,14 @@ end
 --------------------------------------------------
 -- Table Utilities
 
+function util.TableKeysToList(keyTable, indexToKey)
+	local list = {}
+	for i = 1, #indexToKey do
+		list[i] = keyTable[indexToKey[i]]
+	end
+	return list
+end
+
 function util.PrintTable(data, name, indent, tableChecked)
 	name = name or "PrintTable"
 	indent = indent or ""
@@ -379,7 +387,7 @@ function util.PrintTable(data, name, indent, tableChecked)
 			print("warning, userdata")
 		end
 		if ty == "table" then
-			PrintTable(v, name, newIndent, true)
+			util.PrintTable(v, name, newIndent, true)
 		elseif ty == "boolean" then
 			print(newIndent .. name .. " = " .. (v and "true" or "false"))
 		elseif ty == "string" or ty == "number" then
