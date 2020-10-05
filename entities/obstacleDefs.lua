@@ -151,6 +151,7 @@ for i = 1, #spellDefs.spellList do
 		name = spellName,
 		imageName = spellDefs.spellIcon[spellName],
 		spellName = spellName,
+		spellAnim = spellDefs.spellObstacleAnim[spellName],
 		health = 80,
 		healthRange = 70,
 		placeRadius = 80,
