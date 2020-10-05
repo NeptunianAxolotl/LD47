@@ -7,16 +7,17 @@ local DRAW_DEBUG = false
 local function NewObstacle(self, def, rng)
 	-- pos
 	self.health = def.health + rng:random()*def.healthRange
+	self.sizeMult = def.minSize + rng:random()*(def.maxSize - def.minSize)
 	
 	function self.GetPhysics()
-		return self.pos, def.radius
+		return self.pos, def.radius*self.sizeMult
 	end
 	
 	function self.IsColliding(otherPos, otherRadius, isCreature, projectile, player, dt)
 		if not ((isCreature and def.collideCreature) or (projectile and def.collideProjectile) or (player and (def.overlapEffect or def.spellName))) then
 			return
 		end
-		local collide, distSq = util.IntersectingCircles(self.pos, def.radius, otherPos, otherRadius)
+		local collide, distSq = util.IntersectingCircles(self.pos, def.radius*self.sizeMult, otherPos, otherRadius)
 		if not collide then
 			return
 		end
@@ -54,12 +55,12 @@ local function NewObstacle(self, def, rng)
 	function self.Draw(drawQueue)
 		drawQueue:push({y=self.pos[2]; f=function()
 			if def.spellName then
-				Resources.DrawAnimation("spell_anim", self.pos[1], self.pos[2], self.animDt or 0, false, 0.8, def.scale)
+				Resources.DrawAnimation("spell_anim", self.pos[1], self.pos[2], self.animDt or 0, false, 0.8, (def.scale or 1)*self.sizeMult)
 			end
-			Resources.DrawImage(self.imageOverride or def.imageName, self.pos[1], self.pos[2], false, false, def.scale)
+			Resources.DrawImage(self.imageOverride or def.imageName, self.pos[1], self.pos[2], false, false, (def.scale or 1)*self.sizeMult)
 		end})
 		if DRAW_DEBUG then
-			drawQueue:push({y=2^20; f=function() love.graphics.circle('line',self.pos[1], self.pos[2], def.radius) end})
+			drawQueue:push({y=2^20; f=function() love.graphics.circle('line',self.pos[1], self.pos[2], def.radius*self.sizeMult) end})
 		end
 	end
 	
