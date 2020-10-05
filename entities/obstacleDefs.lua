@@ -89,8 +89,8 @@ local obstacleDefs = {
 		collideProjectile = false,
 		overlapEffect = function (self, player, distSq, dt)
 			local _, _, playerSpeed = player.GetPhysics()
-			if playerSpeed > 6 then
-				playerSpeed = playerSpeed*(1 - 60*dt*0.05)
+			if playerSpeed > 8 then
+				playerSpeed = playerSpeed*(1 - 60*dt*0.02)
 				player.SetSpeed(playerSpeed)
 			end
 			self.imageOverride = "bush_1_flat"
@@ -110,8 +110,8 @@ local obstacleDefs = {
 		collideProjectile = false,
 		overlapEffect = function (self, player, distSq, dt)
 			local _, _, playerSpeed = player.GetPhysics()
-			if playerSpeed > 6 then
-				playerSpeed = playerSpeed*(1 - 60*dt*0.05)
+			if playerSpeed > 8 then
+				playerSpeed = playerSpeed*(1 - 60*dt*0.02)
 				player.SetSpeed(playerSpeed)
 			end
 			if not self.imageOverride then
@@ -135,8 +135,8 @@ local obstacleDefs = {
 		collideProjectile = false,
 		overlapEffect = function (self, player, distSq, dt)
 			local _, _, playerSpeed = player.GetPhysics()
-			if playerSpeed > 4 then
-				playerSpeed = playerSpeed*(1 - 60*dt*0.07)
+			if playerSpeed > 6 then
+				playerSpeed = playerSpeed*(1 - 60*dt*0.04)
 				player.SetSpeed(playerSpeed)
 			end
 		end,
