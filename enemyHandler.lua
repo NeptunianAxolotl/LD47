@@ -6,6 +6,7 @@ local Terrain = require("terrainHandler")
 local ProjectileHandler = require("projectileHandler")
 local CreatureDefs = require("entities/creatureDefs")
 local NewCreature = require("entities/creature")
+local Progression = require("progression")
 
 local self = {}
 local api = {}
@@ -16,9 +17,9 @@ local function SpawnNewEnemies(player)
 	end
 	local playerPos, playerVel, playerSpeed = player.GetPhysics()
 	
-	local enemyCount = math.random(1, 3)
+	local enemyCount = Progression.GetEnemySpawnCount(playerPos[2])
 	
-	local spawnDistribution = util.GenerateDistributionFromBoundedRandomWeights(CreatureDefs.spawnWeights)
+	local spawnDistribution = util.WeightsToDistribution(util.TableKeysToList(Progression.GetEnemySpawnWeights(playerPos[2]), CreatureDefs.indexToKey))
 	
 	for i = 1, enemyCount do
 		local creatureDef = CreatureDefs.defs[util.SampleDistribution(spawnDistribution)]
@@ -70,7 +71,8 @@ function api.Update(player, dt)
 	self.spawnCheckAcc = self.spawnCheckAcc - dt
 	if self.spawnCheckAcc <= 0 then
 		SpawnNewEnemies(player)
-		self.spawnCheckAcc = 5.5 + math.random()*6
+		local playerPos, playerVel, playerSpeed = player.GetPhysics()
+		self.spawnCheckAcc = Progression.GetNextEnemySpawnTime(playerPos[2])
 	end
 	
 	IterableMap.ApplySelf(self.activeEnemies, "Update", Terrain, api, ProjectileHandler, player, dt)

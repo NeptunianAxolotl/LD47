@@ -15,8 +15,6 @@ local creatureDefs = {
 		healthRange = 70,
 		radius = 32,
 		speed = 0.2,
-		minSpawnWeight = 5,
-		maxSpawnWeight = 10,
 		despawnDistance = 500,
 		stopRange = 10,
 		goalOffset = {0, 1000},
@@ -39,8 +37,6 @@ local creatureDefs = {
 		radius = 58,
 		speed = 8,
 		maxTurnRate = 0.08,
-		minSpawnWeight = 10,
-		maxSpawnWeight = 30,
 		despawnDistance = 500,
 		stopRange = 10,
 		goalOffset = {0, 700},
@@ -72,15 +68,13 @@ local creatureDefs = {
 	},
 }
 
-local spawnWeights = {}
+
+local indexToKey = {}
 for i = 1, #creatureDefs do
-	spawnWeights[i] = {
-		creatureDefs[i].minSpawnWeight,
-		creatureDefs[i].maxSpawnWeight,
-	}
+	indexToKey[i] = creatureDefs[i].name
 end
 
 return {
 	defs = creatureDefs,
-	spawnWeights = spawnWeights,
+	indexToKey = indexToKey,
 }

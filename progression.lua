@@ -4,11 +4,11 @@ local progression = {}
 local OBSTACLES_PER_CHUNK_MIN = 18
 local OBSTACLES_PER_CHUNK_MAX = 50
 
-function progression.GetChunkObstacleCount(top, Random)
+function progression.GetChunkObstacleCount(chunkDistance, Random)
 	return Random(OBSTACLES_PER_CHUNK_MIN, OBSTACLES_PER_CHUNK_MAX)
 end
 
-function progression.GetObstacleSpawnWeights(top)
+function progression.GetObstacleSpawnWeights(chunkDistance)
 	return {
 		tree_1    = 1,
 		rock_1    = 1,
@@ -20,11 +20,11 @@ function progression.GetObstacleSpawnWeights(top)
 	}
 end
 
-function progression.GetChunkSpellCount(top, Random)
+function progression.GetChunkSpellCount(chunkDistance, Random)
 	return 1
 end
 
-function progression.GetSpellSpawnWeights(top)
+function progression.GetSpellSpawnWeights(chunkDistance)
 	return {
 		cantrip  = 0,
 		fireball = 10,
@@ -37,6 +37,19 @@ function progression.GetSpellSpawnWeights(top)
 	}
 end
 
+function progression.GetNextEnemySpawnTime(playerDistance)
+	return 4 + math.random()*6
+end
 
+function progression.GetEnemySpawnCount(playerDistance)
+	return math.random(2, 7)
+end
+
+function progression.GetEnemySpawnWeights(playerDistance)
+	return {
+		rocket_bear = 1,
+		bunny_car   = 1,
+	}
+end
 
 return progression
