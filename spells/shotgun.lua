@@ -13,7 +13,7 @@ local function NewSpell(player, modifies, level)
     -- properties derived from modifiers
     local nProjectiles = 5 + (level-1)*2
     local sprayAngle = 0.2 * ((nProjectiles*3)/(nProjectiles+baseN*2) )
-    local myDamage = 60 * (1 + 0.1 * (level-1))
+    local myDamage = 40
     local baseSpeed = 15
     local myLives = 1
 
@@ -27,7 +27,7 @@ local function NewSpell(player, modifies, level)
     for i = 1,nProjectiles do
         self.projectiles[i] = {}
         self.projectiles[i].pos, self.projectiles[i].velocity = player.GetPhysics()
-        local launchVelocity = util.SetLength(baseSpeed, self.projectiles[i].velocity)
+        local launchVelocity = util.SetLength(baseSpeed - 0.1 + 0.2 * math.random(), self.projectiles[i].velocity)
         launchVelocity = util.RotateVector(launchVelocity, math.random() * sprayAngle * 2 - sprayAngle)
         self.projectiles[i].velocity = util.Add(self.projectiles[i].velocity, launchVelocity);
         self.projectiles[i].alive = true

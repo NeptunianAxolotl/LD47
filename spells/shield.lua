@@ -14,7 +14,7 @@ local function phaseModifier(i)
     return modifier
 end
 
-local shieldSize = 50
+local shieldSize = 40
 
 local function NewSpell(player, modifies, level)
 
@@ -38,7 +38,7 @@ local function NewSpell(player, modifies, level)
     self.projectiles = {}
     self.lifetime = myDuration
     self.phaseLength = myPhaseLength 
-    self.sizeMult = 1 + math.min((0.1 * (level-1)),1)
+    self.sizeMult = 1 + math.min((0.1 * (level-1)),1.2)
     self.radius = myRadius + shieldSize * self.sizeMult
     self.maxVelocity = 2 * math.pi * self.radius / (self.phaseLength * 60) + 1
     self.playerRef = player
