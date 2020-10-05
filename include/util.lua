@@ -103,6 +103,10 @@ function util.Cross(v1, v2)
 	return {v1[2]*v2[3] - v1[3]*v2[2], v1[3]*v2[1] - v1[1]*v2[3], v1[1]*v2[2] - v1[2]*v2[1]}
 end
 
+function util.Cross2D(v1, v2)
+	return v1[1]*v2[2] - v1[2]*v2[1]
+end
+
 -- Projection of v1 onto v2
 function util.Project(v1, v2)
 	local uV2 = util.Unit(v2)

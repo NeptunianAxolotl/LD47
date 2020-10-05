@@ -28,4 +28,5 @@ return {
 	"health",
 	"dead_croc",
 	"stun",
+	"car",
 }

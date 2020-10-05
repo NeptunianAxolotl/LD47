@@ -10,6 +10,7 @@ local function NewCreature(self, def)
 	-- pos
 	self.health = def.health + math.random()*def.healthRange
 	self.direction = 0
+	self.velocity = {0, 0}
     self.projIgnoreTime = 0
     self.projIgnoreFresh = {}
     self.projIgnoreStale = {}
@@ -38,10 +39,14 @@ local function NewCreature(self, def)
         if self.health <= 0 then
             return true -- Remove
         end
+		self.oldPos = self.pos
         
 		if def.updateFunc then
 			def.updateFunc(self, def, Terrain, Enemies, player, dt)
 		end
+		
+		self.pos = util.Add(self.pos, util.Mult(dt, self.velocity))
+		self.velocity = util.Mult(1 - dt, self.velocity)
         
         self.projIgnoreTime = self.projIgnoreTime + dt
         if self.projIgnoreTime > (PROJ_TIMEOUT / 2) then
@@ -63,16 +68,17 @@ local function NewCreature(self, def)
     end
 	
 	function self.AddPosition(posToAdd)
-		self.pos = util.Add(self.pos, posToAdd)
+		self.velocity = util.Add(self.velocity, util.Mult(def.speedChangeFactor or 0.4, posToAdd))
+		self.pos = util.Add(self.pos, util.Mult(def.posChangeFactor or 0.4, posToAdd))
 	end
 	
 	function self.AddSlowTime(toAdd)
-		self.slowTime = math.min(1, (self.slowTime or 0.1) + toAdd)
+		self.slowTime = math.min(1, (self.slowTime or 0.1) + toAdd)*(def.slowTimeMult or 1)
 	end
 	
 	function self.Draw(drawQueue)
 		drawQueue:push({y=self.pos[2]; f=function()
-			Resources.DrawIsoImage(def.imageName, self.pos[1], self.pos[2], self.direction)
+			Resources.DrawIsoImage(def.imageName, self.pos[1], self.pos[2], self.drawDir or self.direction)
 		end})
 		if DRAW_DEBUG then
 			love.graphics.circle('line',self.pos[1], self.pos[2], def.radius)

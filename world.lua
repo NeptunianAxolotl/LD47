@@ -20,7 +20,7 @@ function self.Update(dt)
 	local playerPos, playerVelocity, playerSpeed = Player.GetPhysics()
 	local cameraX, cameraY, cameraScale = Camera.UpdateCamera(dt, playerPos, playerVelocity, playerSpeed, Player.IsDead() and 0.96 or 0.8)
 	local windowX, windowY = love.window.getMode()
-	self.cameraTransform:setTransformation(windowX/2, 150, 0, cameraScale, cameraScale, cameraX, cameraY)
+	self.cameraTransform:setTransformation(windowX/2, 150, 0, cameraScale*windowY/1080, cameraScale*windowY/1080, cameraX, cameraY)
 	
 	SpellHandler.Update(dt)
 	EnemyHandler.Update(Player, dt)
