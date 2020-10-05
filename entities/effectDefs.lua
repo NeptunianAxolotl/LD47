@@ -49,10 +49,19 @@ local effectDefs = {
 		interface = false,
 		alphaScale = true,
 		color = {0.5, 0.8, 0.5},
-		inFront = 80,
+		inFront = 50,
 		spawnOffset = {0, -20},
 		duration = "inherit",
-	}
+	},
+	fireball_explode = {
+		image = "fireball_explode",
+		interface = false,
+		alphaScale = true,
+		color = {0.8, 0.4, 0.1},
+		inFront = 50,
+		spawnOffset = {0, 0},
+		duration = "inherit",
+	},
 }
 
 

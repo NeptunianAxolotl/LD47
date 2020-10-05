@@ -1,6 +1,7 @@
 local util = require("include/util")
 local Resources = require("resourceHandler")
 local spellutil = require("spells/spellutil")
+local EffectHandler = require("effectsHandler")
 
 local function speedMultiplier(i)
     local multiplier = math.floor(i/2) * 0.2
@@ -33,7 +34,6 @@ local function NewSpell(player, modifies, level)
     self.modifiers = modifiers
     self.projectiles = {}
     self.lifetime = 10
-    self.explosionEffects = {}
     
     -- setting up the projectiles
     for i = 1,nProjectiles do
@@ -57,16 +57,9 @@ local function NewSpell(player, modifies, level)
             if self.projectiles[k].alive then anyAlive = true end
         end
         if not anyAlive then 
-            if not (#self.explosionEffects > 0 and self.explosionEffects[#self.explosionEffects].timer > 0) then
-                return true -- kill
-            end
+            return true -- kill
         end
         
-        for f in pairs(self.explosionEffects) do
-            if self.explosionEffects[f].timer > 0 then
-                self.explosionEffects[f].timer = self.explosionEffects[f].timer - dt
-            end
-        end
         
         for k in pairs(self.projectiles) do
             if self.projectiles[k].alive then
@@ -95,12 +88,10 @@ local function NewSpell(player, modifies, level)
                     for t in pairs(enemysplash) do
                         enemysplash[t].ProjectileImpact(self.projectiles[k].exploEffect)
                     end
-                    self.explosionEffects[#self.explosionEffects+1] = {timer = exploDuration, x = self.projectiles[k].pos[1], y = self.projectiles[k].pos[2]}
+					EffectHandler.Spawn("fireball_explode", self.projectiles[k].pos, exploRadius/200)
                 end
             end
         end
-        
-        
 	end
 	
 	function self.Draw(drawQueue)
@@ -112,18 +103,6 @@ local function NewSpell(player, modifies, level)
 				})
 			end
 		end
-        for f in pairs(self.explosionEffects) do
-            if self.explosionEffects[f].timer > 0 then
-                drawQueue:push({
-					y=self.explosionEffects[f].y,
-                    f=function() 
-                        love.graphics.setColor(1,0.3,0)
-                        love.graphics.setLineWidth(6)
-                        love.graphics.circle("line", self.explosionEffects[f].x, self.explosionEffects[f].y, (exploDuration-self.explosionEffects[f].timer)/exploDuration*exploRadius) 
-                    end,
-				})
-            end
-        end
 	end
 	
 	return self
