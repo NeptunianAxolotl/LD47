@@ -28,6 +28,7 @@ function api.ModifyHealth(change)
 	end
 	self.health = math.max(0, math.min(6, self.health + change))
 	if change < 0 then
+		SoundHandler.PlaySound("health_down")
 		EffectHandler.Spawn("health_down", {0, 0})
 	else
 		SoundHandler.PlaySound("health_up")
