@@ -4,7 +4,7 @@ function love.conf(t)
 	t.window.height = 768
 	--t.window.fullscreen = true -- Do not fullscreen since we lack an exit button.
 	t.window.resizable = true
-	t.window.icon = "icon.png"
+	t.window.icon = "resources/images/hat.png"
 
 	t.modules.joystick = false
     --t.window.fullscreen = true 
