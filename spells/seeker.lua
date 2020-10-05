@@ -21,7 +21,7 @@ local function NewSpell(player, modifies, level)
     local baseSpeed = 5
     local myLives = 1
     local turnspeed = math.pi/50
-    local mySearchRad = math.min(1000,500+100*level)
+    local mySearchRad = 500
     
     -- setting up the spell
 	local self = {}

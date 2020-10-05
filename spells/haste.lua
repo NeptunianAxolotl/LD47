@@ -11,7 +11,7 @@ local function NewSpell(player, modifies, level)
     -- properties derived from modifiers
     local nProjectiles = 6
     local sprayAngle = 0.1
-    local myMult = 4 * (level and 1+(0.25*(level-1)) or 1)
+    local myMult = 4 * (level and 1+(0.2*(level-1)) or 1)
     local myDuration = 0.6 * (level and 1+(0.5*(level-1)) or 1)
     
     -- setting up the spell

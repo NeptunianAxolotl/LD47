@@ -28,7 +28,7 @@ local function NewSpell(player, modifies, level)
     local myFire = 100
     local exploDamage = 70
     local exploRadius = 300 * (level and (1 + 0.25*(level-1)) or 1)
-    local baseSpeed = 15
+    local baseSpeed = 13 + level*2.5
     local myLives = 1
     
     -- setting up the spell
@@ -70,12 +70,12 @@ local function NewSpell(player, modifies, level)
                 self.projectiles[k].pos = util.Add(util.Mult(dt*60, self.projectiles[k].velocity), self.projectiles[k].pos)
                 
                 -- check collision
-                local collided = Terrain.GetTerrainCollision(self.projectiles[k].pos, 30, false, self.projectiles[k].effect.id, nil, dt)
+                local collided = Terrain.GetTerrainCollision(self.projectiles[k].pos, 40, false, self.projectiles[k].effect.id, nil, dt)
                 if collided then
                     collided.ProjectileImpact(self.projectiles[k].effect)
                     self.projectiles[k].alive = false
                 else
-                    collided = Enemies.DetectCollision(self.projectiles[k].pos, 30, false, self.projectiles[k].effect.id, nil, dt)
+                    collided = Enemies.DetectCollision(self.projectiles[k].pos, 60, false, self.projectiles[k].effect.id, nil, dt)
                     if collided then
                         collided.ProjectileImpact(self.projectiles[k].effect)
                         self.projectiles[k].lives = self.projectiles[k].lives - 1

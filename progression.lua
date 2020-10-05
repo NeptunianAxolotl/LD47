@@ -15,7 +15,7 @@ local DISTANCE_MULT = 1/1800
 
 local distanceKeyframes = {
 	{
-		dist          = 0,
+		dist          = -1,
 		lushFactor    = 0,
 		
 		obstacleCount = {0,   0},
@@ -50,10 +50,10 @@ local distanceKeyframes = {
 		shield        = {1,   1},
 	},
 	{
-		dist          = 1,
+		dist          = 0,
 		lushFactor    = 0,
 		
-		obstacleCount = {0,   0},
+		obstacleCount = {1,   6},
 		spellCount    = {0,   0},
 		
 		tree          = {0, 0},
@@ -244,9 +244,9 @@ local distanceKeyframes = {
 		spawnCount    = {5,   30},
 		
 		bunny         = {0,   0},
-		rocket_bear   = {0,   4},
-		bunny_car     = {2,   8},
-		bear_car      = {0,   0},
+		rocket_bear   = {0.2, 4},
+		bunny_car     = {3,   8},
+		bear_car      = {0.2, 2},
 		spider        = {0,   3},
 		croc_enemy    = {0,   0},
 		
