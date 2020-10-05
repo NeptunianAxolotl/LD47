@@ -46,7 +46,7 @@ local function NewCreature(self, def)
 			Progression.SetBossHealth(self.health)
 		end
 		
-        if self.health <= 0 or true then
+        if self.health <= 0 then
 			if def.isBoss then
 				Progression.SetBossHealth(self.health, true)
 			end
