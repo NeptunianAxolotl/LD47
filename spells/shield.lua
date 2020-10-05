@@ -3,6 +3,7 @@ local util = require("include/util")
 local Resources = require("resourceHandler")
 local spellutil = require("spells/spellutil")
 local Projectiles = require("projectileHandler")
+local SoundHandler = require("soundHandler")
 
 local lookup = {0, math.pi, math.pi / 2, 3 / 2 * math.pi}
 
@@ -19,6 +20,7 @@ local shieldSize = 40
 local function NewSpell(player, modifies, level)
 
     modifiers = modifiers or {}
+    SoundHandler.PlaySound("shield_shoot")
     level = level or 1
     
     -- uniform properties
