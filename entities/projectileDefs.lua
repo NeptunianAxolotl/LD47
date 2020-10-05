@@ -64,6 +64,63 @@ local creatureDefs = {
 			Terrain.AddObstacle("web", self.pos)
 		end,
 	},
+	fireball = {
+		isoImage = "fireball",
+		radius = 24,
+		spawnOffset = {0, -10},
+		life = 4,
+		damage = -1,
+		hitRadius = 200,
+		updateFunc = function (self, def, Terrain, Enemies, player, dt)
+			
+		end,
+		onKill = function (self, def, Terrain, Enemies, player, dt)
+			EffectHandler.Spawn("rocket_explode", self.pos)
+			local playerPos, playerVelocity, playerSpeed = player.GetPhysics()
+			if util.DistVectors(playerPos, self.pos) < def.hitRadius then
+				player.ModifyHealth(-1)
+			end
+		end,
+	},
+	bees = {
+		isoAnimationName = "seeker",
+		radius = 24,
+		spawnOffset = {0, -10},
+		life = 5,
+		damage = -1,
+		updateFunc = function (self, def, Terrain, Enemies, player, dt)
+			if not self.init then
+				self.init = true
+				self.ignoreTerrain = 1.8
+			end
+			if self.ignoreTerrain then
+				self.ignoreTerrain = self.ignoreTerrain - dt
+				if self.ignoreTerrain < 0 then
+					self.ignoreTerrain = false
+				end
+			end
+			
+			local playerPos, playerVelocity, playerSpeed = player.GetPhysics()
+			local toPlayer = util.Subtract(util.Add(util.Mult(35, playerVelocity), playerPos), self.pos)
+			
+			self.velocity = util.Add(util.Mult(1 - dt*1.8, self.velocity), util.SetLength(32*dt, toPlayer))
+			self.speed, self.direction = util.CartToPolar(self.velocity)
+			
+			self.speed = math.max(5, math.min(25, self.speed))
+			self.velocity = util.SetLength(self.speed, self.velocity)
+		end,
+	},
+	ice = {
+		isoImage = "shotgun",
+		radius = 16,
+		spawnOffset = {0, -36},
+		life = 3.5,
+		damage = -1,
+		hitEffect = "ice_hit_effect",
+		updateFunc = function (self, def, Terrain, Enemies, player, dt)
+			
+		end,
+	},
 }
 
 

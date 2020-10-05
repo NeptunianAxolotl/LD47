@@ -194,25 +194,26 @@ local creatureDefs = {
 		name = "croc_enemy",
 		animationName = "croc_enemy",
 		animateWithSpeed = true,
+		isBoss = true,
 		recolor = {1, 0.4, 1},
 		health = 15000,
 		healthRange = 50,
 		radius = 40,
 		speed = 8,
-		reloadTime = 7,
-		burstRate = 1.8,
-		burstCount = 1,
+		reloadTime = 2,
+		burstRate = 0.28,
+		burstCount = 4,
 		maxTurnRate = 0.24,
-		turnLimit = 1.4,
+		turnLimit = 1.9,
 		goalOffset = {0, 200},
-		goalRandomOffsetX = 500,
-		goalRandomOffsetY = 800,
+		goalRandomOffsetX = 800,
+		goalRandomOffsetY = 600,
 		slowTimeMult = 0.2,
 		speedChangeFactor = 0.7,
 		posChangeFactor = 0.3,
 		updateFunc = function (self, def, Terrain, Enemies, Projectiles, player, dt)
 			local playerPos, playerVel, playerSpeed = player.GetPhysics()
-			self.wantedSpeed = playerSpeed*3.2 + 10
+			self.wantedSpeed = playerSpeed*3 + 10
 			
 			self.goalChangeTime = (self.goalChangeTime or 1) - dt
 			if self.goalChangeTime < 0 then
@@ -226,7 +227,27 @@ local creatureDefs = {
 			creatureUtil.DoCollisions(self, def, Terrain, Enemies, player, dt)
 			
 			if creatureUtil.UpdateReload(self, def, dt) then
-				creatureUtil.ShootBulletAtPlayer(self, Projectiles, player, "rocket", 10, 60, 0.15, dt)
+				if not self.projectileType then
+					self.projectileType = math.random()*4
+				end
+				
+				if self.projectileType < 1 then
+					creatureUtil.ShootBulletAtPlayer(self, Projectiles, player, "fireball", 18, 60, 0.75, dt)
+				elseif self.projectileType < 2 then
+					creatureUtil.ShootBulletAtPlayer(self, Projectiles, player, "spider_web", math.random()*6 + 2.5, 450, 1.1, dt)
+				elseif self.projectileType < 3 then
+					for i = 1, 9 do
+						creatureUtil.ShootBulletAtPlayer(self, Projectiles, player, "ice", 22, 6000, 1, dt)
+					end
+				else
+					creatureUtil.ShootBulletAtPlayer(self, Projectiles, player, "bees", 3, 60, 0.15, dt)
+					creatureUtil.ShootBulletAtPlayer(self, Projectiles, player, "bees", 3, 60, 0.15, dt)
+				end
+				
+				if self.fireCycle%2 == 0 then
+					self.projectileType = false
+					self.projectileSpeed = false
+				end
 			end
 			
 			EffectHandler.SpawnDust(self.pos, self.velocity, self.wantedSpeed, dt, 0.8)

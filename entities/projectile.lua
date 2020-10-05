@@ -67,8 +67,8 @@ local function NewProjectile(self, def)
 			return true
 		end
 		
-		if def.animationName then
-			self.animTime = Resources.UpdateAnimation(def.animationName, self.animTime, dt)
+		if def.animationName or def.isoAnimationName then
+			self.animTime = Resources.UpdateAnimation(def.animationName or def.isoAnimationName, self.animTime, dt)
 		end
 		
 		self.pos = util.Add(self.pos, util.Mult(dt*60, self.velocity))
@@ -83,8 +83,12 @@ local function NewProjectile(self, def)
 		drawQueue:push({y=self.pos[2] + 120; f=function()
 			if def.animationName then
 				Resources.DrawAnimation(def.animationName, self.pos[1], self.pos[2], self.animTime or 0, self.direction)
-			else
+			elseif def.isoAnimationName then
+				Resources.DrawIsoAnimation(def.isoAnimationName, self.pos[1], self.pos[2], self.animTime or 0, self.direction)
+			elseif def.imageName then
 				Resources.DrawImage(def.imageName, self.pos[1], self.pos[2], self.direction)
+			else
+				Resources.DrawIsoImage(def.isoImage, self.pos[1], self.pos[2], self.direction)
 			end
 		end})
 		if DRAW_DEBUG then

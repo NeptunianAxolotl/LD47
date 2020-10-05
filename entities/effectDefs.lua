@@ -60,6 +60,15 @@ local effectDefs = {
 		spawnOffset = {0, -20},
 		duration = "inherit",
 	},
+	ice_hit_effect = {
+		image = "bunny_bullet_hit",
+		interface = false,
+		alphaScale = true,
+		color = {0.3, 0.6, 0.9},
+		inFront = 50,
+		spawnOffset = {0, -12},
+		duration = "inherit",
+	},
 	fireball_explode = {
 		image = "fireball_explode",
 		interface = false,

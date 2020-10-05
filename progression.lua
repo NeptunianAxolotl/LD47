@@ -61,7 +61,7 @@ function progression.GetSpellSpawnWeights(chunkDistance)
 end
 
 function progression.GetNextEnemySpawnTime(playerDistance, enemyCount)
-	return 2 + math.random()*1
+	return 200 + math.random()*100
 end
 
 function progression.GetEnemySpawnCount(playerDistance, enemyCount)
@@ -75,7 +75,7 @@ function progression.GetEnemySpawnWeights(playerDistance, enemyCount)
 		bear_car    = 1,
 		bunny       = 1,
 		spider      = 1,
-		croc_enemy  = 1,
+		croc_enemy  = 1000,
 	}
 end
 
