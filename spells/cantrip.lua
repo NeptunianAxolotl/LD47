@@ -9,7 +9,7 @@ local function NewSpell(player, modifies, level)
     
     modifiers = modifiers or {}
 	
-	SoundHandler.PlaySound("bulletfire", 1)
+	SoundHandler.PlaySound("bulletfire")
     
     -- uniform properties
     local baseN = 1

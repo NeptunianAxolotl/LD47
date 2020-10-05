@@ -9,6 +9,7 @@ local Terrain = require("terrainHandler")
 local Resources = require("resourceHandler")
 local Enemies = require("enemyHandler")
 local EffectHandler = require("effectsHandler")
+local SoundHandler = require("soundHandler")
 
 local self = {}
 
@@ -79,6 +80,9 @@ function api.AddChargeAndCast(player, chargeAdd)
 	if self.charge > 1 then
 		local spellData = self.spellPositions[self.currentSpell]
 		EffectHandler.Spawn("cast_spell", spellData.pos)
+		if spellData.castSound then
+			SoundHandler.PlaySound(spellData.castSound)
+		end
 		
 		api.CastSpell(spellData.spellName, spellData.modifiers, spellData.spellLevel, player)
 		self.charge = self.charge - 1
@@ -159,6 +163,7 @@ function api.Initialize()
 			spellLevel = i,
 			modifiers = {},
 			rotation = (i + 5)*math.pi/4,
+			--castSound = "beat" .. i,
 		}
 		spellData.pos = util.Add(spellCentre, util.PolarToCart(SPELL_RADIUS, (i - 1)*math.pi/4))
 		

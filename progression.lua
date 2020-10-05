@@ -1,5 +1,8 @@
 
+local SoundHandler = require("soundHandler")
+
 local progression = {}
+local self = {}
 
 local OBSTACLES_PER_CHUNK_MIN = 18
 local OBSTACLES_PER_CHUNK_MAX = 50
@@ -73,6 +76,17 @@ function progression.GetEnemySpawnWeights(playerDistance, enemyCount)
 		bunny       = 1,
 		spider      = 1,
 	}
+end
+
+function progression.Update(playerDistance, dt)
+	if not self.musicPlaying then
+		SoundHandler.PlaySound("fulltrack", true)
+		self.musicPlaying = true
+	end
+end
+
+function progression.Initialize()
+	self = {}
 end
 
 return progression

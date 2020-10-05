@@ -8,6 +8,7 @@ local SpellHandler = require("spellHandler")
 local EnemyHandler = require("enemyHandler")
 local EffectsHandler = require("effectsHandler")
 local SoundHandler = require("soundHandler")
+local Progression = require("progression")
 
 local PriorityQueue = require("include/PriorityQueue")
 
@@ -30,6 +31,7 @@ function self.Update(dt)
 	ProjectileHandler.Update(Player, dt)
 	EffectsHandler.Update(dt)
 	SoundHandler.Update(dt)
+	Progression.Update(playerPos[2], dt)
 	
 	-- Only update visible chunks.
 	love.graphics.replaceTransform(self.cameraTransform)
@@ -71,7 +73,8 @@ function self.Initialize()
 	SpellHandler.Initialize()
 	EnemyHandler.Initialize()
 	ProjectileHandler.Initialize()
-	SoundHandler.Initialize(dt)
+	SoundHandler.Initialize()
+	Progression.Initialize()
 end
 
 return self
