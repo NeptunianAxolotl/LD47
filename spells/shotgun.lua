@@ -2,10 +2,12 @@
 local util = require("include/util")
 local Resources = require("resourceHandler")
 local spellutil = require("spells/spellutil")
+local SoundHandler = require("soundHandler")
 
 local function NewSpell(player, modifies, level)
 
     modifiers = modifiers or {}
+    SoundHandler.PlaySound("shotgun_shoot")
     
     -- uniform properties
     local baseN = 5
