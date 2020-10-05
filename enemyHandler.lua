@@ -3,6 +3,7 @@ local IterableMap = require("include/IterableMap")
 local util = require("include/util")
 
 local Terrain = require("terrainHandler")
+local ProjectileHandler = require("projectileHandler")
 local CreatureDefs = require("entities/creatureDefs")
 local NewCreature = require("entities/creature")
 
@@ -71,8 +72,8 @@ function api.Update(player, dt)
 		SpawnNewEnemies(player)
 		self.spawnCheckAcc = 5.5 + math.random()*6
 	end
-
-	IterableMap.ApplySelf(self.activeEnemies, "Update", Terrain, api, player, dt)
+	
+	IterableMap.ApplySelf(self.activeEnemies, "Update", Terrain, api, ProjectileHandler, player, dt)
 end
 
 function api.Draw(drawQueue)

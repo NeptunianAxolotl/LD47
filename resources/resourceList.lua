@@ -33,4 +33,5 @@ return {
 	"stun",
 	"car",
 	"bunny",
+	"projectiles",
 }

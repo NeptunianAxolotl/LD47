@@ -22,7 +22,7 @@ local creatureDefs = {
 		goalOffset = {0, 1000},
 		goalRandomOffsetX = 700,
 		goalRandomOffsetY = 200,
-		updateFunc = function (self, def, Terrain, Enemies, player, dt)
+		updateFunc = function (self, def, Terrain, Enemies, Projectiles, player, dt)
 			creatureUtil.MoveTowardsPlayer(self, def, Terrain, Enemies, player, def.stopRange, def.goalOffset, dt)
 			creatureUtil.DoCollisions(self, def, Terrain, Enemies, player, dt)
 		end,
@@ -36,8 +36,8 @@ local creatureDefs = {
 		turretImage = "bunny",
 		health = 50,
 		healthRange = 70,
-		radius = 48,
-		speed = 8 ,
+		radius = 58,
+		speed = 8,
 		maxTurnRate = 0.08,
 		minSpawnWeight = 10,
 		maxSpawnWeight = 30,
@@ -49,7 +49,7 @@ local creatureDefs = {
 		slowTimeMult = 0.2,
 		speedChangeFactor = 0.7,
 		posChangeFactor = 0.3,
-		updateFunc = function (self, def, Terrain, Enemies, player, dt)
+		updateFunc = function (self, def, Terrain, Enemies, Projectiles, player, dt)
 			local playerPos, playerVel, playerSpeed = player.GetPhysics()
 			self.wantedSpeed = playerSpeed*2.3 + 12
 			
@@ -57,6 +57,12 @@ local creatureDefs = {
 			
 			creatureUtil.MoveTowardsPlayer(self, def, Terrain, Enemies, player, def.stopRange, myGoalOffset, dt)
 			creatureUtil.DoCollisions(self, def, Terrain, Enemies, player, dt)
+			
+			if math.random() < 0.03 then
+				local aimVector = util.Subtract(util.Add(util.RandomPointInCircle(80), playerPos), self.pos)
+				aimVector[1] = aimVector[1]*0.3 -- Shoot mostly up
+				Projectiles.SpawnProjectile("bunny_bullet", self.pos, util.Add(playerVel, util.SetLength(18, aimVector)))
+			end
 			
 			creatureUtil.SetLimitedTurnDrawDir(self, def, dt)
 		end,

@@ -30,7 +30,7 @@ local function NewCreature(self, def)
 		return util.IntersectingCircles(self.pos, def.radius, otherPos, otherRadius)
 	end
 
-	function self.Update(Terrain, Enemies, player, dt)
+	function self.Update(Terrain, Enemies, Projectiles, player, dt)
 		local playerPos = player.GetPhysics()
 		if playerPos[2] > self.pos[2] + def.despawnDistance then
 			return true -- Remove
@@ -42,7 +42,7 @@ local function NewCreature(self, def)
 		self.oldPos = self.pos
         
 		if def.updateFunc then
-			def.updateFunc(self, def, Terrain, Enemies, player, dt)
+			def.updateFunc(self, def, Terrain, Enemies, Projectiles, player, dt)
 		end
 		
 		self.pos = util.Add(self.pos, util.Mult(dt, self.velocity))
