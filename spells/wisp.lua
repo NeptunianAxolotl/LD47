@@ -2,6 +2,7 @@
 local util = require("include/util")
 local Resources = require("resourceHandler")
 local spellutil = require("spells/spellutil")
+local SoundHandler = require("soundHandler")
 
 local lookup = {0, math.pi, math.pi / 2, 3 / 2 * math.pi}
 
@@ -18,6 +19,7 @@ local wispSize = 40
 local function NewSpell(player, modifies, level)
 
     modifiers = modifiers or {}
+    SoundHandler.PlaySound("wisp_shoot")
     
     -- uniform properties
     local baseN = 2

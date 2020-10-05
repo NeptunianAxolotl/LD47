@@ -13,6 +13,7 @@ local soundFiles = {
 	fireball_shoot = {file = "sounds/fireball_shoot1.wav", volMult = 0.34},
 	haste_shoot   = {file = "sounds/haste_shoot0.wav", volMult = 0.34},
 	serpent_shoot = {file = "sounds/serpent_shoot2.wav", volMult = 0.34},
+	wisp_shoot = {file = "sounds/wisp_shoot2.wav", volMult = 0.15},
 	seeker_travel = {file = "sounds/seeker_travel0.wav", volMult = 0.10},
 	beat1 = {file = "resources/sounds/beat1.wav", volMult = 0.15},
 	beat2 = {file = "resources/sounds/beat2.wav", volMult = 0.15},
