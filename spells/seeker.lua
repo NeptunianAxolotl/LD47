@@ -38,7 +38,7 @@ local function NewSpell(player, modifies, level)
         local angle = -sprayAngle*nProjectiles/2 + sprayAngle*(i-1) 
         if angle > math.pi*2/3 then angle = math.fmod(angle, math.pi*2/3) end
         if angle < -math.pi*2/3 then angle = -math.fmod(-angle, math.pi*2/3) end
-        launchVelocity = util.RotateVector(launchVelocity, math.random() * sprayAngle * 2 - sprayAngle)
+        launchVelocity = util.RotateVector(launchVelocity, angle)
         self.projectiles[i].velocity = util.Add(self.projectiles[i].velocity, launchVelocity);
         self.projectiles[i].alive = true
         self.projectiles[i].effect = {id = spellutil.newProjID(), damage = myDamage}

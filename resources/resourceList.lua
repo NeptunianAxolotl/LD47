@@ -32,6 +32,7 @@ return {
     "fireball",
     "serpent",
     "cantrip",
+    "haste",
 	"spell_anim",
 	"spell_anim_fire",
 	"spell_anim_serpent",
