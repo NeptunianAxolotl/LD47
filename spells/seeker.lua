@@ -10,18 +10,17 @@ local function NewSpell(player, modifies, level)
     local baseN = 1
     local maxLifetime = 10
     local exploDuration = 0.2 -- graphics only
-    local mySearchRad = 500
-    
     
     -- properties derived from modifiers
-    local nProjectiles = 1 + (modifiers.shotgun and modifiers.shotgun * 2 or 0)
-    local sprayAngle = (nProjectiles - 1) * 0.04
-    local myDamage = 50 * (nProjectiles+baseN)/(nProjectiles*2) * (level and 1+(0.5*(level-1)) or 1)
-    local exploDamage = (modifiers.fireball and 25 + modifiers.fireball * 25 or 0) * (nProjectiles+baseN)/(nProjectiles*2)
-    local exploRadius = 80 * (modifiers.fireball and 1+(modifiers.fireball*0.25) or 1)
-    local baseSpeed = 5 * (modifiers.wisp and 0.5 + 0.5 / modifers.wisp or 1)
-    local myLives = 1 + (modifiers.serpent and modifiers.serpent or 0)
-    local turnspeed = math.pi/50 * (level and 1+0.3*(3*level)/(level+2) or 1)
+    local nProjectiles = level + 1
+    local sprayAngle = 0.8
+    local myDamage = 60
+    local exploDamage = 0
+    local exploRadius = 0
+    local baseSpeed = 5
+    local myLives = 1
+    local turnspeed = math.pi/50
+    local mySearchRad = math.min(1000,500+100*level)
     
     -- setting up the spell
 	local self = {}
@@ -36,6 +35,9 @@ local function NewSpell(player, modifies, level)
         self.projectiles[i] = {}
         self.projectiles[i].pos, self.projectiles[i].velocity = self.pos, self.velocity
         local launchVelocity = util.SetLength(baseSpeed, self.projectiles[i].velocity)
+        local angle = -sprayAngle*nProjectiles/2 + sprayAngle*(i-1) 
+        if angle > math.pi*2/3 then angle = math.fmod(angle, math.pi*2/3) end
+        if angle < -math.pi*2/3 then angle = -math.fmod(-angle, math.pi*2/3) end
         launchVelocity = util.RotateVector(launchVelocity, math.random() * sprayAngle * 2 - sprayAngle)
         self.projectiles[i].velocity = util.Add(self.projectiles[i].velocity, launchVelocity);
         self.projectiles[i].alive = true
@@ -43,7 +45,7 @@ local function NewSpell(player, modifies, level)
         if exploDamage > 0 then self.projectiles[i].exploEffect = {damage = exploDamage} end
         self.projectiles[i].lives = myLives
         self.projectiles[i].searchRadius = mySearchRad
-        self.projectiles[i].turnSpeed = turnspeed
+        self.projectiles[i].turnSpeed = turnspeed * (0.75 + math.random()*0.5)
     end
     
     function self.Update(Terrain, Enemies, dt)
