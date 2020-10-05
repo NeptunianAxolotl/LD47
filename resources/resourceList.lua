@@ -25,6 +25,7 @@ return {
     "seeker_icon",
     "shield_icon",
     "shield",
+    "shield_damaged",
     "fireball",
     "serpent",
 	"spell_anim",

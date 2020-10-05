@@ -2,6 +2,7 @@
 local util = require("include/util")
 local Resources = require("resourceHandler")
 local spellutil = require("spells/spellutil")
+local Projectiles = require("projectileHandler")
 
 local lookup = {0, math.pi, math.pi / 2, 3 / 2 * math.pi}
 
@@ -85,6 +86,14 @@ local function NewSpell(player, modifiers)
                 self.projectiles[k].pos = util.Add(currentRelPos,self.pos)
                 
                 -- check collision
+                local collided = Projectiles.DetectCollision(self.projectiles[k].pos, 5)
+                if collided then
+                    collided.Kill()
+                    self.projectiles[k].lives = self.projectiles[k].lives - 1
+                    if self.projectiles[k].lives <= 0 then
+                        self.projectiles[k].alive = false
+                    end
+                end
                 -- Collides with enemy projectiles, which doesn't exist yet.
             end
         end
@@ -93,15 +102,27 @@ local function NewSpell(player, modifiers)
 	function self.Draw(drawQueue)
 		for k in pairs(self.projectiles) do
 			if self.projectiles[k].alive then
-				drawQueue:push({
-					y=self.projectiles[k].pos[2],
-					f=function() 
-                        Resources.DrawImage("shield", self.projectiles[k].pos[1], self.projectiles[k].pos[2]) 
-                        -- love.graphics.setColor(0,0,1)
-                        -- love.graphics.setLineWidth(2)
-                        -- love.graphics.circle("line", self.projectiles[k].pos[1], self.projectiles[k].pos[2], shieldSize) 
-                    end,
-				})
+                if self.projectiles[k].lives > 1 then
+                    drawQueue:push({
+                        y=self.projectiles[k].pos[2],
+                        f=function() 
+                            Resources.DrawImage("shield", self.projectiles[k].pos[1], self.projectiles[k].pos[2]) 
+                            -- love.graphics.setColor(0,0,1)
+                            -- love.graphics.setLineWidth(2)
+                            -- love.graphics.circle("line", self.projectiles[k].pos[1], self.projectiles[k].pos[2], shieldSize) 
+                        end,
+                    })
+                else
+                    drawQueue:push({
+                        y=self.projectiles[k].pos[2],
+                        f=function() 
+                            Resources.DrawImage("shield_damaged", self.projectiles[k].pos[1], self.projectiles[k].pos[2]) 
+                            -- love.graphics.setColor(0,0,1)
+                            -- love.graphics.setLineWidth(2)
+                            -- love.graphics.circle("line", self.projectiles[k].pos[1], self.projectiles[k].pos[2], shieldSize) 
+                        end,
+                    })
+                end
 			end
 		end
 	end
