@@ -9,6 +9,15 @@ return {
 		yOffset = 0.6,
 	},
 	{
+		name = "bush_hearts",
+		form = "image",
+		file = "resources/images/bush_hearts.png",
+		xScale = 0.35,
+		yScale = 0.35,
+		xOffset = 0.5,
+		yOffset = 0.6,
+	},
+	{
 		name = "bush_1_flat",
 		form = "image",
 		file = "resources/images/bush1flat.png",

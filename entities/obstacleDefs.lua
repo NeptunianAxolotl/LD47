@@ -76,13 +76,33 @@ local obstacleDefs = {
 				playerSpeed = playerSpeed*(1 - 60*dt*0.07)
 				player.SetSpeed(playerSpeed)
 			end
+			self.imageOverride = "bush_1_flat"
+		end,
+		minSpawnWeight = 10,
+		maxSpawnWeight = 20,
+	},
+	{
+		name = "mud_heart",
+		imageName = "bush_hearts",
+		health = 80,
+		healthRange = 70,
+		placeRadius = 80,
+		placeBlockRadius = 80,
+		radius = 70,
+		collideCreature = false,
+		overlapEffect = function (self, player, distSq, dt)
+			local _, _, playerSpeed = player.GetPhysics()
+			if playerSpeed > 6 then
+				playerSpeed = playerSpeed*(1 - 60*dt*0.07)
+				player.SetSpeed(playerSpeed)
+			end
 			if not self.imageOverride then
 				player.ModifyHealth(1)
 			end
 			self.imageOverride = "bush_1_flat"
 		end,
-		minSpawnWeight = 10,
-		maxSpawnWeight = 20,
+		minSpawnWeight = 0.1,
+		maxSpawnWeight = 4,
 	},
 }
 
