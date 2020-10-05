@@ -247,7 +247,7 @@ function api.DrawInterface()
 	love.graphics.print("Distance " .. (string.format("%.1f", myDist)) .. "km", 8, 10 + HEALTH_SPACING + 22 + 26)
 	love.graphics.print("Speed " .. (string.format("%.0f", math.floor(self.speed*60*1000*DIST_TO_KM))) .. "m/s", 8, 10 + HEALTH_SPACING + 22 + 26 + 26)
 	
-	love.graphics.print("REAL DEBUG DISTANCE " .. (string.format("%.1f", math.floor(self.pos[2])/1800)), 8, 10 + HEALTH_SPACING + 22 + 260)
+	--love.graphics.print("REAL DEBUG DISTANCE " .. (string.format("%.1f", math.floor(self.pos[2])/1800)), 8, 10 + HEALTH_SPACING + 22 + 260)
 	
 	if self.isDead then
 		Font.SetSize(0)
