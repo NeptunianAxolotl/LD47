@@ -163,6 +163,7 @@ local function UpdateSpellcasting(dt)
 end
 
 function api.PickupSpell(spellName, spellLevel)
+	EffectHandler.Spawn("get_spell_world", self.pos)
 	SpellHandler.PickupSpell(spellName, spellLevel)
 end
 

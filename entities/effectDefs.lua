@@ -44,6 +44,13 @@ local effectDefs = {
 	},
 	
 	-- World
+	get_spell_world = {
+		image = "get_spell",
+		interface = false,
+		alphaScale = true,
+		color = {0.8, 0.8, 0.5},
+		duration = "inherit",
+	},
 	bunny_bullet_hit = {
 		image = "bunny_bullet_hit",
 		interface = false,
