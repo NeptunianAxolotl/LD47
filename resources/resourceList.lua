@@ -28,6 +28,7 @@ return {
     "shield_damaged",
     "fireball",
     "serpent",
+    "cantrip",
 	"spell_anim",
 	"shape_n",
 	"health",

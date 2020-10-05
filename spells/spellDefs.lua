@@ -29,7 +29,7 @@ local probability = {
 	wisp     = 1,
     haste    = 1,
     seeker    = 1,
-    shield   = 100,
+    shield   = 1,
 }
 
 return {
