@@ -31,10 +31,10 @@ local soundFiles = {
 	beat8 = {file = "resources/sounds/beat8.wav", volMult = 0.15},
 	death = {file = "sounds/death.wav", volMult = 0.40},
 	fulltrack = {file = "resources/sounds/fulltrack.wav", volMult = 0.12},
-    crocodial_a = {file = "sounds/crocodial_a.wav", volMult = 0.12},
-    crocodial_b = {file = "sounds/crocodial_b.wav", volMult = 0.12},
-    crocodial_c = {file = "sounds/crocodial_c.wav", volMult = 0.12},
-    crocodial_d = {file = "sounds/crocodial_d.wav", volMult = 0.12},
+    crocodial_a = {file = "sounds/crocodial_a.wav", volMult = 0.13},
+    crocodial_b = {file = "sounds/crocodial_b.wav", volMult = 0.13},
+    crocodial_c = {file = "sounds/crocodial_c.wav", volMult = 0.13},
+    crocodial_d = {file = "sounds/crocodial_d.wav", volMult = 0.13},
 }
 
 function addSource(name, id)

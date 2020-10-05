@@ -656,8 +656,8 @@ function progression.Update(playerDistance, dt)
     if not self.musicPlaying then
        self.introTimer = 18.146
        self.musicPlaying = true
-       self.musicTrack = 3
-       self.wantedMusicTrack = 3
+       self.musicTrack = 1
+       self.wantedMusicTrack = 1
        SoundHandler.PlaySound("crocodial_a", false, "0", 0.5, 0, 1)
        SoundHandler.PlaySound("crocodial_b", true, "1", 1, 18.146, 20)
     end
