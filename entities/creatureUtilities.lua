@@ -108,7 +108,16 @@ function creatureUtils.MoveTowardsPlayer(self, def, Terrain, Enemies, player, st
 	end
 	
 	local speed = (self.wantedSpeed or def.speed) * ((self.slowTime and (1 - self.slowTime*0.4)) or 1)
-	self.AddPosition(util.SetLength(speed * 60 * dt, toPlayer))
+	
+	if def.turnLimit and self.prevAttemptedVelocity then
+		local oldAngle = util.Angle(self.prevAttemptedVelocity)
+		local oldToNewAngle = util.AngleSubtractShortest(util.Angle(toPlayer), oldAngle)
+		toPlayer = util.RotateVector(self.prevAttemptedVelocity, util.SignPreserveMax(oldToNewAngle, def.turnLimit*dt))
+	end
+	
+	self.prevAttemptedSpeed = speed
+	self.prevAttemptedVelocity = util.SetLength(speed * 60 * dt, toPlayer)
+	self.AddPosition(self.prevAttemptedVelocity)
 end
 
 function creatureUtils.SetLimitedTurnDrawDir(self, def, dt)

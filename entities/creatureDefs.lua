@@ -82,7 +82,7 @@ local creatureDefs = {
 		burstCount = 4,
 		maxTurnRate = 0.32,
 		despawnDistance = 500,
-		stopRange = 10,
+		turnLimit = 3.2,
 		goalOffset = {0, 700},
 		goalRandomOffsetX = 1200,
 		goalRandomOffsetY = 300,
@@ -123,7 +123,7 @@ local creatureDefs = {
 		burstCount = 1,
 		maxTurnRate = 0.32,
 		despawnDistance = 500,
-		stopRange = 10,
+		turnLimit = 2.8,
 		goalOffset = {0, 900},
 		goalRandomOffsetX = 1000,
 		goalRandomOffsetY = 300,
@@ -164,7 +164,7 @@ local creatureDefs = {
 		burstCount = 3,
 		despawnDistance = 500,
 		maxTurnRate = 0.32,
-		stopRange = 10,
+		turnLimit = 2.8,
 		goalOffset = {0, 600},
 		goalRandomOffsetX = 1400,
 		goalRandomOffsetY = 500,
@@ -188,6 +188,53 @@ local creatureDefs = {
 		end,
 		getSpawnOffset = function(player)
 			return util.Add(BEAR_SPAWN_OFFSET, util.RandomPointInAnnulus(1800, 2400, math.pi*0.4, math.pi*0.6))
+		end,
+	},
+	{
+		name = "croc_enemy",
+		animationName = "croc_enemy",
+		animateWithSpeed = true,
+		recolor = {1, 0.4, 1},
+		health = 15000,
+		healthRange = 50,
+		radius = 40,
+		speed = 8,
+		reloadTime = 7,
+		burstRate = 1.8,
+		burstCount = 1,
+		maxTurnRate = 0.24,
+		turnLimit = 1.4,
+		goalOffset = {0, 200},
+		goalRandomOffsetX = 500,
+		goalRandomOffsetY = 800,
+		slowTimeMult = 0.2,
+		speedChangeFactor = 0.7,
+		posChangeFactor = 0.3,
+		updateFunc = function (self, def, Terrain, Enemies, Projectiles, player, dt)
+			local playerPos, playerVel, playerSpeed = player.GetPhysics()
+			self.wantedSpeed = playerSpeed*3.2 + 10
+			
+			self.goalChangeTime = (self.goalChangeTime or 1) - dt
+			if self.goalChangeTime < 0 then
+				self.goalChangeTime = self.goalChangeTime + 5
+				self.randomGoalOffset = util.RandomPointInEllipse(def.goalRandomOffsetX, def.goalRandomOffsetY)
+			end
+			
+			local myGoalOffset = util.SetLength(350 + 1500*(playerSpeed/(playerSpeed + 8)), def.goalOffset)
+			
+			creatureUtil.MoveTowardsPlayer(self, def, Terrain, Enemies, player, def.stopRange, myGoalOffset, dt)
+			creatureUtil.DoCollisions(self, def, Terrain, Enemies, player, dt)
+			
+			if creatureUtil.UpdateReload(self, def, dt) then
+				creatureUtil.ShootBulletAtPlayer(self, Projectiles, player, "rocket", 10, 60, 0.15, dt)
+			end
+			
+			EffectHandler.SpawnDust(self.pos, self.velocity, self.wantedSpeed, dt, 0.8)
+			
+			creatureUtil.SetLimitedTurnDrawDir(self, def, dt)
+		end,
+		getSpawnOffset = function(player)
+			return util.Add(SPAWN_OFFSET, util.RandomPointInAnnulus(1800, 2400, START_ANGLE, END_ANGLE))
 		end,
 	},
 }

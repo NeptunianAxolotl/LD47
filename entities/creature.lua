@@ -2,7 +2,7 @@
 local util = require("include/util")
 local Resources = require("resourceHandler")
 
-local DRAW_DEBUG = false
+local DRAW_DEBUG = true
 
 local PROJ_TIMEOUT = 0.6
 
@@ -32,17 +32,22 @@ local function NewCreature(self, def)
 
 	function self.Update(Terrain, Enemies, Projectiles, player, dt)
 		local playerPos = player.GetPhysics()
-		if playerPos[2] > self.pos[2] + def.despawnDistance then
+		if def.despawnDistance and playerPos[2] > self.pos[2] + def.despawnDistance then
 			return true -- Remove
 		end
 		
         if self.health <= 0 then
             return true -- Remove
         end
+		self.oldSpeedNoDt = self.oldPos and util.Subtract(self.pos, self.oldPos)
 		self.oldPos = self.pos
         
 		if def.animationName then
-			 self.animTime = Resources.UpdateAnimation(def.animationName, self.animTime or 0, dt)
+			if def.animateWithSpeed and self.prevAttemptedSpeed then
+				self.animTime = Resources.UpdateAnimation(def.animationName, self.animTime or 0, self.prevAttemptedSpeed*dt*0.02)
+			else
+				self.animTime = Resources.UpdateAnimation(def.animationName, self.animTime or 0, dt)
+			end
 		end
 		
 		if def.updateFunc then
@@ -83,7 +88,7 @@ local function NewCreature(self, def)
 	function self.Draw(drawQueue)
 		drawQueue:push({y=self.pos[2] + (def.drawInFront or 0); f=function()
 			if def.animationName then
-				Resources.DrawIsoAnimation(def.animationName, self.pos[1], self.pos[2], self.animTime or 0, self.drawDir or self.direction)
+				Resources.DrawIsoAnimation(def.animationName, self.pos[1], self.pos[2], self.animTime or 0, self.drawDir or self.direction, false, false, def.recolor)
 			else
 				Resources.DrawIsoImage(def.imageName, self.pos[1], self.pos[2], self.drawDir or self.direction)
 				if def.turretImage then

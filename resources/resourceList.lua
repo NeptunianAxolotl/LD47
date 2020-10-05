@@ -6,6 +6,7 @@ return {
 	"spell_interface",
 	"spell_croc",
 	"croc",
+	"croc_enemy",
 	"test_iso_image",
 	"tree_1",
 	"rock_1",
