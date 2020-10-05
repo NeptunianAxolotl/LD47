@@ -1,5 +1,6 @@
 
 local Resources = require("resourceHandler")
+local Progression = require("progression")
 
 local backgrounds = {
 	{
@@ -18,16 +19,11 @@ local backgrounds = {
 	},
 }
 
-local DISTANCE_SCALE = 10000
-
 local function DrawBackground(def, left, top, right, bottom)
 	local floorLeft = math.floor((left - def.xOffset) / def.size)*def.size + def.xOffset
 	local floorTop  = math.floor((top  - def.yOffset) / def.size)*def.size + def.yOffset
 	
-	local distance = math.max(0, math.min(DISTANCE_SCALE, top))/DISTANCE_SCALE
-	local distanceScaleDouble = math.max(0, math.min(DISTANCE_SCALE*2, top))/(DISTANCE_SCALE*2)
-
-	local color = {0.85 - 0.25*distanceScaleDouble, 0.8 + 0.2*distance, 1}
+	local color = Progression.GetBackgroundColor(top)
 
 	for x = floorLeft, right, def.size do
 		for y = floorTop, bottom, def.size do

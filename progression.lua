@@ -4,6 +4,25 @@ local progression = {}
 local OBSTACLES_PER_CHUNK_MIN = 18
 local OBSTACLES_PER_CHUNK_MAX = 50
 
+local DISTANCE_SCALE = 30000
+local PLATEU_MULT = 1.3
+local END_SCALE = 11000
+
+function progression.GetBackgroundColor(cameraDistance)
+	local greenScale = math.max(0, math.min(DISTANCE_SCALE*0.4, cameraDistance))/(DISTANCE_SCALE*0.4)
+	local redScale = math.max(0, math.min(DISTANCE_SCALE, cameraDistance))/DISTANCE_SCALE
+	
+	if cameraDistance > DISTANCE_SCALE*PLATEU_MULT then
+		-- Rapidly go backwards.
+		factor = math.max(0, math.min(1, (END_SCALE - (cameraDistance - DISTANCE_SCALE*PLATEU_MULT))/END_SCALE))
+		
+		greenScale = factor
+		redScale = factor
+	end
+
+	return {0.95 - 0.3*redScale, 0.8 + 0.2*greenScale, 1}
+end
+
 function progression.GetChunkObstacleCount(chunkDistance, Random)
 	return Random(OBSTACLES_PER_CHUNK_MIN, OBSTACLES_PER_CHUNK_MAX)
 end
@@ -37,15 +56,15 @@ function progression.GetSpellSpawnWeights(chunkDistance)
 	}
 end
 
-function progression.GetNextEnemySpawnTime(playerDistance)
+function progression.GetNextEnemySpawnTime(playerDistance, enemyCount)
 	return 4 + math.random()*6
 end
 
-function progression.GetEnemySpawnCount(playerDistance)
-	return math.random(2, 7)
+function progression.GetEnemySpawnCount(playerDistance, enemyCount)
+	return math.random(0, 1)
 end
 
-function progression.GetEnemySpawnWeights(playerDistance)
+function progression.GetEnemySpawnWeights(playerDistance, enemyCount)
 	return {
 		rocket_bear = 1,
 		bunny_car   = 1,

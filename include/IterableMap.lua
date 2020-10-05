@@ -162,7 +162,7 @@ end
 
 -- This 'method' of iteration is for barbarians. Seems to have performance
 -- similar to Apply.
-function IterableMap.GetIndexMax(self)
+function IterableMap.Count(self)
 	return self.indexMax
 end
 

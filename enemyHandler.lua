@@ -17,9 +17,9 @@ local function SpawnNewEnemies(player)
 	end
 	local playerPos, playerVel, playerSpeed = player.GetPhysics()
 	
-	local enemyCount = Progression.GetEnemySpawnCount(playerPos[2])
+	local enemyCount = Progression.GetEnemySpawnCount(playerPos[2], IterableMap.Count(self.activeEnemies))
 	
-	local spawnDistribution = util.WeightsToDistribution(util.TableKeysToList(Progression.GetEnemySpawnWeights(playerPos[2]), CreatureDefs.indexToKey))
+	local spawnDistribution = util.WeightsToDistribution(util.TableKeysToList(Progression.GetEnemySpawnWeights(playerPos[2], IterableMap.Count(self.activeEnemies)), CreatureDefs.indexToKey))
 	
 	for i = 1, enemyCount do
 		local creatureDef = CreatureDefs.defs[util.SampleDistribution(spawnDistribution)]
@@ -72,7 +72,7 @@ function api.Update(player, dt)
 	if self.spawnCheckAcc <= 0 then
 		SpawnNewEnemies(player)
 		local playerPos, playerVel, playerSpeed = player.GetPhysics()
-		self.spawnCheckAcc = Progression.GetNextEnemySpawnTime(playerPos[2])
+		self.spawnCheckAcc = Progression.GetNextEnemySpawnTime(playerPos[2], IterableMap.Count(self.activeEnemies))
 	end
 	
 	IterableMap.ApplySelf(self.activeEnemies, "Update", Terrain, api, ProjectileHandler, player, dt)
