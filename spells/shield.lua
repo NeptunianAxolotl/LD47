@@ -16,7 +16,7 @@ end
 
 local shieldSize = 35
 
-local function NewSpell(player, modifiers)
+local function NewSpell(player, modifies, level)
 
     modifiers = modifiers or {}
     

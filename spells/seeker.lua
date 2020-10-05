@@ -2,7 +2,7 @@ local util = require("include/util")
 local Resources = require("resourceHandler")
 local spellutil = require("spells/spellutil")
 
-local function NewSpell(player, modifiers)
+local function NewSpell(player, modifies, level)
     
     modifiers = modifiers or {}
     

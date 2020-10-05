@@ -13,7 +13,7 @@ local function phaseModifier(i)
     return modifier
 end
 
-local function NewSpell(player, modifiers)
+local function NewSpell(player, modifies, level)
 
     modifiers = modifiers or {}
     

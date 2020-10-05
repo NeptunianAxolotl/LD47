@@ -31,8 +31,8 @@ function api.SetDead()
 	self.isDead = true
 end
 
-function api.CastSpell(name, player, world)
-	IterableMap.Add(self.activeSpells, self.spellTypes[name](player, world))
+function api.CastSpell(name, modifiers, level, player)
+	IterableMap.Add(self.activeSpells, self.spellTypes[name](player, modifiers, level))
 end
 
 function api.SwapSpell()
@@ -55,7 +55,7 @@ function api.SwapSpell()
 	
 	if self.heldSpell == "cantrip" then
 		self.heldSpell, self.heldSpellLevel = false, false
-end
+	end
 end
 
 function api.PickupSpell(name, level)
@@ -67,10 +67,11 @@ function api.PickupSpell(name, level)
 	end
 end
 
-function api.AddChargeAndCast(player, world, chargeAdd)
+function api.AddChargeAndCast(player, chargeAdd)
 	self.charge = self.charge + chargeAdd*CHARGE_MULT
 	if self.charge > 1 then
-		api.CastSpell(self.spellPositions[self.currentSpell].spellName, player, world)
+		local spellData = self.spellPositions[self.currentSpell]
+		api.CastSpell(spellData.spellName, spellData.modifiers, spellData.spellLevel, player)
 		self.charge = self.charge - 1
 		self.currentSpell = (self.currentSpell%SPELL_COUNT) + 1
 	end
@@ -154,6 +155,7 @@ function api.Initialize()
 			chargeProgressRange = 9*math.pi/4,
 			spellName = "cantrip",
 			spellLevel = 1,
+			modifiers = {},
 			rotation = (i + 5)*math.pi/4,
 		}
 		spellData.pos = util.Add(spellCentre, util.PolarToCart(SPELL_RADIUS, (i - 1)*math.pi/4))

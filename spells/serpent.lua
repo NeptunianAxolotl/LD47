@@ -11,7 +11,7 @@ local function sineMultiplier(i)
     return multiplier
 end
 
-local function NewSpell(player, modifiers)
+local function NewSpell(player, modifies, level)
 
     modifiers = modifiers or {}
     

@@ -153,7 +153,7 @@ local function UpdateFacing(dt)
 end
 
 local function UpdateSpellcasting(dt)
-	SpellHandler.AddChargeAndCast(api, world, dt * (self.speed + 3))
+	SpellHandler.AddChargeAndCast(api, dt * (self.speed + 3))
 end
 
 function api.PickupSpell(spellName, spellLevel)

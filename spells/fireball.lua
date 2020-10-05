@@ -10,7 +10,7 @@ local function speedMultiplier(i)
     return 1+multiplier
 end
 
-local function NewSpell(player, modifiers)
+local function NewSpell(player, modifies, level)
 
     modifiers = modifiers or {}
 
