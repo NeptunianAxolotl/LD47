@@ -41,23 +41,12 @@ end
 -- Update
 --------------------------------------------------
 
-local acc = 0
 function love.update(dt)
 	--animDt = Resources.UpdateAnim("test_anim", animDt, dt/5)
 	if dt > 0.08 then
 		dt = 0.08
 	end
-	
-	if dt > 1/50 then
-		print(1/dt)
-	end
-	
-	acc = acc + dt
-	if acc < 1/4000 then
-		return
-	end
-	World.Update(acc)
-	acc = 0
+	World.Update(dt)
 end
 
 --------------------------------------------------
