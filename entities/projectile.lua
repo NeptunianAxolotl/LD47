@@ -1,11 +1,11 @@
 
 local util = require("include/util")
 local Resources = require("resourceHandler")
+local EffectHandler = require("effectsHandler")
 
 local DRAW_DEBUG = false
 
-
-local function NewCreature(self, def)
+local function NewProjectile(self, def)
 	-- pos
 	-- velocity
 	self.direction = util.Angle(self.velocity)
@@ -22,6 +22,9 @@ local function NewCreature(self, def)
 
 	function self.Update(Terrain, Enemies, player, dt)
 		if self.toKill then
+			if def.hitEffect then
+				EffectHandler.Spawn(def.hitEffect, self.pos)
+			end
 			return true
 		end
 		
@@ -36,11 +39,17 @@ local function NewCreature(self, def)
 		
 		local obstacle = Terrain.GetTerrainCollision(self.pos, def.radius, false, true, false, dt)
 		if obstacle then
+			if def.hitEffect then
+				EffectHandler.Spawn(def.hitEffect, self.pos)
+			end
 			return true
 		end
 		
 		if player.IsColliding(self.pos, def.radius) then
 			player.ModifyHealth(def.damage)
+			if def.hitEffect then
+				EffectHandler.Spawn(def.hitEffect, self.pos)
+			end
 			return true
 		end
 		
@@ -65,4 +74,4 @@ local function NewCreature(self, def)
 	return self
 end
 
-return NewCreature
+return NewProjectile

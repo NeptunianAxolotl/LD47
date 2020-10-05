@@ -2,6 +2,7 @@
 local util = require("include/util")
 
 local effectDefs = {
+	-- Interface
 	health_down = {
 		image = "health_down",
 		interface = true,
@@ -14,6 +15,44 @@ local effectDefs = {
 		alphaScale = true,
 		duration = "inherit",
 	},
+	get_spell = {
+		image = "get_spell",
+		interface = true,
+		alphaScale = true,
+		color = {0.8, 0.8, 0.5},
+		duration = "inherit",
+	},
+	switch_spell = {
+		image = "get_spell",
+		interface = true,
+		alphaScale = true,
+		color = {0.5, 0.8, 0.8},
+		duration = "inherit",
+	},
+	cast_spell = {
+		image = "spell_anim",
+		interface = true,
+		alphaScale = true,
+		duration = "inherit",
+	},
+	switch_spell = {
+		image = "get_spell",
+		interface = true,
+		alphaScale = true,
+		color = {0.5, 0.8, 0.8},
+		duration = "inherit",
+	},
+	
+	-- World
+	bunny_bullet_hit = {
+		image = "bunny_bullet_hit",
+		interface = false,
+		alphaScale = true,
+		color = {0.5, 0.8, 0.5},
+		inFront = 80,
+		spawnOffset = {0, -20},
+		duration = "inherit",
+	}
 }
 
 

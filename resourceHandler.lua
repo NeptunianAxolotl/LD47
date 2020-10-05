@@ -212,8 +212,13 @@ function self.GetAnimationDuration(name)
 	return self.animations[name].duration
 end
 
-function self.DrawAnimInternal(data, x, y, progress, rotation, alpha, scale)
-	love.graphics.setColor(1, 1, 1, alpha or 1)
+function self.DrawAnimInternal(data, x, y, progress, rotation, alpha, scale, color)
+	love.graphics.setColor(
+		(color and color[1]) or 1,
+		(color and color[2]) or 1,
+		(color and color[3]) or 1,
+		((color and color[4]) or 1)*(alpha or 1)
+	)
 	
 	scale = scale or 1
 	rotation = rotation or 0
@@ -227,21 +232,19 @@ function self.DrawAnimInternal(data, x, y, progress, rotation, alpha, scale)
 	end
 end
 
-function self.DrawAnimation(name, x, y, progress, rotation, alpha, scale)
+function self.DrawAnimation(name, x, y, progress, rotation, alpha, scale, color)
 	if not self.animations[name] then
 		print("Invalid DrawAnimation ", name)
 		return
 	end
-	self.DrawAnimInternal(self.animations[name], x, y, progress, rotation, alpha, scale)
+	self.DrawAnimInternal(self.animations[name], x, y, progress, rotation, alpha, scale, color)
 end
 
-function self.DrawIsoAnimation(name, x, y, progress, direction, alpha, scale)
+function self.DrawIsoAnimation(name, x, y, progress, direction, alpha, scale, color)
 	if not self.animations[name] then
 		print("Invalid DrawIsoAnimation ", name)
 		return
 	end
-	
-	love.graphics.setColor(1, 1, 1, 1)
 	
 	local data = self.animations[name]
 	local drawDir = util.DirectionToCardinal(direction, data.firstDir, data.directionCount)
@@ -251,7 +254,7 @@ function self.DrawIsoAnimation(name, x, y, progress, direction, alpha, scale)
 		rotation = -util.AngleToCardinal(direction, drawDir, data.firstDir, data.directionCount)
 	end
 	
-	self.DrawAnimInternal(data.dirAnim[drawDir], x, y, progress, rotation, alpha, scale)
+	self.DrawAnimInternal(data.dirAnim[drawDir], x, y, progress, rotation, alpha, scale, color)
 end
 
 

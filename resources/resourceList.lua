@@ -38,4 +38,5 @@ return {
 	"bunny",
 	"projectiles",
 	"interface_anim",
+	"explosions",
 }

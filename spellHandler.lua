@@ -8,6 +8,7 @@ local spellDefs = require("spells/spellDefs")
 local Terrain = require("terrainHandler")
 local Resources = require("resourceHandler")
 local Enemies = require("enemyHandler")
+local EffectHandler = require("effectsHandler")
 
 local self = {}
 
@@ -53,6 +54,10 @@ function api.SwapSpell()
 	currentSpellData.spellName, self.heldSpell = self.heldSpell, currentSpellData.spellName
 	currentSpellData.spellLevel, self.heldSpellLevel = self.heldSpellLevel, currentSpellData.spellLevel
 	
+	
+	EffectHandler.Spawn("switch_spell", SPELL_HELD_POS)
+	EffectHandler.Spawn("switch_spell", currentSpellData.pos)
+	
 	if self.heldSpell == "cantrip" then
 		self.heldSpell, self.heldSpellLevel = false, false
 	end
@@ -61,6 +66,8 @@ end
 function api.PickupSpell(name, level)
 	self.heldSpell = name
 	self.heldSpellLevel = level
+	
+	EffectHandler.Spawn("get_spell", SPELL_HELD_POS)
 	
 	if self.heldTutorialCounter then
 		self.heldTutorialCounter = 1
@@ -71,6 +78,8 @@ function api.AddChargeAndCast(player, chargeAdd)
 	self.charge = self.charge + chargeAdd*CHARGE_MULT
 	if self.charge > 1 then
 		local spellData = self.spellPositions[self.currentSpell]
+		EffectHandler.Spawn("cast_spell", spellData.pos)
+		
 		api.CastSpell(spellData.spellName, spellData.modifiers, spellData.spellLevel, player)
 		self.charge = self.charge - 1
 		self.currentSpell = (self.currentSpell%SPELL_COUNT) + 1
@@ -79,7 +88,6 @@ end
 
 function api.Update(dt)
 	IterableMap.ApplySelf(self.activeSpells, "Update", Terrain, Enemies, dt)
-	self.spellAnim = Resources.UpdateAnimation("spell_anim", self.spellAnim, dt)
 	
 	if self.heldSpell then
 		self.heldSpellRotate = (self.heldSpellRotate + dt*HELD_ROTATE)%(2*math.pi)
@@ -113,11 +121,6 @@ function api.DrawInterface()
 	for i = 1, SPELL_COUNT do
 		local spellData = self.spellPositions[i]
 		DrawSpellLevel(spellData.pos, spellData.spellLevel, spellData.rotation, 1, i == self.currentSpell)
-		if i == self.currentSpell and self.charge > 0.8 then
-			Resources.DrawAnimation("spell_anim", spellData.pos[1], spellData.pos[2], self.spellAnim, nil, (self.charge - 0.8)/0.2)
-		elseif i%8 + 1 == self.currentSpell and self.charge < 0.1 then
-			Resources.DrawAnimation("spell_anim", spellData.pos[1], spellData.pos[2], self.spellAnim, nil, 1 - 10*self.charge)
-		end
 		Resources.DrawImage(spellDefs.spellIcon[spellData.spellName], spellData.pos[1], spellData.pos[2])
 	end
 	
@@ -142,7 +145,6 @@ function api.Initialize()
 		charge = 0,
 		spellPositions = {},
 		currentSpell = 7, -- Croc starts vertical because it is funny.
-		spellAnim = 0,
 		heldSpell = false,
 		heldSpellLevel = false,
 		heldSpellRotate = 0,

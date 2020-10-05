@@ -8,12 +8,16 @@ local NewEffect = require("entities/effect")
 local self = {}
 local api = {}
 
-function api.Spawn(name, pos)
+function api.Spawn(name, pos, scale)
 	local def = EffectDefs.defs[name]
+	local data = {
+		pos = pos,
+		scale = scale, -- optional
+	}
 	if def.interface then
-		IterableMap.Add(self.interfaceEffects, NewEffect({pos = pos}, def))
+		IterableMap.Add(self.interfaceEffects, NewEffect(data, def))
 	else
-		IterableMap.Add(self.worldEffects, NewEffect({pos = pos}, def))
+		IterableMap.Add(self.worldEffects, NewEffect(data, def))
 	end
 end
 

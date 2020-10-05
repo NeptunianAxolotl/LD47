@@ -21,4 +21,13 @@ return {
 		xOffset = 0,
 		yOffset = 0,
 	},
+	{
+		name = "get_spell",
+		file = "resources/images/effects/explosion.png",
+		form = "animation",
+		xScale = 0.42,
+		yScale = 0.42,
+		width = 400,
+		duration = 0.4,
+	},
 }

@@ -8,6 +8,7 @@ local creatureDefs = {
 		spawnOffset = {0, -25},
 		life = 4,
 		damage = -1,
+		hitEffect = "bunny_bullet_hit",
 		updateFunc = function (self, def, Terrain, Enemies, player, dt)
 			
 		end,
