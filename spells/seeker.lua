@@ -145,11 +145,18 @@ local function NewSpell(player, modifies, level)
 						end
 					end)()
                     
+                    local any_alive = false
                     for k in pairs(self.projectiles) do
-                        if self.lifetime < 8.3 or kill or not self.projectiles[k].alive then
+                        if not(self.lifetime < 8.3 or kill or not self.projectiles[k].alive) then
+                            any_alive = true
+                        end
+                    end
+                    if not any_alive then
+                        for k in pairs(self.projectiles) do
                             SoundHandler.StopSound("seeker_travel".. self.projectiles[k].effect.id, true)
                         end
                     end
+                    
 	end
 	
 	function self.Draw(drawQueue)
