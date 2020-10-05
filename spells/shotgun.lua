@@ -3,6 +3,7 @@ local util = require("include/util")
 local Resources = require("resourceHandler")
 local spellutil = require("spells/spellutil")
 local SoundHandler = require("soundHandler")
+local EffectHandler = require("effectsHandler")
 
 local function NewSpell(player, modifies, level)
 
@@ -56,11 +57,13 @@ local function NewSpell(player, modifies, level)
             local collided = Terrain.GetTerrainCollision(self.projectiles[k].pos, 15, false, self.projectiles[k].effect.id, nil, dt)
             if collided then
                 collided.ProjectileImpact(self.projectiles[k].effect)
+				EffectHandler.Spawn("ice_hit_effect", self.projectiles[k].pos)
                 self.projectiles[k].alive = false
             else
                 collided = Enemies.DetectCollision(self.projectiles[k].pos, 15, false, self.projectiles[k].effect.id, nil, dt)
                 if collided then
                     collided.ProjectileImpact(self.projectiles[k].effect)
+					EffectHandler.Spawn("ice_hit_effect", self.projectiles[k].pos)
                     self.projectiles[k].lives = self.projectiles[k].lives - 1
                     if self.projectiles[k].lives <= 0 then
                         self.projectiles[k].alive = false

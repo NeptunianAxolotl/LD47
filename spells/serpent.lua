@@ -2,6 +2,7 @@
 local util = require("include/util")
 local Resources = require("resourceHandler")
 local spellutil = require("spells/spellutil")
+local EffectHandler = require("effectsHandler")
 local SoundHandler = require("soundHandler")
 
 local function sineMultiplier(i)
@@ -78,6 +79,7 @@ local function NewSpell(player, modifies, level)
             else
                 collided = Enemies.DetectCollision(self.projectiles[k].pos, 30, false, self.projectiles[k].effect.id, nil, dt)
                 if collided then
+					EffectHandler.Spawn("serpent_hit", self.projectiles[k].pos)
                     collided.ProjectileImpact(self.projectiles[k].effect)
                     -- Do not destroy projectile, serpent pierces enemies
                 end

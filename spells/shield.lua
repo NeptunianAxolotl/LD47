@@ -3,6 +3,7 @@ local util = require("include/util")
 local Resources = require("resourceHandler")
 local spellutil = require("spells/spellutil")
 local Projectiles = require("projectileHandler")
+local EffectHandler = require("effectsHandler")
 local SoundHandler = require("soundHandler")
 
 local lookup = {0, math.pi, math.pi / 2, 3 / 2 * math.pi}
@@ -91,6 +92,7 @@ local function NewSpell(player, modifies, level)
                 -- check collision
                 local collided = Projectiles.DetectCollision(self.projectiles[k].pos, shieldSize * self.sizeMult * (self.projectiles[k].lives > 1 and 1 or 0.8))
                 if collided then
+					EffectHandler.Spawn("shield_hit", self.projectiles[k].pos)
                     collided.Kill(true)
                     self.projectiles[k].lives = self.projectiles[k].lives - 1
                     if self.projectiles[k].lives <= 0 then

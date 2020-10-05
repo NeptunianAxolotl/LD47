@@ -1,6 +1,7 @@
 local util = require("include/util")
 local Resources = require("resourceHandler")
 local spellutil = require("spells/spellutil")
+local EffectHandler = require("effectsHandler")
 local SoundHandler = require("soundHandler")
 
 local function NewSpell(player, modifies, level)
@@ -130,6 +131,7 @@ local function NewSpell(player, modifies, level)
 										end
 										
 										if collided then
+												EffectHandler.Spawn("seeker_hit", self.projectiles[k].pos)
 												-- explosion
 												if exploDamage > 0 then
 														local enemysplash = Enemies.DetectInCircle(self.projectiles[k].pos, exploRadius)

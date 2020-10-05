@@ -7,7 +7,10 @@ local DRAW_DEBUG = false
 local function NewEffect(self, def)
 	-- pos
 	self.inFront = def.inFront or 0
-	local maxLife = (def.duration == "inherit" and Resources.GetAnimationDuration(def.image)) or def.duration
+	local maxLife = (def.duration == "inherit" and def.image and Resources.GetAnimationDuration(def.image)) or def.duration
+	if not maxLife then
+		print(maxLife, def.image, def.actual_image)
+	end
 	self.life = maxLife
 	self.animTime = 0
 	self.direction = (def.randomDirection and math.random()*2*math.pi) or 0
