@@ -79,10 +79,70 @@ function progression.GetEnemySpawnWeights(playerDistance, enemyCount)
 	}
 end
 
+------------------------------------------------------------------
+------------------------------------------------------------------
+-- Boss
+
+local function DrawBossHealth()
+	local windowX, windowY = love.window.getMode()
+	
+	local OFF_X = 0.22
+	local OFF_Y = 0.87
+	local HEIGHT = 0.05
+	
+	self.bossAlpha = self.bossAlpha or 0
+	
+	love.graphics.setColor(0, 0, 0, self.bossAlpha)
+	love.graphics.setLineWidth(3)
+	love.graphics.rectangle('line', windowX*OFF_X, windowY*OFF_Y, windowX*(1 - 2*OFF_X), windowY*HEIGHT)
+
+	local otherCol = math.max(0, (self.bossAlpha - 0.5)*0.8)
+
+	love.graphics.setColor(1, otherCol, otherCol, self.bossAlpha)
+	love.graphics.rectangle('fill', windowX*OFF_X + 1.5, windowY*OFF_Y + 1.5,
+		windowX*(1 - 2*OFF_X)*self.bossHealth/self.bossMaxHealth - 3, windowY*HEIGHT - 3)
+	
+	love.graphics.setLineWidth(1)
+end
+
+function progression.SetBossHealth(newHealth, isDead, maxHealth)
+	if self.bossHealth and self.bossHealth ~= newHealth then
+		self.bossAlpha = 0.95
+	end
+	
+	self.bossHealth = newHealth
+	self.bossMaxHealth = maxHealth or self.bossMaxHealth or newHealth
+	self.bossIsDead = isDead
+end
+
+function progression.BossExists()
+	return self.bossHealth and not self.bossIsDead
+end
+
+------------------------------------------------------------------
+------------------------------------------------------------------
+
 function progression.Update(playerDistance, dt)
 	if not self.musicPlaying then
 		SoundHandler.PlaySound("fulltrack", true)
 		self.musicPlaying = true
+	end
+	if self.bossAlpha then
+		if self.bossAlpha > 0.5 then
+			self.bossAlpha = self.bossAlpha - dt*0.5
+			if self.bossAlpha < 0.5 then
+				self.bossAlpha = 0.5
+			end
+		else
+			self.bossAlpha = self.bossAlpha + dt*0.5
+		end
+	end
+	
+end
+
+function progression.DrawInterface()
+	if self.bossHealth and not self.bossIsDead then
+		DrawBossHealth()
 	end
 end
 

@@ -61,11 +61,15 @@ function self.Draw()
 	SpellHandler.DrawInterface()
 	Player.DrawInterface()
 	EffectsHandler.DrawInterface()
+	
+	love.graphics.replaceTransform(self.emptyTransform)
+	Progression.DrawInterface()
 end
 
 function self.Initialize()
 	self.cameraTransform = love.math.newTransform()
 	self.interfaceTransform = love.math.newTransform()
+	self.emptyTransform = love.math.newTransform()
 	Camera.Initialize()
 	Player.Initialize()
 	Terrain.Initialize()

@@ -1,6 +1,7 @@
 
 local util = require("include/util")
 local Resources = require("resourceHandler")
+local Progression = require("progression")
 
 local DRAW_DEBUG = false
 
@@ -14,6 +15,10 @@ local function NewCreature(self, def)
     self.projIgnoreTime = 0
     self.projIgnoreFresh = {}
     self.projIgnoreStale = {}
+	
+	if def.isBoss then
+		Progression.SetBossHealth(self.health, false, self.health)
+	end
 	
 	if def.goalRandomOffsetX then
 		self.randomGoalOffset = util.RandomPointInEllipse(def.goalRandomOffsetX, def.goalRandomOffsetY)
@@ -36,8 +41,15 @@ local function NewCreature(self, def)
 			return true -- Remove
 		end
 		
+		if def.isBoss then
+			Progression.SetBossHealth(self.health)
+		end
+		
         if self.health <= 0 then
-            return true -- Remove
+			if def.isBoss then
+				Progression.SetBossHealth(self.health, true)
+			end
+			return true -- Remove
         end
 		self.oldSpeedNoDt = self.oldPos and util.Subtract(self.pos, self.oldPos)
 		self.oldPos = self.pos

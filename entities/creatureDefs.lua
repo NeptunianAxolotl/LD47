@@ -196,13 +196,13 @@ local creatureDefs = {
 		animateWithSpeed = true,
 		isBoss = true,
 		recolor = {1, 0.4, 1},
-		health = 15000,
-		healthRange = 50,
+		health = 900,
+		healthRange = 0,
 		radius = 40,
 		speed = 8,
-		reloadTime = 2,
+		reloadTime = 1.8,
 		burstRate = 0.28,
-		burstCount = 4,
+		burstCount = 5,
 		maxTurnRate = 0.24,
 		turnLimit = 1.9,
 		goalOffset = {0, 200},
@@ -232,12 +232,12 @@ local creatureDefs = {
 				end
 				
 				if self.projectileType < 1 then
-					creatureUtil.ShootBulletAtPlayer(self, Projectiles, player, "fireball", 18, 60, 0.75, dt)
+					creatureUtil.ShootBulletAtPlayer(self, Projectiles, player, "fireball", 20 + math.random()*6, 60, 0.85, dt)
 				elseif self.projectileType < 2 then
-					creatureUtil.ShootBulletAtPlayer(self, Projectiles, player, "spider_web", math.random()*6 + 2.5, 450, 1.1, dt)
+					creatureUtil.ShootBulletAtPlayer(self, Projectiles, player, "spider_web", math.random()*6 + 4.5, 200, 1.1, dt)
 				elseif self.projectileType < 3 then
-					for i = 1, 9 do
-						creatureUtil.ShootBulletAtPlayer(self, Projectiles, player, "ice", 22, 6000, 1, dt)
+					for i = 1, 6 do
+						creatureUtil.ShootBulletAtPlayer(self, Projectiles, player, "ice", 17 + math.random()*6, 900, 0.75, dt)
 					end
 				else
 					creatureUtil.ShootBulletAtPlayer(self, Projectiles, player, "bees", 3, 60, 0.15, dt)

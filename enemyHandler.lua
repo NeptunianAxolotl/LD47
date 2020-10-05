@@ -25,7 +25,9 @@ local function SpawnNewEnemies(player)
 		local creatureDef = CreatureDefs.defs[util.SampleDistribution(spawnDistribution)]
 		local creaturePos = util.Add(playerPos, creatureDef.getSpawnOffset(player))
 		
-		IterableMap.Add(self.activeEnemies, NewCreature({pos = creaturePos}, creatureDef))
+		if not (creatureDef.isBoss and Progression.BossExists()) then
+			IterableMap.Add(self.activeEnemies, NewCreature({pos = creaturePos}, creatureDef))
+		end
 	end
 end
 
