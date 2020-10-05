@@ -3,6 +3,7 @@ local util = require("include/util")
 local Font = require("include/font")
 
 local Resources = require("resourceHandler")
+local EffectHandler = require("effectsHandler")
 local SpellHandler = require("spellHandler")
 local pi = math.pi
 
@@ -25,6 +26,9 @@ function api.ModifyHealth(change)
 		return
 	end
 	self.health = math.max(0, math.min(6, self.health + change))
+	if change < 0 then
+		EffectHandler.Spawn("health_down", {0, 0})
+	end
 	if self.health == 0 then
 		self.isDead = true
 		self.velocity = {0, 0}

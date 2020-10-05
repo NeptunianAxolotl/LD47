@@ -204,6 +204,14 @@ function self.UpdateAnimation(name, progress, dt)
 	return (progress + dt)%self.animations[name].duration
 end
 
+function self.GetAnimationDuration(name)
+	if not self.animations[name] then
+		print("Invalid GetAnimationDuration ", name)
+		return
+	end
+	return self.animations[name].duration
+end
+
 function self.DrawAnimInternal(data, x, y, progress, rotation, alpha, scale)
 	love.graphics.setColor(1, 1, 1, alpha or 1)
 	

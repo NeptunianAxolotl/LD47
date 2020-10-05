@@ -6,6 +6,7 @@ local Camera = require("utilities/cameraUtilities")
 local DrawOverlappingBackground = require("utilities/backgroundUtilities")
 local SpellHandler = require("spellHandler")
 local EnemyHandler = require("enemyHandler")
+local EffectsHandler = require("effectsHandler")
 
 local PriorityQueue = require("include/PriorityQueue")
 
@@ -26,6 +27,7 @@ function self.Update(dt)
 	SpellHandler.Update(dt)
 	EnemyHandler.Update(Player, dt)
 	ProjectileHandler.Update(Player, dt)
+	EffectsHandler.Update(dt)
 	
 	-- Only update visible chunks.
 	love.graphics.replaceTransform(self.cameraTransform)
@@ -41,6 +43,7 @@ function self.Draw()
 	SpellHandler.Draw(drawQueue)
 	EnemyHandler.Draw(drawQueue)
 	ProjectileHandler.Draw(drawQueue)
+	EffectsHandler.Draw(drawQueue)
 	
 	while true do
 		local d = drawQueue:pop()
@@ -53,6 +56,7 @@ function self.Draw()
 	love.graphics.replaceTransform(self.interfaceTransform)
 	SpellHandler.DrawInterface()
 	Player.DrawInterface()
+	EffectsHandler.DrawInterface()
 end
 
 function self.Initialize()
@@ -61,6 +65,7 @@ function self.Initialize()
 	Camera.Initialize()
 	Player.Initialize()
 	Terrain.Initialize()
+	EffectsHandler.Initialize()
 	SpellHandler.Initialize()
 	EnemyHandler.Initialize()
 	ProjectileHandler.Initialize()
