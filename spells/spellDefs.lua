@@ -23,12 +23,12 @@ local spellIcon = {
 
 local probability = {
     cantrip  = 0,
-	fireball = 10,
+	fireball = 1,
 	shotgun  = 1,
 	serpent  = 1,
 	wisp     = 1,
     haste    = 1,
-    seeker   = 1,
+    seeker    = 1,
     shield   = 1,
 }
 

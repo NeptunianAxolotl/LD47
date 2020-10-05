@@ -27,6 +27,7 @@ return {
     "shotgun",
     "shield",
     "shield_damaged",
+    "seeker",
     "fireball",
     "serpent",
     "cantrip",
