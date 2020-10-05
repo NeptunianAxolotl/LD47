@@ -201,8 +201,8 @@ local creatureDefs = {
 		radius = 50,
 		speed = 8,
 		reloadTime = 1.8,
-		burstRate = 0.28,
-		burstCount = 5,
+		burstRate = 0.16,
+		burstCount = 7,
 		maxTurnRate = 0.24,
 		turnLimit = 2.2,
 		goalOffset = {0, 200},
@@ -244,7 +244,7 @@ local creatureDefs = {
 					creatureUtil.ShootBulletAtPlayer(self, Projectiles, player, "bees", 3, 60, 0.15, dt)
 				end
 				
-				if self.fireCycle%2 == 0 then
+				if self.fireCycle%3 == 0 then
 					self.projectileType = false
 					self.projectileSpeed = false
 				end
