@@ -165,17 +165,18 @@ function self.DrawImage(name, x, y, rotation, alpha, scale, color)
 	rotation = rotation or 0
 	scale = scale or 1
 	
-	if color then
-		love.graphics.setColor(color)
-	else
-		love.graphics.setColor(1, 1, 1, alpha or 1)
-	end
+	love.graphics.setColor(
+		(color and color[1]) or 1,
+		(color and color[2]) or 1,
+		(color and color[3]) or 1,
+		((color and color[4]) or 1)*(alpha or 1)
+	)
 	
 	local data = self.images[name]
 	love.graphics.draw(data.image, x, y, rotation, data.xScale*scale, data.yScale*scale, data.xOffset, data.yOffset, 0, 0)
 end
 
-function self.DrawIsoImage(name, x, y, direction, alpha, scale)
+function self.DrawIsoImage(name, x, y, direction, alpha, scale, color)
 	if not self.images[name] then
 		print("Invalid DrawIsoImage ", name)
 		return
@@ -183,7 +184,12 @@ function self.DrawIsoImage(name, x, y, direction, alpha, scale)
 	
 	scale = scale or 1
 	
-	love.graphics.setColor(1, 1, 1, alpha or 1)
+	love.graphics.setColor(
+		(color and color[1]) or 1,
+		(color and color[2]) or 1,
+		(color and color[3]) or 1,
+		((color and color[4]) or 1)*(alpha or 1)
+	)
 	
 	local data = self.images[name]
 	local drawDir = util.DirectionToCardinal(direction, data.firstDir, data.directionCount)
