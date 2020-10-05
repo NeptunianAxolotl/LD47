@@ -24,6 +24,7 @@ return {
     "cantrip_icon",
     "seeker_icon",
     "shield_icon",
+    "shotgun",
     "shield",
     "shield_damaged",
     "fireball",
