@@ -62,6 +62,16 @@ local effectDefs = {
 		spawnOffset = {0, 0},
 		duration = "inherit",
 	},
+	dust = {
+		image = "dust",
+		interface = false,
+		alphaScale = true,
+		lifeScale = true,
+		color = {0.8, 0.8, 0.6},
+		spawnOffset = {0, 16},
+		inFront = -20,
+		duration = "inherit",
+	},
 }
 
 

@@ -192,6 +192,7 @@ function api.Update(Terrain, EnemyHandler, cameraTransform, dt)
 	
 	self.pos = util.Add(self.pos, util.Mult(dt*60, self.velocity))
 	UpdateFacing(dt)
+	EffectHandler.SpawnDust(self.pos, self.velocity, self.speed, dt)
 	
 	UpdateSpellcasting(dt)
 	

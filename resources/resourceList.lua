@@ -42,4 +42,5 @@ return {
 	"projectiles",
 	"interface_anim",
 	"explosions",
+	"dust",
 }

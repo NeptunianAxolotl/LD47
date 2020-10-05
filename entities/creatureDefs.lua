@@ -1,6 +1,7 @@
 
 local util = require("include/util")
 local creatureUtil = require("entities/creatureUtilities")
+local EffectHandler = require("effectsHandler")
 
 local SPAWN_OFFSET = {0, 1100}
 local OUTER_SPAWN = 1500
@@ -36,7 +37,7 @@ local creatureDefs = {
 		healthRange = 70,
 		radius = 58,
 		speed = 8,
-		maxTurnRate = 0.08,
+		maxTurnRate = 0.32,
 		despawnDistance = 500,
 		stopRange = 10,
 		goalOffset = {0, 700},
@@ -59,6 +60,8 @@ local creatureDefs = {
 				aimVector[1] = aimVector[1]*0.8 -- Shoot mostly up
 				Projectiles.SpawnProjectile("bunny_bullet", self.pos, util.Add(playerVel, util.SetLength(18, aimVector)))
 			end
+			
+			EffectHandler.SpawnDust(self.pos, self.velocity, self.wantedSpeed, dt, 0.1)
 			
 			creatureUtil.SetLimitedTurnDrawDir(self, def, dt)
 		end,

@@ -93,7 +93,7 @@ function creatureUtils.SetLimitedTurnDrawDir(self, def, dt)
 	local dirDiff = util.AngleSubtractShortest(util.Angle(self.velocity), self.drawDir)
 	local wantTurn = util.SignPreserveMax(dirDiff, def.maxTurnRate*4)
 	
-	self.drawDirMomentum = util.SignPreserveMax(((self.drawDirMomentum or 0)*0.95 + wantTurn*dt), def.maxTurnRate)
+	self.drawDirMomentum = util.SignPreserveMax(((self.drawDirMomentum or 0)*0.85 + wantTurn*dt), def.maxTurnRate)
 	self.drawDir = self.drawDir + self.drawDirMomentum*60*dt
 end
 
