@@ -2,6 +2,7 @@
 local util = require("include/util")
 local Resources = require("resourceHandler")
 local spellutil = require("spells/spellutil")
+local SoundHandler = require("soundHandler")
 
 local function sineMultiplier(i)
     local multiplier = math.floor((i+1)/2)
@@ -14,6 +15,7 @@ end
 local function NewSpell(player, modifies, level)
 
     modifiers = modifiers or {}
+    SoundHandler.PlaySound("serpent_shoot")
     
     -- uniform properties
     local baseN = 2
