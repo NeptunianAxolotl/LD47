@@ -3,7 +3,6 @@
 
 return {
 	"test_anim",
-	"fireball",
 	"spell_interface",
 	"spell_croc",
 	"croc",
@@ -23,6 +22,9 @@ return {
     "haste_icon",
     "cantrip_icon",
     "seeker_icon",
+    "shield_icon",
+    "shield",
+    "fireball",
 	"spell_anim",
 	"shape_n",
 	"health",

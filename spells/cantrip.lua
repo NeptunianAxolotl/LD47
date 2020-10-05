@@ -106,7 +106,12 @@ local function NewSpell(player, modifiers)
 			if self.projectiles[k].alive then
 				drawQueue:push({
 					y=self.projectiles[k].pos[2],
-					f=function() Resources.DrawIsoImage("fireball", self.projectiles[k].pos[1], self.projectiles[k].pos[2], util.Angle(self.projectiles[k].velocity)) end,
+					f=function() 
+                        Resources.DrawIsoImage("fireball", self.projectiles[k].pos[1], self.projectiles[k].pos[2], util.Angle(self.projectiles[k].velocity)) 
+                        love.graphics.setColor(0,0,1)
+                        love.graphics.setLineWidth(2)
+                        love.graphics.circle("line", self.projectiles[k].pos[1], self.projectiles[k].pos[2], 5) 
+                    end,
 				})
 			end
 		end

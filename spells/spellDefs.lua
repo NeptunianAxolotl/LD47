@@ -7,6 +7,7 @@ local spellList = {
 	"wisp",
     "haste",
     "seeker",
+    "shield",
 }
 
 local spellIcon = {
@@ -17,6 +18,7 @@ local spellIcon = {
 	wisp     = "wisp_icon",
     haste    = "haste_icon",
     seeker   = "seeker_icon",
+    shield   = "shield_icon",
 }
 
 local probability = {
@@ -27,6 +29,7 @@ local probability = {
 	wisp     = 1,
     haste    = 1,
     seeker    = 1,
+    shield   = 1,
 }
 
 return {
