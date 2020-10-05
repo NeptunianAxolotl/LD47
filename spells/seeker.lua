@@ -21,7 +21,7 @@ local function NewSpell(player, modifies, level)
     local exploRadius = 80 * (modifiers.fireball and 1+(modifiers.fireball*0.25) or 1)
     local baseSpeed = 5 * (modifiers.wisp and 0.5 + 0.5 / modifers.wisp or 1)
     local myLives = 1 + (modifiers.serpent and modifiers.serpent or 0)
-    local turnspeed = math.pi/50 * (level and 1+0.3*(3*(level-1))/((level-1)+2) or 1)
+    local turnspeed = math.pi/50 * (level and 1+0.3*(3*level)/(level+2) or 1)
     
     -- setting up the spell
 	local self = {}
