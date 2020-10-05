@@ -13,8 +13,8 @@ local function NewObstacle(self, def, rng)
 		return self.pos, def.radius*self.sizeMult
 	end
 	
-	function self.IsColliding(otherPos, otherRadius, isCreature, projectile, player, dt)
-		if not ((isCreature and def.collideCreature) or (projectile and def.collideProjectile) or (player and (def.overlapEffect or def.spellName))) then
+	function self.IsColliding(otherPos, otherRadius, isCreature, isProjectile, player, dt)
+		if not ((isCreature and def.collideCreature) or (isProjectile and def.collideProjectile) or (player and (def.overlapEffect or def.spellName))) then
 			return
 		end
 		local collide, distSq = util.IntersectingCircles(self.pos, def.radius*self.sizeMult, otherPos, otherRadius)

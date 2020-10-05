@@ -36,7 +36,7 @@ local obstacleDefs = {
 		minSize = 0.8,
 		maxSize = 1.5,
 		collideCreature = true,
-		collideProjectile = true,
+		collideProjectile = false,
 		minSpawnWeight = 10,
 		maxSpawnWeight = 30,
 	},
@@ -66,6 +66,7 @@ local obstacleDefs = {
 		minSize = 0.85,
 		maxSize = 1.15,
 		collideCreature = false,
+		collideProjectile = false,
 		minSpawnWeight = 4,
 		maxSpawnWeight = 10,
 	},
@@ -80,6 +81,7 @@ local obstacleDefs = {
 		minSize = 0.85,
 		maxSize = 1.15,
 		collideCreature = false,
+		collideProjectile = false,
 		minSpawnWeight = 4,
 		maxSpawnWeight = 10,
 	},
@@ -94,6 +96,7 @@ local obstacleDefs = {
 		minSize = 0.85,
 		maxSize = 1.15,
 		collideCreature = false,
+		collideProjectile = false,
 		overlapEffect = function (self, player, distSq, dt)
 			local _, _, playerSpeed = player.GetPhysics()
 			if playerSpeed > 6 then
@@ -116,6 +119,7 @@ local obstacleDefs = {
 		minSize = 0.85,
 		maxSize = 1.15,
 		collideCreature = false,
+		collideProjectile = false,
 		overlapEffect = function (self, player, distSq, dt)
 			local _, _, playerSpeed = player.GetPhysics()
 			if playerSpeed > 6 then

@@ -21,12 +21,21 @@ local function NewCreature(self, def)
 	end
 
 	function self.Update(Terrain, Enemies, player, dt)
+		if self.toKill then
+			return true
+		end
+		
 		if def.updateFunc then
 			def.updateFunc(self, def, Terrain, Enemies, player, dt)
 		end
 		
 		self.life = self.life - dt
 		if self.life < 0 then
+			return true
+		end
+		
+		local obstacle = Terrain.GetTerrainCollision(self.pos, def.radius, false, true, false, dt)
+		if obstacle then
 			return true
 		end
 		
@@ -38,6 +47,10 @@ local function NewCreature(self, def)
 		self.animTime = Resources.UpdateAnimation(def.imageName, self.animTime, dt)
 		
 		self.pos = util.Add(self.pos, util.Mult(dt*60, self.velocity))
+	end
+	
+	function self.Kill()
+		self.toKill = true
 	end
 	
 	function self.Draw(drawQueue)

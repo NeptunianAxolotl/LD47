@@ -1,11 +1,7 @@
 
 local util = require("include/util")
 
-local self = {
-	cameraPos = {0, 0},
-	cameraVelocity = {0, 0},
-	cameraScale = 1,
-}
+local self = {}
 
 local function UpdateCamera(dt, playerPos, playerVelocity, playerSpeed, smoothness)
 	self.cameraVelocity = util.Average(self.cameraVelocity, playerVelocity, 2*(1 - smoothness))
@@ -17,6 +13,15 @@ local function UpdateCamera(dt, playerPos, playerVelocity, playerSpeed, smoothne
 	return self.cameraPos[1], self.cameraPos[2], self.cameraScale
 end
 
+local function Initialize()
+	self = {
+		cameraPos = {0, 0},
+		cameraVelocity = {0, 0},
+		cameraScale = 1,
+	}
+end
+
 return {
 	UpdateCamera = UpdateCamera,
+	Initialize = Initialize
 }

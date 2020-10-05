@@ -15,6 +15,7 @@ local util = require("include/util")
 local ObstacleDefs = require("entities/obstacleDefs")
 local NewObstacle = require("entities/obstacle")
 
+local api = {}
 local self = {}
 
 local chunkList = {}
@@ -32,14 +33,14 @@ local OBSTACLES_PER_CHUNK_MAX = 50
 
 local rngSeed
 
-local function detectCollision(obstacles, otherPos, otherRadius, isCreature, projectile, player, dt)
+local function detectCollision(obstacles, otherPos, otherRadius, isCreature, isProjectile, player, dt)
 	--Does the circle described by 'x,y,radius' intersect with any
 	--of the objects in the 'obstacles' list?
 	local collided = false
 	for i = 1, #obstacles do
 		local v = obstacles[i]
         if v then
-            local collide, removeObstacle = v.IsColliding(otherPos, otherRadius, isCreature, projectile, player, dt)
+            local collide, removeObstacle = v.IsColliding(otherPos, otherRadius, isCreature, isProjectile, player, dt)
             if collide then
                 collided = v
             end
@@ -175,13 +176,13 @@ local function getChunksIDsForRegion(top, left, bottom, right)
 	return chunkIDs
 end
 
-function self.GetTerrainCollision(pos, radius, isCreature, projectile, player, dt)
+function api.GetTerrainCollision(pos, radius, isCreature, isProjectile, player, dt)
 	-- Other things, such as the player, enemies, and active spell effects, may call the terrain
 	-- to check whether they are colliding with any mechanical part of it.
 	--TODO: Additional chunks need to be checked, if the 'radius' overlaps with the edge of the chunk that 'x','y' is in.
 	local chunk = getExistingChunk(getChunkIDFromPosition(pos[1], pos[2]))
 	if chunk then
-		return detectCollision(chunk.obstacles, pos, radius, isCreature, projectile, player, dt)
+		return detectCollision(chunk.obstacles, pos, radius, isCreature, isProjectile, player, dt)
 	end
 end
 
@@ -246,7 +247,7 @@ local function drawChunks(visibleChunks, drawQueue)
 end
 
 local deleteAcc = 0
-function self.Update(dt)
+function api.Update(dt)
 	deleteAcc = deleteAcc + dt
 	if deleteAcc > 1 then
 		DeleteOldChunks()
@@ -257,19 +258,17 @@ function self.Update(dt)
 	updateChunks(self.visibleChunks, dt)
 end
 
-function self.Draw(drawQueue)
+function api.Draw(drawQueue)
 	self.visibleChunks = self.visibleChunks or GetVisibleChunks()
 	drawChunks(self.visibleChunks, drawQueue)
 end
 
-function self.Initialize()
+function api.Initialize()
 	rngSeed = math.random(0, 2^16)
-	self = {
-		visibleChunks = nil,
-	}
+	self = {}
 	
 	chunkList = {}
 	chunkCache = {}
 end
 
-return self
+return api
