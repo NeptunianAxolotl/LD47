@@ -105,7 +105,7 @@ local function NewSpell(player, modifies, level)
                     drawQueue:push({
                         y=self.projectiles[k].pos[2],
                         f=function() 
-                            Resources.DrawImage("shield", self.projectiles[k].pos[1], self.projectiles[k].pos[2]) 
+                            Resources.DrawAnimation("shield", self.projectiles[k].pos[1], self.projectiles[k].pos[2], self.lifetime) 
                             -- love.graphics.setColor(0,0,1)
                             -- love.graphics.setLineWidth(2)
                             -- love.graphics.circle("line", self.projectiles[k].pos[1], self.projectiles[k].pos[2], shieldSize) 
@@ -115,7 +115,7 @@ local function NewSpell(player, modifies, level)
                     drawQueue:push({
                         y=self.projectiles[k].pos[2],
                         f=function() 
-                            Resources.DrawImage("shield_damaged", self.projectiles[k].pos[1], self.projectiles[k].pos[2]) 
+                            Resources.DrawAnimation("shield_damaged", self.projectiles[k].pos[1], self.projectiles[k].pos[2], self.lifetime) 
                             -- love.graphics.setColor(0,0,1)
                             -- love.graphics.setLineWidth(2)
                             -- love.graphics.circle("line", self.projectiles[k].pos[1], self.projectiles[k].pos[2], shieldSize) 
