@@ -28,6 +28,7 @@ return {
     "shield",
     "shield_damaged",
     "seeker",
+    "wisp",
     "fireball",
     "serpent",
     "cantrip",

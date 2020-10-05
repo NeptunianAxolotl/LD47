@@ -107,7 +107,7 @@ local function NewSpell(player, modifies, level)
 			if self.projectiles[k].alive then
 				drawQueue:push({
 					y=self.projectiles[k].pos[2],
-					f=function() Resources.DrawImage("rock_1", self.projectiles[k].pos[1], self.projectiles[k].pos[2]) end,
+					f=function() Resources.DrawAnimation("wisp", self.projectiles[k].pos[1], self.projectiles[k].pos[2], self.lifetime)  end,
 				})
 			end
 		end
