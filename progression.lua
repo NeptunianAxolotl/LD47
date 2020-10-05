@@ -28,8 +28,8 @@ local distanceKeyframes = {
 		bigRock       = {2,   4},
 		grass_1       = {1,   1},
 		grass_2       = {1,   1},
-		bush          = {0.4, 0.8},
-		healthBush    = {0.5, 0.9},
+		bush          = {0.1, 0.6},
+		healthBush    = {0.1, 0.6},
 		web           = {0,   0},
 		
 		spawnTime     = {10,   5},
@@ -63,8 +63,8 @@ local distanceKeyframes = {
 		bigRock       = {2,   4},
 		grass_1       = {1,   1},
 		grass_2       = {1,   1},
-		bush          = {0.4, 0.8},
-		healthBush    = {0.5, 0.9},
+		bush          = {0.1, 0.6},
+		healthBush    = {0.1, 0.6},
 		web           = {0,   0},
 		
 		spawnTime     = {10,   5},
@@ -98,8 +98,8 @@ local distanceKeyframes = {
 		bigRock       = {2,   5},
 		grass_1       = {1,   1},
 		grass_2       = {1,   1},
-		bush          = {0.4, 0.8},
-		healthBush    = {0.5, 0.9},
+		bush          = {0.1, 0.6},
+		healthBush    = {0.1, 0.6},
 		web           = {0,   0},
 		
 		spawnTime     = {12,   5},

@@ -100,7 +100,7 @@ local function NewSpell(player, modifies, level)
                 local collided = Projectiles.DetectCollision(self.projectiles[k].pos, shieldSize * self.sizeMult * (self.projectiles[k].lives > 1 and 1 or 0.8))
                 if collided then
 					EffectHandler.Spawn("shield_hit", self.projectiles[k].pos)
-					self.projectiles[k].hitMult = 1.6
+					self.projectiles[k].hitMult = 1.8
                     collided.Kill(true)
                     self.projectiles[k].lives = self.projectiles[k].lives - 1
                     if self.projectiles[k].lives <= 0 then

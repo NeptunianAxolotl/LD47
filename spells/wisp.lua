@@ -28,10 +28,10 @@ local function NewSpell(player, modifies, level)
     -- properties derived from modifiers
     local nProjectiles = 2 
     local myDamage = 60
-    local myRadius = 140 + 25*level
+    local myRadius = 130 + 25*level
     local myPhaseLength = 2 * math.max((1 - 0.08 * (level-1)),0.4)
     local myDuration = 9 + level
-    local myLives = 3 + math.floor((level-1)/2)
+    local myLives = 2 + math.floor((level-1)/2)
 
     -- setting up the spell
 	local self = {}
@@ -105,7 +105,7 @@ local function NewSpell(player, modifies, level)
                     collided = Enemies.DetectCollision(self.projectiles[k].pos, wispSize * self.sizeMult, false, self.projectiles[k].effect.id, nil, dt)
                     if collided then
 						EffectHandler.Spawn("wisp_hit", self.projectiles[k].pos)
-						self.projectiles[k].hitMult = 1.6
+						self.projectiles[k].hitMult = 1.8
                         collided.ProjectileImpact(self.projectiles[k].effect)
                         self.projectiles[k].lives = self.projectiles[k].lives - 1
                         if self.projectiles[k].lives <= 0 then
