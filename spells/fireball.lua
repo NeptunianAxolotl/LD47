@@ -28,7 +28,7 @@ local function NewSpell(player, modifies, level)
     local myFire = 100
     local exploDamage = 70
     local exploRadius = 300 * (level and (1 + 0.25*(level-1)) or 1)
-    local baseSpeed = 13 + level*2.5
+    local baseSpeed = 13 + level*1.2
     local myLives = 1
     
     -- setting up the spell

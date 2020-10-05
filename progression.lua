@@ -243,7 +243,7 @@ local distanceKeyframes = {
 		web           = {0,   0.5},
 		
 		spawnTime     = {10,   15},
-		spawnCount    = {5,   30},
+		spawnCount    = {5,   28},
 		
 		bunny         = {0,   0},
 		rocket_bear   = {0.2, 4},
@@ -278,7 +278,7 @@ local distanceKeyframes = {
 		web           = {0,   0},
 		
 		spawnTime     = {5,   10},
-		spawnCount    = {10,  30},
+		spawnCount    = {10,  28},
 		
 		bunny         = {0,   0},
 		rocket_bear   = {0,   3},
@@ -313,7 +313,7 @@ local distanceKeyframes = {
 		web           = {0,   0},
 		
 		spawnTime     = {10,   15},
-		spawnCount    = {10,   20},
+		spawnCount    = {10,   15},
 		
 		bunny         = {0,   0},
 		rocket_bear   = {0,   4},
@@ -348,12 +348,12 @@ local distanceKeyframes = {
 		web           = {0,   0},
 		
 		spawnTime     = {25,  5},
-		spawnCount    = {20,  38},
+		spawnCount    = {20,  32},
 		
 		bunny         = {0,   0},
 		rocket_bear   = {0,   4},
 		bunny_car     = {2,   8},
-		bear_car      = {0,   3},
+		bear_car      = {0,   2.5},
 		spider        = {0,   1.5},
 		croc_enemy    = {0,   0},
 		
