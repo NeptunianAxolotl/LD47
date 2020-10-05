@@ -53,7 +53,7 @@ function progression.GetSpellSpawnWeights(chunkDistance)
 		wisp     = 1,
 		haste    = 1,
 		seeker   = 1,
-		shield   = 8,
+		shield   = 1,
 	}
 end
 
