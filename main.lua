@@ -29,7 +29,7 @@ function love.keypressed(key, scancode, isRepeat)
 		World.Initialize()
 	end
 	if key == 'escape' then
-	
+		love.event.quit()
 	end
 end
 
