@@ -10,6 +10,7 @@ local function NewCreature(self, def)
 	-- velocity
 	self.direction = util.Angle(self.velocity)
 	self.animTime = 0
+	self.life = def.life
 	
 	function self.GetPhysics()
 		return self.pos, def.radius
@@ -22,6 +23,16 @@ local function NewCreature(self, def)
 	function self.Update(Terrain, Enemies, player, dt)
 		if def.updateFunc then
 			def.updateFunc(self, def, Terrain, Enemies, player, dt)
+		end
+		
+		self.life = self.life - dt
+		if self.life < 0 then
+			return true
+		end
+		
+		if player.IsColliding(self.pos, def.radius) then
+			player.ModifyHealth(def.damage)
+			return true
 		end
 		
 		self.animTime = Resources.UpdateAnimation(def.imageName, self.animTime, dt)

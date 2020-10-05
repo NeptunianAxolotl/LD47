@@ -169,6 +169,10 @@ function api.IsDead()
 	return self.isDead
 end
 
+function api.IsColliding(otherPos, otherRadius)
+	return util.IntersectingCircles(self.pos, self.radius, otherPos, otherRadius)
+end
+
 function api.Update(Terrain, EnemyHandler, cameraTransform, dt)
 	local mouseX, mouseY = cameraTransform:inverseTransformPoint(love.mouse.getX(), love.mouse.getY())
 	

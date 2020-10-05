@@ -58,7 +58,7 @@ local creatureDefs = {
 			creatureUtil.MoveTowardsPlayer(self, def, Terrain, Enemies, player, def.stopRange, myGoalOffset, dt)
 			creatureUtil.DoCollisions(self, def, Terrain, Enemies, player, dt)
 			
-			if math.random() < 0.03 then
+			if math.random() < 0.03 and not player.IsDead() then
 				local aimVector = util.Subtract(util.Add(util.RandomPointInCircle(80), playerPos), self.pos)
 				aimVector[1] = aimVector[1]*0.3 -- Shoot mostly up
 				Projectiles.SpawnProjectile("bunny_bullet", self.pos, util.Add(playerVel, util.SetLength(18, aimVector)))
