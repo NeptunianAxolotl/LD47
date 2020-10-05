@@ -30,7 +30,7 @@ local function NewSpell(player, modifies, level)
     local nProjectiles = 2 
     local myRadius = 45 + 5*level
     local myPhaseLength = 2 * math.max((1 - 0.08 * (level - 1)),0.4)
-    local myDuration = 6 + 2*level
+    local myDuration = 6 + level*2/3
     local myLives = 2 + math.floor(level*2/3)
 
     -- setting up the spell

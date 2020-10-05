@@ -29,8 +29,8 @@ local function NewSpell(player, modifies, level)
     local myDamage = 75
     local myRadius = 140 + 25*level
     local myPhaseLength = 2 * math.max((1 - 0.08 * (level-1)),0.4)
-    local myDuration = 10 + 2*level
-    local myLives = 5 + math.floor((level-1)/2)
+    local myDuration = 10 + level
+    local myLives = 4 + math.floor((level-1)/2)
 
     -- setting up the spell
 	local self = {}

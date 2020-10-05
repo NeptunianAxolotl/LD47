@@ -154,7 +154,7 @@ local creatureDefs = {
 	{
 		name = "spider",
 		animationName = "spider",
-		health = 2000,
+		health = 200,
 		healthRange = 100,
 		radius = 60,
 		speed = 0.1,
