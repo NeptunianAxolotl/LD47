@@ -54,7 +54,7 @@ function creatureUtils.DoCollisions(self, def, Terrain, Enemies, player, dt)
 	end
 end
 
-function creatureUtils.ShootBulletAtPlayer(self, Projectiles, player, bulletType, speed, inaccuracy, usePlayerVelocity, dt)
+function creatureUtils.ShootBulletAtPlayer(self, Projectiles, player, bulletType, speed, inaccuracy, r, dt)
 	if player.IsDead() then
 		return
 	end

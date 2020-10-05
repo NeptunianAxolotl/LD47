@@ -43,4 +43,6 @@ return {
 	"interface_anim",
 	"explosions",
 	"dust",
+	"car_blue",
+	"bear_car",
 }

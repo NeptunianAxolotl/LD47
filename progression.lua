@@ -66,8 +66,10 @@ end
 
 function progression.GetEnemySpawnWeights(playerDistance, enemyCount)
 	return {
-		rocket_bear = 100,
+		rocket_bear = 1,
 		bunny_car   = 1,
+		bear_car    = 1,
+		bunny       = 3,
 	}
 end
 
