@@ -55,20 +55,19 @@ local function UpdatePhysics(mouseX, mouseY, dt)
 	self.velDir = self.velDir + util.SignPreserveMax(dirDiff, mouseControl*maxTurnRate)
 	
 	local downhillFactor = util.Dot(self.velocity, DOWNHILL_DIR)
-	if downhillFactor < 0 then
-		downhillFactor = downhillFactor/10
-	end
+	local uphill = (downhillFactor < 0.2 and -0.2 - downhillFactor) or 0
+	local controlMult = (downhillFactor < 0.2 and self.mouseControl) or 1
 	
-	self.speed = math.max(0, self.speed + dt*60*(0.004 + 0.01*downhillFactor) + ((self.speedMult or 1) - 1)*7*dt)
-	self.speed = math.max(0, self.speed - dt*60*(0.0027*self.speed^1.5 + 0.05*self.speed*dirChange^3))
+	self.speed = math.max(0, self.speed + dt*60*(controlMult*0.022 + 0.01*downhillFactor) + ((self.speedMult or 1) - 1)*7*dt)
+	self.speed = math.max(0, self.speed - dt*60*(0.0008*self.speed^1.8 + 0.008*self.speed*dirChange))
 	
-	self.velocity = util.Add(util.Mult(dt*60*(0.075 - 0.045*(self.speed/(self.speed + 15))), DOWNHILL_DIR), util.PolarToCart(self.speed, self.velDir))
+	self.velocity = util.Add(util.Mult(dt*60*(0.015 + 0.02*uphill - 0.015*(self.speed/(self.speed + 8))), DOWNHILL_DIR), util.PolarToCart(self.speed, self.velDir))
 	self.speed, self.velDir = util.CartToPolar(self.velocity)
 	
 	if self.speed < 8 and util.Dot(self.velocity, DOWNHILL_DIR) < 0 then
-		self.mouseControlMult = 0.4
-	elseif self.mouseControlMult and self.speed > 8 then
-		self.mouseControlMult = self.mouseControlMult + 0.02
+		self.mouseControlMult = 0.6
+	elseif self.mouseControlMult and self.speed > 3 then
+		self.mouseControlMult = self.mouseControlMult + 0.5*dt
 		if self.mouseControlMult > 1 then
 			self.mouseControlMult = false
 		end
