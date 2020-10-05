@@ -5,17 +5,17 @@ local api = {}
 local sounds = IterableMap.New()
 
 local volMult = {
-    bulletfire = 0.34,
+    bulletfire = 0.16,
 }
 
 local soundFiles = {
-	bulletfire     = {file = "sounds/bulletfire.wav", volMult = 0.34},
-	fireball_shoot = {file = "sounds/fireball_shoot1.wav", volMult = 0.34},
+	bulletfire     = {file = "sounds/bulletfire.wav", volMult = 0.05},
+	fireball_shoot = {file = "sounds/fireball_shoot1.wav", volMult = 0.1},
 	haste_shoot   = {file = "sounds/haste_shoot0.wav", volMult = 0.34},
 	serpent_shoot = {file = "sounds/serpent_shoot2.wav", volMult = 0.34},
 	shield_shoot = {file = "sounds/shield_shoot6.wav", volMult = 0.34},
 	shotgun_shoot = {file = "sounds/shotgun_shoot0.wav", volMult = 0.7},
-	fireball_explode = {file = "sounds/fireball_explode0.wav", volMult = 0.34},
+	fireball_explode = {file = "sounds/fireball_explode0.wav", volMult = 0.2},
 	health_up = {file = "sounds/health1.wav", volMult = 0.34},
 	health_down = {file = "sounds/health_down0.wav", volMult = 1.5},
 	wisp_shoot = {file = "sounds/wisp_shoot2.wav", volMult = 0.15},
@@ -31,6 +31,10 @@ local soundFiles = {
 	beat8 = {file = "resources/sounds/beat8.wav", volMult = 0.15},
 	death = {file = "sounds/death.wav", volMult = 0.40},
 	fulltrack = {file = "resources/sounds/fulltrack.wav", volMult = 0.12},
+    crocodial_a = {file = "sounds/crocodial_a.wav", volMult = 0.12},
+    crocodial_b = {file = "sounds/crocodial_b.wav", volMult = 0.12},
+    crocodial_c = {file = "sounds/crocodial_c.wav", volMult = 0.12},
+    crocodial_d = {file = "sounds/crocodial_d.wav", volMult = 0.12},
 }
 
 function addSource(name, id)
@@ -40,8 +44,9 @@ function addSource(name, id)
     end
 end
 
-function api.PlaySound(name, loop, id, fadeRate, delay)
+function api.PlaySound(name, loop, id, fadeRate, delay, fadeIn)
 	id = name .. (id or 1)
+    fadeIn = fadeIn or fadeRate
 	local soundData = IterableMap.Get(sounds, id)
     if not soundData then
 		local def = soundFiles[name]
@@ -52,6 +57,7 @@ function api.PlaySound(name, loop, id, fadeRate, delay)
 			volumeMult = def.volMult,
             source = addSource(name, id),
             fadeRate = fadeRate,
+            fadeIn = fadeIn,
             delay = delay,
         }
 		if loop then
@@ -92,7 +98,7 @@ function api.Update(dt)
             end
         else
             if soundData.want > soundData.have then
-                soundData.have = soundData.have + (soundData.fadeRate or 10)*dt
+                soundData.have = soundData.have + (soundData.fadeIn or 10)*dt
                 if soundData.have > soundData.want then
                     soundData.have = soundData.want
                 end

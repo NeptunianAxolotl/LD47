@@ -146,7 +146,7 @@ local function NewSpell(player, modifies, level)
 					end)()
 				
 				for k in pairs(self.projectiles) do
-						if kill or not self.projectiles[k].alive then
+						if self.lifetime < 8.3 or kill or not self.projectiles[k].alive then
 							SoundHandler.StopSound("seeker_travel".. self.projectiles[k].effect.id, true)
 						end
 				end
