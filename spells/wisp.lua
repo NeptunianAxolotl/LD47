@@ -49,7 +49,7 @@ local function NewSpell(player, modifies, level)
         self.projectiles[i].pos = self.pos
         self.projectiles[i].velocity = self.velocity
         self.projectiles[i].alive = true
-        self.projectiles[i].effect = {id = spellutil.newProjID(), damage = 50}
+        self.projectiles[i].effect = {id = spellutil.newProjID(), damage = myDamage}
         self.projectiles[i].lives = myLives
     end
 	

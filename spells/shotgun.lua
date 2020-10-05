@@ -31,7 +31,7 @@ local function NewSpell(player, modifies, level)
         launchVelocity = util.RotateVector(launchVelocity, math.random() * sprayAngle * 2 - sprayAngle)
         self.projectiles[i].velocity = util.Add(self.projectiles[i].velocity, launchVelocity);
         self.projectiles[i].alive = true
-        self.projectiles[i].effect = {id = spellutil.newProjID(), damage = 60}
+        self.projectiles[i].effect = {id = spellutil.newProjID(), damage = myDamage}
         self.projectiles[i].lives = myLives
     end
 	
