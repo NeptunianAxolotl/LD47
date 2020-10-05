@@ -48,7 +48,7 @@ local function NewSpell(player, modifies, level)
         self.projectiles[i].lives = myLives
         self.projectiles[i].searchRadius = mySearchRad
         self.projectiles[i].turnSpeed = turnspeed * (0.75 + math.random()*0.5)
-				SoundHandler.PlaySound("seeker_travel", true, self.projectiles[i].effect.id)
+		if i == 1 then SoundHandler.PlaySound("seeker_travel", true, self.projectiles[i].effect.id) end
     end
     
     function self.Update(Terrain, Enemies, dt)
@@ -144,12 +144,12 @@ local function NewSpell(player, modifies, level)
 								end
 						end
 					end)()
-				
-				for k in pairs(self.projectiles) do
-						if self.lifetime < 8.3 or kill or not self.projectiles[k].alive then
-							SoundHandler.StopSound("seeker_travel".. self.projectiles[k].effect.id, true)
-						end
-				end
+                    
+                    for k in pairs(self.projectiles) do
+                        if self.lifetime < 8.3 or kill or not self.projectiles[k].alive then
+                            SoundHandler.StopSound("seeker_travel".. self.projectiles[k].effect.id, true)
+                        end
+                    end
 	end
 	
 	function self.Draw(drawQueue)

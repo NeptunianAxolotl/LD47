@@ -19,7 +19,7 @@ local soundFiles = {
 	health_up = {file = "sounds/health1.wav", volMult = 0.34},
 	health_down = {file = "sounds/health_down0.wav", volMult = 1.5},
 	wisp_shoot = {file = "sounds/wisp_shoot2.wav", volMult = 0.15},
-	seeker_travel = {file = "sounds/seeker_travel0.wav", volMult = 0.05},
+	seeker_travel = {file = "sounds/seeker_travel0.wav", volMult = 0.12},
 	beat1 = {file = "resources/sounds/beat1.wav", volMult = 0.15},
 	beat2 = {file = "resources/sounds/beat2.wav", volMult = 0.15},
 	beat3 = {file = "resources/sounds/beat3.wav", volMult = 0.15},
