@@ -108,6 +108,49 @@ local effectDefs = {
 		spawnOffset = {0, 0},
 		duration = "inherit",
 	},
+	
+	-- Death Clones
+	dead_bear = {
+		actual_image = "dead_bear",
+		interface = false,
+		alphaScale = true,
+		inFront = 60,
+		spawnOffset = {0, 0},
+		duration = 10,
+	},
+	dead_bunny = {
+		actual_image = "dead_bunny",
+		interface = false,
+		alphaScale = true,
+		inFront = 60,
+		spawnOffset = {0, 0},
+		duration = 10,
+	},
+	dead_enemy_croc = {
+		actual_image = "dead_enemy_croc",
+		interface = false,
+		alphaScale = true,
+		randomDirection = true,
+		inFront = 60,
+		spawnOffset = {0, 0},
+		duration = 10,
+	},
+	dead_car_red = {
+		actual_image = "dead_car_red",
+		interface = false,
+		alphaScale = true,
+		inFront = 60,
+		spawnOffset = {0, 50},
+		duration = 10,
+	},
+	dead_car_blue = {
+		actual_image = "dead_car_blue",
+		interface = false,
+		alphaScale = true,
+		inFront = 60,
+		spawnOffset = {0, 50},
+		duration = 10,
+	},
 }
 
 

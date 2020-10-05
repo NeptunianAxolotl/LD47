@@ -28,10 +28,17 @@ local function NewEffect(self, def)
 	
 	function self.Draw(drawQueue)
 		drawQueue:push({y=self.pos[2] + self.inFront; f=function()
-			Resources.DrawAnimation(def.image, self.pos[1], self.pos[2], self.animTime, self.direction,
-				(def.alphaScale and self.life/maxLife) or 1,
-				(self.scale or 1)*((def.lifeScale and (1 - 0.5*self.life/maxLife)) or 1),
-			def.color)
+			if def.actual_image then
+				Resources.DrawImage(def.actual_image, self.pos[1], self.pos[2], self.direction,
+					(def.alphaScale and self.life/maxLife) or 1,
+					(self.scale or 1)*((def.lifeScale and (1 - 0.5*self.life/maxLife)) or 1),
+				def.color)
+			else
+				Resources.DrawAnimation(def.image, self.pos[1], self.pos[2], self.animTime, self.direction,
+					(def.alphaScale and self.life/maxLife) or 1,
+					(self.scale or 1)*((def.lifeScale and (1 - 0.5*self.life/maxLife)) or 1),
+				def.color)
+			end
 		end})
 		if DRAW_DEBUG then
 			love.graphics.circle('line',self.pos[1], self.pos[2], def.radius)
@@ -39,10 +46,17 @@ local function NewEffect(self, def)
 	end
 	
 	function self.DrawInterface()
-		Resources.DrawAnimation(def.image, self.pos[1], self.pos[2], self.animTime, self.direction,
-				(def.alphaScale and self.life/maxLife) or 1,
-				(self.scale or 1)*((def.lifeScale and (1 - 0.5*self.life/maxLife)) or 1),
-			def.color)
+		if def.actual_image then
+			Resources.DrawAnimation(def.actual_image, self.pos[1], self.pos[2], self.direction,
+					(def.alphaScale and self.life/maxLife) or 1,
+					(self.scale or 1)*((def.lifeScale and (1 - 0.5*self.life/maxLife)) or 1),
+				def.color)
+		else
+			Resources.DrawAnimation(def.image, self.pos[1], self.pos[2], self.animTime, self.direction,
+					(def.alphaScale and self.life/maxLife) or 1,
+					(self.scale or 1)*((def.lifeScale and (1 - 0.5*self.life/maxLife)) or 1),
+				def.color)
+		end
 		if DRAW_DEBUG then
 			love.graphics.circle('line',self.pos[1], self.pos[2], 100)
 		end

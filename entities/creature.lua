@@ -2,6 +2,7 @@
 local util = require("include/util")
 local Resources = require("resourceHandler")
 local Progression = require("progression")
+local EffectHandler = require("effectsHandler")
 
 local DRAW_DEBUG = false
 
@@ -48,6 +49,12 @@ local function NewCreature(self, def)
         if self.health <= 0 then
 			if def.isBoss then
 				Progression.SetBossHealth(self.health, true)
+			end
+			if def.death_clone then
+				EffectHandler.Spawn(def.death_clone, self.pos)
+			end
+			if def.death_clone_lower then
+				EffectHandler.Spawn(def.death_clone_lower, self.pos)
 			end
 			return true -- Remove
         end

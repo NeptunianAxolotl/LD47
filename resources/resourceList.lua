@@ -55,4 +55,5 @@ return {
 	"bear_car",
 	"spider",
 	"web",
+	"death_clones",
 }
