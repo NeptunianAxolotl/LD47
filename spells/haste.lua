@@ -8,7 +8,7 @@ local function NewSpell(player, modifies, level)
     
     -- properties derived from modifiers
     local myMult = 2
-    local myDuration = 0.6 * (level and 1+(0.5*level) or 1)
+    local myDuration = 0.6 * (level and 1+(0.5*(level-1)) or 1)
     
     -- setting up the spell
     local self = {}

@@ -16,12 +16,12 @@ local function NewSpell(player, modifies, level)
     -- properties derived from modifiers
     local nProjectiles = 1 + (modifiers.shotgun and modifiers.shotgun * 2 or 0)
     local sprayAngle = (nProjectiles - 1) * 0.04
-    local myDamage = 50 * (nProjectiles+baseN)/(nProjectiles*2) * (level and 1+(0.5*level) or 1)
+    local myDamage = 50 * (nProjectiles+baseN)/(nProjectiles*2) * (level and 1+(0.5*(level-1)) or 1)
     local exploDamage = (modifiers.fireball and 25 + modifiers.fireball * 25 or 0) * (nProjectiles+baseN)/(nProjectiles*2)
     local exploRadius = 80 * (modifiers.fireball and 1+(modifiers.fireball*0.25) or 1)
     local baseSpeed = 5 * (modifiers.wisp and 0.5 + 0.5 / modifers.wisp or 1)
     local myLives = 1 + (modifiers.serpent and modifiers.serpent or 0)
-    local turnspeed = math.pi/50 * (level and 1+0.3*(3*level)/(level+2) or 1)
+    local turnspeed = math.pi/50 * (level and 1+0.3*(3*(level-1))/((level-1)+2) or 1)
     
     -- setting up the spell
 	local self = {}
