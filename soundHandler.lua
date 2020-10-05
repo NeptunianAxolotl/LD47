@@ -8,6 +8,7 @@ local volMult = {
 }
 
 local soundFiles = {
+	bulletfire     = {file = "sounds/bulletfire.wav", volMult = 0.05},
 	fireball_shoot = {file = "sounds/fireball_shoot1.wav", volMult = 0.1},
 	haste_shoot   = {file = "sounds/haste_shoot0.wav", volMult = 0.34},
 	serpent_shoot = {file = "sounds/serpent_shoot2.wav", volMult = 0.34},
