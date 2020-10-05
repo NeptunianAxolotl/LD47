@@ -17,12 +17,12 @@ local api = {}
 
 local CHARGE_MULT = 0.11
 local SPELL_COUNT = 8
-local SPELL_RADIUS = 94
+local SPELL_RADIUS = 92
 local CROC_CENTRE = 125
 local SPELL_HELD_POS = {1530, 70}
 local HELD_ROTATE = 0.8
 
-local SELECTED_COLOR = {0.8, 0.8, 0.97, 1}
+local SELECTED_COLOR = {0.8, 0.5, 0.3, 1}
 
 local function SpellChargeToAngle()
 	local spellData = self.spellPositions[self.currentSpell]
@@ -113,7 +113,7 @@ local function DrawSpellLevel(pos, level, rotation, scale, selected)
 	local nests = {}
 	while level > 3 do
 		Resources.DrawImage("shape_5", pos[1], pos[2], rotation, false, scale, selected and SELECTED_COLOR)
-		scale = scale*0.72
+		scale = scale*0.81
 		level = level - 3
 	end
 	
@@ -156,16 +156,17 @@ function api.Initialize()
 	}
 	local spellCentre = {1920 - CROC_CENTRE, CROC_CENTRE}
 	for i = 1, SPELL_COUNT do
+		local toOut = util.PolarToCart(SPELL_RADIUS, (i - 1)*math.pi/4)
 		local spellData = {
 			startChargeAngle = i*math.pi/4,
 			chargeProgressRange = 9*math.pi/4,
 			spellName = "cantrip",
-			spellLevel = i,
+			spellLevel = 1,
 			modifiers = {},
 			rotation = (i + 5)*math.pi/4,
 			--castSound = "beat" .. i,
 		}
-		spellData.pos = util.Add(spellCentre, util.PolarToCart(SPELL_RADIUS, (i - 1)*math.pi/4))
+		spellData.pos = util.Add(spellCentre, toOut)
 		
 		self.spellPositions[i] = spellData
 	end
