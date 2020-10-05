@@ -7,6 +7,7 @@ local DrawOverlappingBackground = require("utilities/backgroundUtilities")
 local SpellHandler = require("spellHandler")
 local EnemyHandler = require("enemyHandler")
 local EffectsHandler = require("effectsHandler")
+local SoundHandler = require("soundHandler")
 
 local PriorityQueue = require("include/PriorityQueue")
 
@@ -28,6 +29,7 @@ function self.Update(dt)
 	EnemyHandler.Update(Player, dt)
 	ProjectileHandler.Update(Player, dt)
 	EffectsHandler.Update(dt)
+	SoundHandler.Update(dt)
 	
 	-- Only update visible chunks.
 	love.graphics.replaceTransform(self.cameraTransform)
@@ -69,6 +71,7 @@ function self.Initialize()
 	SpellHandler.Initialize()
 	EnemyHandler.Initialize()
 	ProjectileHandler.Initialize()
+	SoundHandler.Initialize(dt)
 end
 
 return self
