@@ -22,11 +22,11 @@ local function NewSpell(player, modifies, level)
     
     -- properties derived from modifiers
     local nProjectiles = 2 + (modifiers.shotgun and modifers.shotgun * 2 or 0)
-    local myDamage = 100 * (nProjectiles+baseN)/(nProjectiles*2)
+    local myDamage = 100 * (nProjectiles+baseN)/(nProjectiles*2) * (level and 1 + 0.25 * level or 1)
     local myRadius = 80 + (modifiers.fireball and modifiers.fireball * 30 or 0)
-    local myPhaseLength = 2 * (modifiers.wisp and 0.6 + 0.4 / modifers.wisp or 1)
-    local myDuration = 10
-    local myLives = 5 + (modifiers.serpent and modifiers.serpent * 2 or 0)
+    local myPhaseLength = 2 * (modifiers.serpent and 0.6 + 0.4 / modifers.serpent or 1)
+    local myDuration = 10 * (modifiers.wisp and 1+modifiers.wisp*0.5 or 1)
+    local myLives = 5 + (level and level * 2 or 0)
 
     -- setting up the spell
 	local self = {}
