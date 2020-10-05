@@ -26,6 +26,7 @@ return {
     "shield_icon",
     "shield",
     "fireball",
+    "serpent",
 	"spell_anim",
 	"shape_n",
 	"health",
