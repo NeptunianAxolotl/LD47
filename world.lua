@@ -14,6 +14,10 @@ local PriorityQueue = require("include/PriorityQueue")
 
 local self = {}
 
+function self.MousePressed()
+	SpellHandler.MousePressed()
+end
+
 function self.MouseReleased()
 	SpellHandler.SwapSpell()
 end

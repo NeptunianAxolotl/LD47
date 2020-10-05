@@ -18,7 +18,7 @@ local distanceKeyframes = {
 		dist          = 0,
 		lushFactor    = 0,
 		
-		obstacleCount = {2,   4},
+		obstacleCount = {0,   0},
 		spellCount    = {0,   0},
 		
 		tree          = {0, 0},
@@ -53,6 +53,41 @@ local distanceKeyframes = {
 		dist          = 1,
 		lushFactor    = 0,
 		
+		obstacleCount = {0,   0},
+		spellCount    = {0,   0},
+		
+		tree          = {0, 0},
+		smallRock     = {3,   7},
+		bigRock       = {2,   4},
+		grass_1       = {1,   1},
+		grass_2       = {1,   1},
+		bush          = {0.4, 0.8},
+		healthBush    = {0.5, 0.9},
+		web           = {0,   0},
+		
+		spawnTime     = {10,   5},
+		spawnCount    = {0,   0},
+		
+		bunny         = {1,   1},
+		rocket_bear   = {0,   0},
+		bunny_car     = {0.1,   0},
+		bear_car      = {0,   0},
+		spider        = {0,   0},
+		croc_enemy    = {0,   0},
+		
+		cantrip       = {0,   0},
+		fireball      = {1,   1},
+		shotgun       = {1,   1},
+		serpent       = {1,   1},
+		wisp          = {1,   1},
+		haste         = {1,   1},
+		seeker        = {1,   1},
+		shield        = {1,   1},
+	},
+	{
+		dist          = 1.5,
+		lushFactor    = 0,
+		
 		obstacleCount = {8,   18},
 		spellCount    = {1,   1},
 		
@@ -66,7 +101,7 @@ local distanceKeyframes = {
 		web           = {0,   0},
 		
 		spawnTime     = {12,   5},
-		spawnCount    = {0.5,   1},
+		spawnCount    = {1,   2},
 		
 		bunny         = {1,   1},
 		rocket_bear   = {0,   0},
@@ -101,7 +136,7 @@ local distanceKeyframes = {
 		web           = {0,   0},
 		
 		spawnTime     = {12,  8},
-		spawnCount    = {0.5, 2},
+		spawnCount    = {1,   2},
 		
 		bunny         = {1,   3},
 		rocket_bear   = {0,   0},
@@ -135,12 +170,12 @@ local distanceKeyframes = {
 		healthBush    = {0.9,  3},
 		web           = {0,   0},
 		
-		spawnTime     = {12,   8},
+		spawnTime     = {12,   20},
 		spawnCount    = {2,   5},
 		
 		bunny         = {1,   4},
 		rocket_bear   = {0,   2},
-		bunny_car     = {0,   4},
+		bunny_car     = {0,   7},
 		bear_car      = {0,   0},
 		spider        = {0,   0},
 		croc_enemy    = {0,   0},
@@ -171,7 +206,7 @@ local distanceKeyframes = {
 		web           = {0,   0},
 		
 		spawnTime     = {6,   8},
-		spawnCount    = {4,   7},
+		spawnCount    = {5,   8},
 		
 		bunny         = {1,   2},
 		rocket_bear   = {0,   3},
@@ -205,8 +240,8 @@ local distanceKeyframes = {
 		healthBush    = {2,   5},
 		web           = {0,   0.5},
 		
-		spawnTime     = {30,   12},
-		spawnCount    = {16,   8},
+		spawnTime     = {10,   15},
+		spawnCount    = {5,   30},
 		
 		bunny         = {0,   0},
 		rocket_bear   = {0,   4},
@@ -240,11 +275,11 @@ local distanceKeyframes = {
 		healthBush    = {2,   5},
 		web           = {0,   0},
 		
-		spawnTime     = {5,   5},
-		spawnCount    = {4,   8},
+		spawnTime     = {5,   10},
+		spawnCount    = {8,   12},
 		
 		bunny         = {0,   0},
-		rocket_bear   = {0,   4},
+		rocket_bear   = {0,   3},
 		bunny_car     = {2,   8},
 		bear_car      = {0,   3},
 		spider        = {0,   1},
@@ -275,8 +310,8 @@ local distanceKeyframes = {
 		healthBush    = {2,   5},
 		web           = {0,   0},
 		
-		spawnTime     = {4,   5},
-		spawnCount    = {4,   8},
+		spawnTime     = {10,   15},
+		spawnCount    = {10,   20},
 		
 		bunny         = {0,   0},
 		rocket_bear   = {0,   4},
@@ -311,7 +346,7 @@ local distanceKeyframes = {
 		web           = {0,   0},
 		
 		spawnTime     = {25,   5},
-		spawnCount    = {12,   5},
+		spawnCount    = {12,   18},
 		
 		bunny         = {0,   0},
 		rocket_bear   = {0,   4},
@@ -346,14 +381,14 @@ local distanceKeyframes = {
 		web           = {0,   0},
 		
 		spawnTime     = {8,   8},
-		spawnCount    = {2,   3},
+		spawnCount    = {15,   20},
 		
 		bunny         = {0,   0},
 		rocket_bear   = {0,   1},
 		bunny_car     = {0,   1},
 		bear_car      = {0,   0.1},
 		spider        = {0,   0},
-		croc_enemy    = {10,   10},
+		croc_enemy    = {20,   20},
 		
 		cantrip       = {0,   0},
 		fireball      = {1,   1},
@@ -456,7 +491,8 @@ end
 
 function progression.GetEnemySpawnCount(playerDistance, enemyCount)
 	local first, second, factor = Interpolate(playerDistance*DISTANCE_MULT)
-	return math.floor(IntAndRand(factor, first, second, "spawnCount"))
+	local count = math.floor(IntAndRand(factor, first, second, "spawnCount"))
+	return math.max(count*0.1 , count - 0.7*enemyCount)
 end
 
 function progression.GetEnemySpawnWeights(playerDistance, enemyCount)

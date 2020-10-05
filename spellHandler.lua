@@ -37,6 +37,12 @@ function api.CastSpell(name, modifiers, level, player)
 	IterableMap.Add(self.activeSpells, self.spellTypes[name](player, modifiers, level))
 end
 
+function api.MousePressed()
+	if self.heldSpell == self.spellPositions[self.currentSpell].spellName then
+		api.SwapSpell()
+	end
+end
+
 function api.SwapSpell()
 	if not self.heldSpell then
 		return
@@ -140,7 +146,7 @@ function api.DrawInterface()
 	if self.heldTutorialCounter == 1 and not self.isDead then
 		Font.SetSize(0)
 		love.graphics.setColor(1, 0.1, 0)
-		love.graphics.print("You grabbed a spell! Click to Swap or hold to Combine it.", 490, 25)
+		love.graphics.print("You grabbed a spell! Click to Swap or hold to Combine it.", 465, 25)
 	end
 	
 	Resources.DrawImage("spell_croc", 1920 - CROC_CENTRE, CROC_CENTRE, SpellChargeToAngle())
