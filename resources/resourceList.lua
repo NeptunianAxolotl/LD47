@@ -37,4 +37,5 @@ return {
 	"car",
 	"bunny",
 	"projectiles",
+	"interface_anim",
 }

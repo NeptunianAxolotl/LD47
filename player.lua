@@ -28,6 +28,8 @@ function api.ModifyHealth(change)
 	self.health = math.max(0, math.min(6, self.health + change))
 	if change < 0 then
 		EffectHandler.Spawn("health_down", {0, 0})
+	else
+		EffectHandler.Spawn("health_up", {0, 0})
 	end
 	if self.health == 0 then
 		self.isDead = true

@@ -7,7 +7,8 @@ local DRAW_DEBUG = false
 local function NewCreature(self, def)
 	-- pos
 	self.inFront = def.inFront or 0
-	self.life = (def.duration == "inherit" and Resources.GetAnimationDuration(def.image)) or def.duration
+	local maxLife = (def.duration == "inherit" and Resources.GetAnimationDuration(def.image)) or def.duration
+	self.life = maxLife
 	self.animTime = 0
 	
 	function self.Update(dt)
@@ -20,7 +21,7 @@ local function NewCreature(self, def)
 	
 	function self.Draw(drawQueue)
 		drawQueue:push({y=self.pos[2] + self.inFront; f=function()
-			Resources.DrawAnimation(def.image, self.pos[1], self.pos[2], self.animTime, self.direction)
+			Resources.DrawAnimation(def.image, self.pos[1], self.pos[2], self.animTime, self.direction, (def.alphaScale and self.life/maxLife) or 1)
 		end})
 		if DRAW_DEBUG then
 			love.graphics.circle('line',self.pos[1], self.pos[2], def.radius)
@@ -28,7 +29,7 @@ local function NewCreature(self, def)
 	end
 	
 	function self.DrawInterface()
-		Resources.DrawAnimation(def.image, self.pos[1], self.pos[2], self.animTime, self.direction)
+		Resources.DrawAnimation(def.image, self.pos[1], self.pos[2], self.animTime, self.direction, (def.alphaScale and self.life/maxLife) or 1)
 		if DRAW_DEBUG then
 			love.graphics.circle('line',self.pos[1], self.pos[2], 100)
 		end
