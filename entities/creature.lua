@@ -2,7 +2,7 @@
 local util = require("include/util")
 local Resources = require("resourceHandler")
 
-local DRAW_DEBUG = true
+local DRAW_DEBUG = false
 
 local PROJ_TIMEOUT = 0.6
 
@@ -27,7 +27,7 @@ local function NewCreature(self, def)
 		if otherCreatureIndex and otherCreatureIndex >= self.index then
 			return
 		end
-		return util.IntersectingCircles(self.pos, def.radius, otherPos, otherRadius)
+		return util.IntersectingCircles(self.pos, def.radius + ((isProjectile and 20) or 0), otherPos, otherRadius)
 	end
 
 	function self.Update(Terrain, Enemies, Projectiles, player, dt)
