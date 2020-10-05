@@ -21,7 +21,7 @@ local distanceKeyframes = {
 		obstacleCount = {2,   4},
 		spellCount    = {0,   0},
 		
-		tree          = {0.2, 0.4},
+		tree          = {0, 0},
 		smallRock     = {3,   7},
 		bigRock       = {2,   4},
 		grass_1       = {1,   1},
@@ -50,13 +50,13 @@ local distanceKeyframes = {
 		shield        = {1,   1},
 	},
 	{
-		dist          = 0.8,
+		dist          = 1,
 		lushFactor    = 0,
 		
 		obstacleCount = {8,   18},
 		spellCount    = {1,   1},
 		
-		tree          = {0.2, 0.4},
+		tree          = {0, 0},
 		smallRock     = {2,   3},
 		bigRock       = {2,   5},
 		grass_1       = {1,   1},
@@ -91,7 +91,7 @@ local distanceKeyframes = {
 		obstacleCount = {10,   20},
 		spellCount    = {1,   1},
 		
-		tree          = {0.2, 0.4},
+		tree          = {0, 0},
 		smallRock     = {2,   3},
 		bigRock       = {2,   10},
 		grass_1       = {1,   1},
@@ -205,8 +205,8 @@ local distanceKeyframes = {
 		healthBush    = {2,   5},
 		web           = {0,   0.5},
 		
-		spawnTime     = {5,   5},
-		spawnCount    = {4,   8},
+		spawnTime     = {30,   12},
+		spawnCount    = {16,   8},
 		
 		bunny         = {0,   0},
 		rocket_bear   = {0,   4},
@@ -247,7 +247,7 @@ local distanceKeyframes = {
 		rocket_bear   = {0,   4},
 		bunny_car     = {2,   8},
 		bear_car      = {0,   3},
-		spider        = {0,   0.5},
+		spider        = {0,   1},
 		croc_enemy    = {0,   0},
 		
 		cantrip       = {0,   0},
@@ -301,7 +301,7 @@ local distanceKeyframes = {
 		obstacleCount = {2,   35},
 		spellCount    = {1.5, 2.5},
 		
-		tree          = {1,   6},
+		tree          = {1,   2},
 		smallRock     = {2,   3},
 		bigRock       = {1.5,   2},
 		grass_1       = {1,   3},
@@ -310,8 +310,8 @@ local distanceKeyframes = {
 		healthBush    = {2,   5},
 		web           = {0,   0},
 		
-		spawnTime     = {5,   5},
-		spawnCount    = {2,   5},
+		spawnTime     = {25,   5},
+		spawnCount    = {12,   5},
 		
 		bunny         = {0,   0},
 		rocket_bear   = {0,   4},
@@ -336,7 +336,7 @@ local distanceKeyframes = {
 		obstacleCount = {5,   12},
 		spellCount    = {0, 0},
 		
-		tree          = {1,   6},
+		tree          = {0,   0},
 		smallRock     = {2,   3},
 		bigRock       = {1.5,   2},
 		grass_1       = {1,   3},
