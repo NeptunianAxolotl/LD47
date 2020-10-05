@@ -7,7 +7,7 @@ function love.conf(t)
 	t.window.icon = "resources/images/hat.png"
 
 	t.modules.joystick = false
-    --t.window.fullscreen = true 
+    t.window.fullscreen = true 
     t.window.fullscreentype = "desktop" 
 end
 

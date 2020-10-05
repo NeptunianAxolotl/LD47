@@ -53,7 +53,7 @@ end
 -- Loading
 --------------------------------------------------
 function love.load(arg)
-	love.window.maximize()
+	--love.window.maximize()
 
 	if arg[#arg] == "-debug" then require("mobdebug").start() end
 	local major, minor, revision, codename = love.getVersion()

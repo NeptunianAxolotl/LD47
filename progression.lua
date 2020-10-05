@@ -564,18 +564,21 @@ end
 function progression.GetEnemySpawnCount(playerDistance, enemyCount)
 	local first, second, factor = Interpolate((playerDistance - (self.resetDist or 0))*DISTANCE_MULT)
 	local count = math.floor(IntAndRand(factor, first, second, "spawnCount"))
-	count = count*(self.spawnMult or 1)
+	if self.spawnMult then
+		count = count*self.spawnMult + 8
+	end
 	return math.max(count*0.1 , count - 0.7*enemyCount)
 end
 
 function progression.GetEnemySpawnWeights(playerDistance, enemyCount)
 	local first, second, factor = Interpolate((playerDistance - (self.resetDist or 0))*DISTANCE_MULT)
+	local add = (self.spawnMult and (self.spawnMult - 0.8)) or 0
 	return {
-		bunny       = IntAndRand(factor, first, second, "bunny"),
-		rocket_bear = IntAndRand(factor, first, second, "rocket_bear"),
-		bunny_car   = IntAndRand(factor, first, second, "bunny_car"),
-		bear_car    = IntAndRand(factor, first, second, "bear_car"),
-		spider      = IntAndRand(factor, first, second, "spider"),
+		bunny       = add + IntAndRand(factor, first, second, "bunny"),
+		rocket_bear = add + IntAndRand(factor, first, second, "rocket_bear"),
+		bunny_car   = add + IntAndRand(factor, first, second, "bunny_car"),
+		bear_car    = add + IntAndRand(factor, first, second, "bear_car"),
+		spider      = add + IntAndRand(factor, first, second, "spider"),
 		croc_enemy  = IntAndRand(factor, first, second, "croc_enemy"),
 	}
 end
