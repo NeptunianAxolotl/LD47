@@ -160,6 +160,7 @@ local creatureDefs = {
 	{
 		name = "spider",
 		animationName = "spider",
+		death_clone = "dead_spider",
 		health = 200,
 		healthRange = 100,
 		radius = 60,

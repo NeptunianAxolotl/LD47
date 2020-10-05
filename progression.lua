@@ -37,7 +37,7 @@ local distanceKeyframes = {
 		
 		bunny         = {1,   1},
 		rocket_bear   = {0,   0},
-		bunny_car     = {0.1,   0},
+		bunny_car     = {0, 0.1},
 		bear_car      = {0,   0},
 		spider        = {0,   0},
 		croc_enemy    = {0,   0},
@@ -72,7 +72,7 @@ local distanceKeyframes = {
 		
 		bunny         = {1,   1},
 		rocket_bear   = {0,   0},
-		bunny_car     = {0.1,   0},
+		bunny_car     = {0,   0.1},
 		bear_car      = {0,   0},
 		spider        = {0,   0},
 		croc_enemy    = {0,   0},

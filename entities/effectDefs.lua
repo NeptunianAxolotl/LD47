@@ -126,6 +126,15 @@ local effectDefs = {
 		spawnOffset = {0, 0},
 		duration = 10,
 	},
+	dead_spider = {
+		actual_image = "dead_spider",
+		interface = false,
+		alphaScale = true,
+		randomDirection = true,
+		inFront = 60,
+		spawnOffset = {0, 0},
+		duration = 10,
+	},
 	dead_enemy_croc = {
 		actual_image = "dead_enemy_croc",
 		interface = false,
