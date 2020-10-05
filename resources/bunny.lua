@@ -3,7 +3,8 @@ return {
 	xScale = 0.18,
 	yScale = 0.18,
 	firstDir = 0,
-	rotate = true,
+	yOffset = 0.85,
+	rotate = false,
 	files = {
 		"resources/images/bunny_e.png",
 		"resources/images/bunny_se.png",

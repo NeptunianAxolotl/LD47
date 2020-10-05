@@ -9,7 +9,7 @@ local function Collision(self, def, other, collideMult, dt)
 	local otherDist = util.AbsVal(toOther)
 	local collideIntensity = ((otherRadius + def.radius) - otherDist + 50)*0.003 + 0.001
 	if otherDist < (otherRadius + def.radius)*0.6 then
-		collideIntensity = collideIntensity + 1 + 0.4*(otherRadius + def.radius)/(otherDist + 10)
+		collideIntensity = collideIntensity + 0.9*(otherRadius + def.radius + 5)/(otherDist + 10)
 	end
 	
 	if collideIntensity < 0.01 then
@@ -38,7 +38,7 @@ local function Collision(self, def, other, collideMult, dt)
 			perpCollision = util.RotateVector(unitCollision, 0.65*math.pi)
 		end
 		
-		self.AddPosition(util.Mult(2 + collideIntensity * collideMult * 2, perpCollision))
+		self.AddPosition(util.Mult(6 + collideIntensity * collideMult * 2, perpCollision))
 	end
 end
 
@@ -64,6 +64,7 @@ function creatureUtils.MoveTowardsPlayer(self, def, Terrain, Enemies, player, st
 	
 	local playerPos = player.GetPhysics()
 	self.direction = util.Angle(util.Subtract(playerPos, self.pos))
+	self.turretDirection = self.direction
 	
 	if player.IsDead() then
 		playerPos = util.Add(playerPos, {0, 3000})

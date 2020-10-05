@@ -29,4 +29,5 @@ return {
 	"dead_croc",
 	"stun",
 	"car",
+	"bunny",
 }

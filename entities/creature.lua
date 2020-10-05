@@ -79,6 +79,9 @@ local function NewCreature(self, def)
 	function self.Draw(drawQueue)
 		drawQueue:push({y=self.pos[2]; f=function()
 			Resources.DrawIsoImage(def.imageName, self.pos[1], self.pos[2], self.drawDir or self.direction)
+			if def.turretImage then
+				Resources.DrawIsoImage(def.turretImage, self.pos[1], self.pos[2], self.turretDirection)
+			end
 		end})
 		if DRAW_DEBUG then
 			love.graphics.circle('line',self.pos[1], self.pos[2], def.radius)

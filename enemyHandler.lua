@@ -6,11 +6,6 @@ local Terrain = require("terrainHandler")
 local CreatureDefs = require("entities/creatureDefs")
 local NewCreature = require("entities/creature")
 
-local SPAWN_OFFSET = {0, 800}
-local OUTER_SPAWN = 1500
-local INNER_SPAWN = 1200
-local START_ANGLE, END_ANGLE = math.pi*0.2, math.pi*0.8
-
 local self = {}
 local api = {}
 
@@ -20,14 +15,13 @@ local function SpawnNewEnemies(player)
 	end
 	local playerPos, playerVel, playerSpeed = player.GetPhysics()
 	
-	local spawnCentre = util.Add(playerPos, SPAWN_OFFSET)
-	local enemyCount = math.random(0, 7)
+	local enemyCount = math.random(1, 3)
 	
 	local spawnDistribution = util.GenerateDistributionFromBoundedRandomWeights(CreatureDefs.spawnWeights)
 	
 	for i = 1, enemyCount do
 		local creatureDef = CreatureDefs.defs[util.SampleDistribution(spawnDistribution)]
-		local creaturePos = util.Add(spawnCentre, util.RandomPointInAnnulus(INNER_SPAWN, OUTER_SPAWN, START_ANGLE, END_ANGLE))
+		local creaturePos = util.Add(playerPos, creatureDef.getSpawnOffset(player))
 		
 		IterableMap.Add(self.activeEnemies, NewCreature({pos = creaturePos}, creatureDef))
 	end
@@ -75,7 +69,7 @@ function api.Update(player, dt)
 	self.spawnCheckAcc = self.spawnCheckAcc - dt
 	if self.spawnCheckAcc <= 0 then
 		SpawnNewEnemies(player)
-		self.spawnCheckAcc = 0.5 + math.random()*3
+		self.spawnCheckAcc = 5.5 + math.random()*6
 	end
 
 	IterableMap.ApplySelf(self.activeEnemies, "Update", Terrain, api, player, dt)
