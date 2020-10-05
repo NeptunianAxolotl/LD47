@@ -54,6 +54,31 @@ function creatureUtils.DoCollisions(self, def, Terrain, Enemies, player, dt)
 	end
 end
 
+function creatureUtils.ShootBulletAtPlayer(self, Projectiles, player, bulletType, speed, inaccuracy, usePlayerVelocity, dt)
+	if player.IsDead() then
+		return
+	end
+	local playerPos, playerVel, playerSpeed = player.GetPhysics()
+	local aimVector = util.Subtract(util.Add(util.RandomPointInCircle(inaccuracy), playerPos), self.pos)
+	aimVector[1] = aimVector[1]*0.8 -- Shoot mostly up
+	
+	local shootVelocity = util.SetLength(speed, aimVector)
+	if usePlayerVelocity then
+		shootVelocity = util.Add(util.Mult(usePlayerVelocity, playerVel), shootVelocity)
+	end
+	Projectiles.SpawnProjectile(bulletType, self.pos, shootVelocity)
+end
+
+function creatureUtils.UpdateReload(self, def, dt)
+	self.reload = (self.reload or math.random()*def.reloadTime) - dt
+	if self.reload > 0 then
+		return false
+	end
+	self.fireCycle = ((self.fireCycle or 0) + 1)%def.burstCount
+	self.reload = (self.fireCycle > 0 and def.burstRate) or def.reloadTime*(math.random()*0.1 + 0.95)
+	return true
+end
+
 function creatureUtils.MoveTowardsPlayer(self, def, Terrain, Enemies, player, stopRange, goalOffset, dt)
 	if self.slowTime then
 		self.slowTime = self.slowTime - dt

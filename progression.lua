@@ -46,13 +46,13 @@ end
 function progression.GetSpellSpawnWeights(chunkDistance)
 	return {
 		cantrip  = 0,
-		fireball = 10,
+		fireball = 1,
 		shotgun  = 1,
 		serpent  = 1,
 		wisp     = 1,
 		haste    = 1,
 		seeker   = 1,
-		shield   = 1,
+		shield   = 8,
 	}
 end
 
@@ -61,12 +61,12 @@ function progression.GetNextEnemySpawnTime(playerDistance, enemyCount)
 end
 
 function progression.GetEnemySpawnCount(playerDistance, enemyCount)
-	return math.random(0, 1)
+	return math.random(5, 8)
 end
 
 function progression.GetEnemySpawnWeights(playerDistance, enemyCount)
 	return {
-		rocket_bear = 1,
+		rocket_bear = 100,
 		bunny_car   = 1,
 	}
 end

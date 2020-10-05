@@ -3,10 +3,10 @@ local util = require("include/util")
 local creatureUtil = require("entities/creatureUtilities")
 local EffectHandler = require("effectsHandler")
 
-local SPAWN_OFFSET = {0, 1100}
-local OUTER_SPAWN = 1500
-local INNER_SPAWN = 1200
-local START_ANGLE, END_ANGLE = math.pi*0.2, math.pi*0.8
+local START_ANGLE, END_ANGLE = math.pi*0.1, math.pi*0.9
+
+local SPAWN_OFFSET = {0, 800}
+local BEAR_SPAWN_OFFSET = {0, 0}
 
 local creatureDefs = {
 	{
@@ -16,17 +16,30 @@ local creatureDefs = {
 		healthRange = 70,
 		radius = 32,
 		speed = 0.2,
+		reloadTime = 10,
+		burstRate = 1.8,
+		burstCount = 2,
 		despawnDistance = 500,
 		stopRange = 10,
 		goalOffset = {0, 1000},
-		goalRandomOffsetX = 700,
+		goalRandomOffsetX = 1500,
 		goalRandomOffsetY = 200,
+		slowTimeMult = 0.6,
+		speedChangeFactor = 0.5,
+		posChangeFactor = 0.5,
 		updateFunc = function (self, def, Terrain, Enemies, Projectiles, player, dt)
+			local playerPos, playerVel, playerSpeed = player.GetPhysics()
+			self.wantedSpeed = playerSpeed*0.05 + 0.2
+			
 			creatureUtil.MoveTowardsPlayer(self, def, Terrain, Enemies, player, def.stopRange, def.goalOffset, dt)
 			creatureUtil.DoCollisions(self, def, Terrain, Enemies, player, dt)
+			
+			if creatureUtil.UpdateReload(self, def, dt) then
+				creatureUtil.ShootBulletAtPlayer(self, Projectiles, player, "rocket", 10, 60, 0.15, dt)
+			end
 		end,
 		getSpawnOffset = function(player)
-			return util.Add(SPAWN_OFFSET, util.RandomPointInAnnulus(INNER_SPAWN, OUTER_SPAWN, START_ANGLE, END_ANGLE))
+			return util.Add(BEAR_SPAWN_OFFSET, util.RandomPointInAnnulus(2000, 2800, START_ANGLE, END_ANGLE))
 		end,
 	},
 	{
@@ -37,6 +50,9 @@ local creatureDefs = {
 		healthRange = 70,
 		radius = 58,
 		speed = 8,
+		reloadTime = 3,
+		burstRate = 0.12,
+		burstCount = 3,
 		maxTurnRate = 0.32,
 		despawnDistance = 500,
 		stopRange = 10,
@@ -55,10 +71,8 @@ local creatureDefs = {
 			creatureUtil.MoveTowardsPlayer(self, def, Terrain, Enemies, player, def.stopRange, myGoalOffset, dt)
 			creatureUtil.DoCollisions(self, def, Terrain, Enemies, player, dt)
 			
-			if math.random() < 0.03 and not player.IsDead() then
-				local aimVector = util.Subtract(util.Add(util.RandomPointInCircle(80), playerPos), self.pos)
-				aimVector[1] = aimVector[1]*0.8 -- Shoot mostly up
-				Projectiles.SpawnProjectile("bunny_bullet", self.pos, util.Add(playerVel, util.SetLength(18, aimVector)))
+			if creatureUtil.UpdateReload(self, def, dt) then
+				creatureUtil.ShootBulletAtPlayer(self, Projectiles, player, "bunny_bullet", 18, 80, 0.95, dt)
 			end
 			
 			EffectHandler.SpawnDust(self.pos, self.velocity, self.wantedSpeed, dt, 0.1)
@@ -66,7 +80,7 @@ local creatureDefs = {
 			creatureUtil.SetLimitedTurnDrawDir(self, def, dt)
 		end,
 		getSpawnOffset = function(player)
-			return util.Add(SPAWN_OFFSET, util.RandomPointInAnnulus(INNER_SPAWN, OUTER_SPAWN, START_ANGLE, END_ANGLE))
+			return util.Add(SPAWN_OFFSET, util.RandomPointInAnnulus(1500, 1700, START_ANGLE, END_ANGLE))
 		end,
 	},
 }

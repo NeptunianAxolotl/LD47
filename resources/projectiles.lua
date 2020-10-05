@@ -9,4 +9,14 @@ return {
 		duration = 0.4,
 		yOffset = 0.75
 	},
+	{
+		name = "rocket",
+		file = "resources/images/rocket_e.png",
+		form = "animation",
+		xScale = 0.5,
+		yScale = 0.18,
+		width = 300,
+		duration = 0.4,
+		yOffset = 0.5,
+	},
 }

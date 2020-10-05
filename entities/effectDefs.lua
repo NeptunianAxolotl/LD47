@@ -72,6 +72,16 @@ local effectDefs = {
 		inFront = -20,
 		duration = "inherit",
 	},
+	rocket_explode = {
+		image = "fireball_explode",
+		interface = false,
+		alphaScale = true,
+		color = {0.8, 0.4, 0.1},
+		inFront = 50,
+		scale = 0.15,
+		spawnOffset = {0, 0},
+		duration = "inherit",
+	},
 }
 
 

@@ -22,6 +22,9 @@ local function NewProjectile(self, def)
 
 	function self.Update(Terrain, Enemies, player, dt)
 		if self.toKill then
+			if def.onKill and not self.noExplode then
+				def.onKill(self, def, Terrain, Enemies, player, dt)
+			end
 			if def.hitEffect then
 				EffectHandler.Spawn(def.hitEffect, self.pos)
 			end
@@ -34,11 +37,17 @@ local function NewProjectile(self, def)
 		
 		self.life = self.life - dt
 		if self.life < 0 then
+			if def.onKill then
+				def.onKill(self, def, Terrain, Enemies, player, dt)
+			end
 			return true
 		end
 		
-		local obstacle = Terrain.GetTerrainCollision(self.pos, def.radius, false, true, false, dt)
+		local obstacle = (not self.ignoreTerrain) and Terrain.GetTerrainCollision(self.pos, def.radius, false, true, false, dt)
 		if obstacle then
+			if def.onKill then
+				def.onKill(self, def, Terrain, Enemies, player, dt)
+			end
 			if def.hitEffect then
 				EffectHandler.Spawn(def.hitEffect, self.pos)
 			end
@@ -47,6 +56,9 @@ local function NewProjectile(self, def)
 		
 		if player.IsColliding(self.pos, def.radius) then
 			player.ModifyHealth(def.damage)
+			if def.onKill then
+				def.onKill(self, def, Terrain, Enemies, player, dt)
+			end
 			if def.hitEffect then
 				EffectHandler.Spawn(def.hitEffect, self.pos)
 			end
@@ -58,8 +70,9 @@ local function NewProjectile(self, def)
 		self.pos = util.Add(self.pos, util.Mult(dt*60, self.velocity))
 	end
 	
-	function self.Kill()
+	function self.Kill(noExplode)
 		self.toKill = true
+		self.noExplode = noExplode
 	end
 	
 	function self.Draw(drawQueue)

@@ -87,7 +87,7 @@ local function NewSpell(player, modifies, level)
                 -- check collision
                 local collided = Projectiles.DetectCollision(self.projectiles[k].pos, 5)
                 if collided then
-                    collided.Kill()
+                    collided.Kill(true)
                     self.projectiles[k].lives = self.projectiles[k].lives - 1
                     if self.projectiles[k].lives <= 0 then
                         self.projectiles[k].alive = false
