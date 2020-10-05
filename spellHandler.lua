@@ -87,6 +87,10 @@ function api.AddChargeAndCast(player, chargeAdd)
 		api.CastSpell(spellData.spellName, spellData.modifiers, spellData.spellLevel, player)
 		self.charge = self.charge - 1
 		self.currentSpell = (self.currentSpell%SPELL_COUNT) + 1
+		
+		if self.heldSpell == self.spellPositions[self.currentSpell].spellName and (love.mouse.isDown(1) or love.mouse.isDown(2) or love.mouse.isDown(3)) then
+			api.SwapSpell()
+		end
 	end
 end
 
@@ -136,7 +140,7 @@ function api.DrawInterface()
 	if self.heldTutorialCounter == 1 and not self.isDead then
 		Font.SetSize(0)
 		love.graphics.setColor(1, 0.1, 0)
-		love.graphics.print("You grabbed a spell! Click to Swap or Combine it.", 550, 25)
+		love.graphics.print("You grabbed a spell! Click to Swap or hold to Combine it.", 490, 25)
 	end
 	
 	Resources.DrawImage("spell_croc", 1920 - CROC_CENTRE, CROC_CENTRE, SpellChargeToAngle())

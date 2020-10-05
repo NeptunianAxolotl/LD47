@@ -21,6 +21,7 @@ function love.mousemoved(x, y, dx, dy, istouch )
 end
 
 function love.mousereleased(x, y, button, istouch, presses)
+	World.MouseReleased()
 end
 
 function love.keypressed(key, scancode, isRepeat)
@@ -33,7 +34,6 @@ function love.keypressed(key, scancode, isRepeat)
 end
 
 function love.mousepressed(x, y, button, istouch, presses)
-	World.MousePressed()
 end
 
 --------------------------------------------------
