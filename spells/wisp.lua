@@ -13,7 +13,7 @@ local function phaseModifier(i)
     return modifier
 end
 
-local wispSize = 25
+local wispSize = 40
 
 local function NewSpell(player, modifies, level)
 
@@ -25,7 +25,7 @@ local function NewSpell(player, modifies, level)
     -- properties derived from modifiers
     local nProjectiles = 2 
     local myDamage = 100 * (1 + 0.1 * (level-1))
-    local myRadius = 130
+    local myRadius = 160
     local myPhaseLength = 2 * math.max((1 - 0.04 * (level-1)),0.5)
     local myDuration = 10
     local myLives = 5 + (level-1)
@@ -112,9 +112,9 @@ local function NewSpell(player, modifies, level)
 					y=self.projectiles[k].pos[2],
 					f=function() 
                         Resources.DrawAnimation("wisp", self.projectiles[k].pos[1], self.projectiles[k].pos[2], self.lifetime, nil, nil, self.sizeMult)  
-                        love.graphics.setColor(0,0,1)
-                        love.graphics.setLineWidth(2)
-                        love.graphics.circle("line", self.projectiles[k].pos[1], self.projectiles[k].pos[2], shieldSize * self.sizeMult) 
+                        -- love.graphics.setColor(0,0,1)
+                        -- love.graphics.setLineWidth(2)
+                        -- love.graphics.circle("line", self.projectiles[k].pos[1], self.projectiles[k].pos[2], wispSize * self.sizeMult) 
                     end,
 				})
 			end

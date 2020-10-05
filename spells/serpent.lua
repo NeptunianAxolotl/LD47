@@ -21,8 +21,8 @@ local function NewSpell(player, modifies, level)
     -- properties derived from modifiers
     local nProjectiles = 2 + math.min(math.floor(level/3)*2,6)
     local myDamage = 100 * (1+0.1*(level-1))
-    local myAmplitude = 80 * (math.pow(0.75,nProjectiles/2))
-    local myPhaseLength = 2 * math.max(1 - 0.04 * level, 0.5)
+    local myAmplitude = 130 * (math.pow(0.75,nProjectiles/2))
+    local myPhaseLength = 2.4 * math.max(1 - 0.04 * level, 0.5)
     local baseSpeed = 5
 
     -- setting up the spell

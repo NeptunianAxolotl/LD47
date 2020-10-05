@@ -14,7 +14,7 @@ local function phaseModifier(i)
     return modifier
 end
 
-local shieldSize = 35
+local shieldSize = 50
 
 local function NewSpell(player, modifies, level)
 
@@ -28,7 +28,7 @@ local function NewSpell(player, modifies, level)
     local nProjectiles = 2 
     local myRadius = 45
     local myPhaseLength = 2 * math.max((1 - 0.04 * (level-1)),0.5)
-    local myDuration = 10
+    local myDuration = 6
     local myLives = 2 + (level-1)
 
     -- setting up the spell
@@ -87,7 +87,7 @@ local function NewSpell(player, modifies, level)
                 self.projectiles[k].pos = util.Add(currentRelPos,self.pos)
                 
                 -- check collision
-                local collided = Projectiles.DetectCollision(self.projectiles[k].pos, shieldSize * self.sizeMult)
+                local collided = Projectiles.DetectCollision(self.projectiles[k].pos, shieldSize * self.sizeMult * (self.projectiles[k].lives > 1 and 1 or 0.8))
                 if collided then
                     collided.Kill(true)
                     self.projectiles[k].lives = self.projectiles[k].lives - 1
@@ -108,19 +108,19 @@ local function NewSpell(player, modifies, level)
                         y=self.projectiles[k].pos[2],
                         f=function() 
                             Resources.DrawAnimation("shield", self.projectiles[k].pos[1], self.projectiles[k].pos[2], self.lifetime, nil, nil, self.sizeMult) 
-                            love.graphics.setColor(0,0,1)
-                            love.graphics.setLineWidth(2)
-                            love.graphics.circle("line", self.projectiles[k].pos[1], self.projectiles[k].pos[2], shieldSize * self.sizeMult) 
+                            -- love.graphics.setColor(0,0,1)
+                            -- love.graphics.setLineWidth(2)
+                            -- love.graphics.circle("line", self.projectiles[k].pos[1], self.projectiles[k].pos[2], shieldSize * self.sizeMult) 
                         end,
                     })
                 else
                     drawQueue:push({
                         y=self.projectiles[k].pos[2],
                         f=function() 
-                            Resources.DrawAnimation("shield_damaged", self.projectiles[k].pos[1], self.projectiles[k].pos[2], self.lifetime, nil, nil, self.sizeMult) 
-                            love.graphics.setColor(0,0,1)
-                            love.graphics.setLineWidth(2)
-                            love.graphics.circle("line", self.projectiles[k].pos[1], self.projectiles[k].pos[2], shieldSize * self.sizeMult) 
+                            Resources.DrawAnimation("shield_damaged", self.projectiles[k].pos[1], self.projectiles[k].pos[2], self.lifetime, nil, nil, self.sizeMult * 0.8) 
+                            -- love.graphics.setColor(0,0,1)
+                            -- love.graphics.setLineWidth(2)
+                            -- love.graphics.circle("line", self.projectiles[k].pos[1], self.projectiles[k].pos[2], shieldSize * self.sizeMult * 0.8) 
                         end,
                     })
                 end

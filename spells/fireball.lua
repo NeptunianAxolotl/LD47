@@ -25,7 +25,7 @@ local function NewSpell(player, modifies, level)
     local myDamage = 100 * (level and 1 + 0.25 * (level-1) or 1)
     local myFire = 100
     local exploDamage = 80 * (level and 1 + 0.25*(level-1) or 1)
-    local exploRadius = 150 * (level and (1 + 0.25*(level-1)) or 1)
+    local exploRadius = 300 * (level and (1 + 0.25*(level-1)) or 1)
     local baseSpeed = 15
     local myLives = 1
     

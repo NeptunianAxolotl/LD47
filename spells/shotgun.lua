@@ -12,7 +12,7 @@ local function NewSpell(player, modifies, level)
 
     -- properties derived from modifiers
     local nProjectiles = 5 + (level-1)*2
-    local sprayAngle = 0.1 * ((nProjectiles*3)/(nProjectiles+baseN*2) )
+    local sprayAngle = 0.2 * ((nProjectiles*3)/(nProjectiles+baseN*2) )
     local myDamage = 60 * (1 + 0.1 * (level-1))
     local baseSpeed = 15
     local myLives = 1
@@ -51,12 +51,12 @@ local function NewSpell(player, modifies, level)
             self.projectiles[k].pos = util.Add(util.Mult(dt*60, self.projectiles[k].velocity), self.projectiles[k].pos)
             
             -- check collision
-            local collided = Terrain.GetTerrainCollision(self.projectiles[k].pos, 5, false, self.projectiles[k].effect.id, nil, dt)
+            local collided = Terrain.GetTerrainCollision(self.projectiles[k].pos, 15, false, self.projectiles[k].effect.id, nil, dt)
             if collided then
                 collided.ProjectileImpact(self.projectiles[k].effect)
                 self.projectiles[k].alive = false
             else
-                collided = Enemies.DetectCollision(self.projectiles[k].pos, 5, false, self.projectiles[k].effect.id, nil, dt)
+                collided = Enemies.DetectCollision(self.projectiles[k].pos, 15, false, self.projectiles[k].effect.id, nil, dt)
                 if collided then
                     collided.ProjectileImpact(self.projectiles[k].effect)
                     self.projectiles[k].lives = self.projectiles[k].lives - 1
@@ -73,7 +73,12 @@ local function NewSpell(player, modifies, level)
 			if self.projectiles[k].alive then
 				drawQueue:push({
 					y=self.projectiles[k].pos[2],
-					f=function() Resources.DrawIsoImage("shotgun", self.projectiles[k].pos[1], self.projectiles[k].pos[2], util.Angle(self.projectiles[k].velocity)) end,
+					f=function() 
+                        Resources.DrawIsoImage("shotgun", self.projectiles[k].pos[1], self.projectiles[k].pos[2], util.Angle(self.projectiles[k].velocity)) 
+                        -- love.graphics.setColor(0,0,1)
+                        -- love.graphics.setLineWidth(2)
+                        -- love.graphics.circle("line", self.projectiles[k].pos[1], self.projectiles[k].pos[2], 15) 
+                    end,
 				})
 			end
         end
