@@ -64,6 +64,13 @@ local function NewSpell(player, modifies, level)
         self.currentPhase = math.fmod(self.currentPhase + dt, self.phaseLength)
         local phaseAngle = self.currentPhase / self.phaseLength * 2 * math.pi
         for k in pairs(self.projectiles) do
+			if self.projectiles[k].hitMult then
+					self.projectiles[k].hitMult = self.projectiles[k].hitMult - 1.4*dt
+				if self.projectiles[k].hitMult < 1 then
+					self.projectiles[k].hitMult = false
+				end
+			end
+			
             -- move
             local perpvector = {}
             perpvector = util.RotateVector(self.velocity, math.pi/2)
@@ -80,6 +87,7 @@ local function NewSpell(player, modifies, level)
                 collided = Enemies.DetectCollision(self.projectiles[k].pos, 30, false, self.projectiles[k].effect.id, nil, dt)
                 if collided then
 					EffectHandler.Spawn("serpent_hit", self.projectiles[k].pos)
+					self.projectiles[k].hitMult = 1.8
                     collided.ProjectileImpact(self.projectiles[k].effect)
                     -- Do not destroy projectile, serpent pierces enemies
                 end
@@ -93,7 +101,7 @@ local function NewSpell(player, modifies, level)
 				drawQueue:push({
 					y=self.projectiles[k].pos[2],
 					f=function() 
-                        Resources.DrawIsoImage("serpent", self.projectiles[k].pos[1], self.projectiles[k].pos[2], util.Angle(self.projectiles[k].velocity)) 
+                        Resources.DrawIsoImage("serpent", self.projectiles[k].pos[1], self.projectiles[k].pos[2], util.Angle(self.projectiles[k].velocity), false, (self.projectiles[k].hitMult or 1)) 
                         -- love.graphics.setColor(0,0,1)
                         -- love.graphics.setLineWidth(2)
                         -- love.graphics.circle("line", self.projectiles[k].pos[1], self.projectiles[k].pos[2], 30) 

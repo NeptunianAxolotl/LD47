@@ -75,7 +75,14 @@ local function NewSpell(player, modifies, level)
         local phaseAngle = - self.currentPhase / self.phaseLength * 2 * math.pi
         for k in pairs(self.projectiles) do
             if self.projectiles[k].alive then
-                -- move
+                if self.projectiles[k].hitMult then
+					self.projectiles[k].hitMult = self.projectiles[k].hitMult - 1.4*dt
+					if self.projectiles[k].hitMult < 1 then
+						self.projectiles[k].hitMult = false
+					end
+				end
+				
+				-- move
                 local currentRelPos = util.Subtract(self.projectiles[k].pos, previousCentrePos)
                 local wantedRelPos = {}
                 local startvec = util.SetLength(self.radius, self.facing)
@@ -93,6 +100,7 @@ local function NewSpell(player, modifies, level)
                 local collided = Projectiles.DetectCollision(self.projectiles[k].pos, shieldSize * self.sizeMult * (self.projectiles[k].lives > 1 and 1 or 0.8))
                 if collided then
 					EffectHandler.Spawn("shield_hit", self.projectiles[k].pos)
+					self.projectiles[k].hitMult = 1.6
                     collided.Kill(true)
                     self.projectiles[k].lives = self.projectiles[k].lives - 1
                     if self.projectiles[k].lives <= 0 then
@@ -111,7 +119,7 @@ local function NewSpell(player, modifies, level)
                     drawQueue:push({
                         y=self.projectiles[k].pos[2],
                         f=function() 
-                            Resources.DrawAnimation("shield", self.projectiles[k].pos[1], self.projectiles[k].pos[2], self.lifetime, nil, nil, self.sizeMult) 
+                            Resources.DrawAnimation("shield", self.projectiles[k].pos[1], self.projectiles[k].pos[2], self.lifetime, nil, nil, self.sizeMult*(self.projectiles[k].hitMult or 1)) 
                             -- love.graphics.setColor(0,0,1)
                             -- love.graphics.setLineWidth(2)
                             -- love.graphics.circle("line", self.projectiles[k].pos[1], self.projectiles[k].pos[2], shieldSize * self.sizeMult) 
@@ -121,7 +129,7 @@ local function NewSpell(player, modifies, level)
                     drawQueue:push({
                         y=self.projectiles[k].pos[2],
                         f=function() 
-                            Resources.DrawAnimation("shield_damaged", self.projectiles[k].pos[1], self.projectiles[k].pos[2], self.lifetime, nil, nil, self.sizeMult * 0.8) 
+                            Resources.DrawAnimation("shield_damaged", self.projectiles[k].pos[1], self.projectiles[k].pos[2], self.lifetime, nil, nil, self.sizeMult * 0.8*(self.projectiles[k].hitMult or 1)) 
                             -- love.graphics.setColor(0,0,1)
                             -- love.graphics.setLineWidth(2)
                             -- love.graphics.circle("line", self.projectiles[k].pos[1], self.projectiles[k].pos[2], shieldSize * self.sizeMult * 0.8) 

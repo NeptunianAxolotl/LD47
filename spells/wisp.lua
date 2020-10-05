@@ -27,11 +27,11 @@ local function NewSpell(player, modifies, level)
     
     -- properties derived from modifiers
     local nProjectiles = 2 
-    local myDamage = 75
+    local myDamage = 60
     local myRadius = 140 + 25*level
     local myPhaseLength = 2 * math.max((1 - 0.08 * (level-1)),0.4)
-    local myDuration = 10 + level
-    local myLives = 4 + math.floor((level-1)/2)
+    local myDuration = 9 + level
+    local myLives = 3 + math.floor((level-1)/2)
 
     -- setting up the spell
 	local self = {}
@@ -74,6 +74,13 @@ local function NewSpell(player, modifies, level)
         local phaseAngle = self.currentPhase / self.phaseLength * 2 * math.pi
         for k in pairs(self.projectiles) do
             if self.projectiles[k].alive then
+                if self.projectiles[k].hitMult then
+					self.projectiles[k].hitMult = self.projectiles[k].hitMult - 1.4*dt
+					if self.projectiles[k].hitMult < 1 then
+						self.projectiles[k].hitMult = false
+					end
+				end
+				
                 -- move
                 local currentRelPos = util.Subtract(self.projectiles[k].pos, previousCentrePos)
                 local wantedRelPos = {}
@@ -98,6 +105,7 @@ local function NewSpell(player, modifies, level)
                     collided = Enemies.DetectCollision(self.projectiles[k].pos, wispSize * self.sizeMult, false, self.projectiles[k].effect.id, nil, dt)
                     if collided then
 						EffectHandler.Spawn("wisp_hit", self.projectiles[k].pos)
+						self.projectiles[k].hitMult = 1.6
                         collided.ProjectileImpact(self.projectiles[k].effect)
                         self.projectiles[k].lives = self.projectiles[k].lives - 1
                         if self.projectiles[k].lives <= 0 then
@@ -115,7 +123,7 @@ local function NewSpell(player, modifies, level)
 				drawQueue:push({
 					y=self.projectiles[k].pos[2],
 					f=function() 
-                        Resources.DrawAnimation("wisp", self.projectiles[k].pos[1], self.projectiles[k].pos[2], self.lifetime, nil, nil, self.sizeMult)  
+                        Resources.DrawAnimation("wisp", self.projectiles[k].pos[1], self.projectiles[k].pos[2], self.lifetime, nil, nil, self.sizeMult*(self.projectiles[k].hitMult or 1))  
                         -- love.graphics.setColor(0,0,1)
                         -- love.graphics.setLineWidth(2)
                         -- love.graphics.circle("line", self.projectiles[k].pos[1], self.projectiles[k].pos[2], wispSize * self.sizeMult) 
