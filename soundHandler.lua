@@ -10,6 +10,9 @@ local volMult = {
 
 local soundFiles = {
 	bulletfire = {file = "sounds/bulletfire.wav", volMult = 0.34},
+	fireball_shoot = {file = "sounds/fireball_shoot1.wav", volMult = 0.34},
+	haste_shoot = {file = "sounds/haste_shoot0.wav", volMult = 0.34},
+	seeker_travel = {file = "sounds/seeker_travel0.wav", volMult = 0.10},
 	beat1 = {file = "resources/sounds/beat1.wav", volMult = 0.15},
 	beat2 = {file = "resources/sounds/beat2.wav", volMult = 0.15},
 	beat3 = {file = "resources/sounds/beat3.wav", volMult = 0.15},

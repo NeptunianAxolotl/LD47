@@ -2,6 +2,7 @@ local util = require("include/util")
 local Resources = require("resourceHandler")
 local spellutil = require("spells/spellutil")
 local EffectHandler = require("effectsHandler")
+local SoundHandler = require("soundHandler")
 
 local function speedMultiplier(i)
     local multiplier = math.floor(i/2) * 0.2
@@ -14,6 +15,7 @@ end
 local function NewSpell(player, modifies, level)
 
     modifiers = modifiers or {}
+    SoundHandler.PlaySound("fireball_shoot")
     level = level or 1
 
     -- uniform properties
