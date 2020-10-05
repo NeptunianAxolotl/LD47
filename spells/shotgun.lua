@@ -15,7 +15,7 @@ local function NewSpell(player, modifies, level)
     -- properties derived from modifiers
     local nProjectiles = 5 + (level-1)*2
     local sprayAngle = 0.2 * ((nProjectiles*3)/(nProjectiles+baseN*2) )
-    local myDamage = 40
+    local myDamage = 55
     local baseSpeed = 15 + level
     local myLives = 1
 

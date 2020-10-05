@@ -26,7 +26,7 @@ local function NewSpell(player, modifies, level)
     
     -- properties derived from modifiers
     local nProjectiles = 2 
-    local myDamage = 100
+    local myDamage = 75
     local myRadius = 140 + 25*level
     local myPhaseLength = 2 * math.max((1 - 0.08 * (level-1)),0.4)
     local myDuration = 10 + 2*level
