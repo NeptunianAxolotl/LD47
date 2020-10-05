@@ -129,7 +129,7 @@ function progression.Update(playerDistance, dt)
 	end
 	if self.bossAlpha then
 		if self.bossAlpha > 0.5 then
-			self.bossAlpha = self.bossAlpha - dt*0.5
+			self.bossAlpha = self.bossAlpha - dt*0.7
 			if self.bossAlpha < 0.5 then
 				self.bossAlpha = 0.5
 			end
