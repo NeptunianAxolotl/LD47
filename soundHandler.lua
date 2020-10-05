@@ -24,6 +24,7 @@ local soundFiles = {
 	beat7 = {file = "resources/sounds/beat7.wav", volMult = 0.15},
 	beat8 = {file = "resources/sounds/beat8.wav", volMult = 0.15},
 	beat8 = {file = "resources/sounds/beat8.wav", volMult = 0.15},
+	death = {file = "sounds/death.wav", volMult = 0.40},
 	fulltrack = {file = "resources/sounds/fulltrack.wav", volMult = 0.12},
 }
 

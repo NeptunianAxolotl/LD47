@@ -5,6 +5,7 @@ local Font = require("include/font")
 local Resources = require("resourceHandler")
 local EffectHandler = require("effectsHandler")
 local SpellHandler = require("spellHandler")
+local SoundHandler = require("soundHandler")
 local pi = math.pi
 
 local DOWNHILL_DIR = {0, 1}
@@ -36,6 +37,7 @@ function api.ModifyHealth(change)
 		self.velocity = {0, 0}
 		self.speed = 0
 		SpellHandler.SetDead()
+		SoundHandler.PlaySound("death")
 	end
 end
 
