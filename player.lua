@@ -6,12 +6,13 @@ local Resources = require("resourceHandler")
 local EffectHandler = require("effectsHandler")
 local SpellHandler = require("spellHandler")
 local SoundHandler = require("soundHandler")
+local Progression = require("progression")
 local pi = math.pi
 
 local DOWNHILL_DIR = {0, 1}
 
 local HEALTH_SPACING = 65
-local DIST_TO_KM = 1/15000
+local DIST_TO_KM = 1/9340
 
 local self = {}
 local api = {}
@@ -219,7 +220,7 @@ local function DrawHealth()
 	
 	for i = 1, 3 do
 		local heartVal = math.max(1, math.min(3, (self.health - healthLimit)))
-		Resources.DrawImage(healthImages[heartVal], 10 + (i - 1)*HEALTH_SPACING, 10)
+		Resources.DrawImage(healthImages[heartVal], 10 + (i - 1)*HEALTH_SPACING, 16)
 		healthLimit = healthLimit + 2
 	end
 end
@@ -230,11 +231,20 @@ function api.DrawInterface()
 	
 	Font.SetSize(2)
 	love.graphics.setColor(1, 1, 0.8)
-	love.graphics.print("Distance " .. (string.format("%.1f", math.floor(self.pos[2]*10*DIST_TO_KM)/10)) .. "km", 8, 10 + HEALTH_SPACING + 14)
-	love.graphics.print("Speed " .. (string.format("%.0f", math.floor(self.speed*60*1000*DIST_TO_KM))) .. "m/s", 8, 10 + HEALTH_SPACING + 14 + 26)
 	
+	local myDist = math.floor(self.pos[2]*10*DIST_TO_KM)/10
 	
-	love.graphics.print("REAL DEBUG DISTANCE " .. (string.format("%.1f", math.floor(self.pos[2])/1800)), 8, 10 + HEALTH_SPACING + 14 + 60)
+	local bossDist, loops = Progression.GetProgressStats(myDist)
+	if loops == 0 then
+		love.graphics.print("Rival distance " .. (string.format("%.1f", 25 - myDist)) .. "km", 8, 10 + HEALTH_SPACING + 22)
+	else
+		love.graphics.print("Rivals defeated " .. loops, 8, 10 + HEALTH_SPACING + 22)
+	end
+	
+	love.graphics.print("Distance " .. (string.format("%.1f", myDist)) .. "km", 8, 10 + HEALTH_SPACING + 22 + 26)
+	love.graphics.print("Speed " .. (string.format("%.0f", math.floor(self.speed*60*1000*DIST_TO_KM))) .. "m/s", 8, 10 + HEALTH_SPACING + 22 + 26 + 26)
+	
+	love.graphics.print("REAL DEBUG DISTANCE " .. (string.format("%.1f", math.floor(self.pos[2])/1800)), 8, 10 + HEALTH_SPACING + 22 + 260)
 	
 	if self.isDead then
 		Font.SetSize(0)

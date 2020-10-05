@@ -13,6 +13,8 @@ local END_SCALE = 11000
 
 local DISTANCE_MULT = 1/1800
 
+local BOSS_DISTANCE = 130
+
 local distanceKeyframes = {
 	{
 		dist          = -1,
@@ -202,7 +204,7 @@ local distanceKeyframes = {
 		grass_1       = {1,   4},
 		grass_2       = {1,   4},
 		bush          = {2,   6},
-		healthBush    = {1,   1.5},
+		healthBush    = {0.2, 1},
 		web           = {0,   0},
 		
 		spawnTime     = {6,   8},
@@ -237,7 +239,7 @@ local distanceKeyframes = {
 		grass_1       = {1,   3},
 		grass_2       = {1,   3},
 		bush          = {2,   6},
-		healthBush    = {1,   1.5},
+		healthBush    = {0.2, 1},
 		web           = {0,   0.5},
 		
 		spawnTime     = {10,   15},
@@ -342,7 +344,7 @@ local distanceKeyframes = {
 		grass_1       = {1,   3},
 		grass_2       = {1,   3},
 		bush          = {1,   4},
-		healthBush    = {0.5, 2},
+		healthBush    = {0.5, 1},
 		web           = {0,   0},
 		
 		spawnTime     = {25,  5},
@@ -377,7 +379,7 @@ local distanceKeyframes = {
 		grass_1       = {1,   3},
 		grass_2       = {1,   3},
 		bush          = {1,   4},
-		healthBush    = {0.5, 2},
+		healthBush    = {0.5, 1},
 		web           = {0,   0},
 		
 		spawnTime     = {25,   5},
@@ -412,7 +414,7 @@ local distanceKeyframes = {
 		grass_1       = {1,   3},
 		grass_2       = {1,   3},
 		bush          = {1,   4},
-		healthBush    = {0.5, 2},
+		healthBush    = {0.5, 1},
 		web           = {0,   0},
 		
 		spawnTime     = {8,   8},
@@ -435,7 +437,7 @@ local distanceKeyframes = {
 		shield        = {1,   1},
 	},
 	{
-		dist          = 130,
+		dist          = BOSS_DISTANCE,
 		lushFactor    = 0,
 		
 		obstacleCount = {5,   12},
@@ -447,7 +449,7 @@ local distanceKeyframes = {
 		grass_1       = {1,   3},
 		grass_2       = {1,   3},
 		bush          = {1,   4},
-		healthBush    = {0.5, 2},
+		healthBush    = {0.2, 1},
 		web           = {0,   0},
 		
 		spawnTime     = {8,   8},
@@ -562,6 +564,7 @@ end
 function progression.GetEnemySpawnCount(playerDistance, enemyCount)
 	local first, second, factor = Interpolate((playerDistance - (self.resetDist or 0))*DISTANCE_MULT)
 	local count = math.floor(IntAndRand(factor, first, second, "spawnCount"))
+	count = count*(self.spawnMult or 1)
 	return math.max(count*0.1 , count - 0.7*enemyCount)
 end
 
@@ -575,6 +578,27 @@ function progression.GetEnemySpawnWeights(playerDistance, enemyCount)
 		spider      = IntAndRand(factor, first, second, "spider"),
 		croc_enemy  = IntAndRand(factor, first, second, "croc_enemy"),
 	}
+end
+
+------------------------------------------------------------------
+------------------------------------------------------------------
+-- Loop
+
+local function UpdateLoop()
+	self.loops = (self.loops or 0) + 1
+	self.healthMult = (self.healthMult or 1)*1.5
+	self.spawnMult  = (self.spawnMult or 1) + 0.2
+	
+	self.resetDist = self.lastPlayerDist
+end
+
+function progression.GetHealthMult()
+	return self.healthMult or 1
+end
+
+function progression.GetProgressStats()
+	local bossDist = ((self.resetDist or 0) + BOSS_DISTANCE/DISTANCE_MULT) - (self.lastPlayerDist or 0)
+	return bossDist, self.loops or 0
 end
 
 ------------------------------------------------------------------
@@ -614,7 +638,7 @@ function progression.SetBossHealth(newHealth, isDead, maxHealth)
 	if isDead then
 		self.bossHealth = nil
 		self.bossMaxHealth = nil
-		self.resetDist = self.lastPlayerDist
+		UpdateLoop()
 	end
 end
 

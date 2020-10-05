@@ -9,7 +9,7 @@ local PROJ_TIMEOUT = 0.6
 
 local function NewCreature(self, def)
 	-- pos
-	self.health = def.health + math.random()*def.healthRange
+	self.health = (def.health + math.random()*def.healthRange)*Progression.GetHealthMult()
 	self.direction = 0
 	self.velocity = {0, 0}
     self.projIgnoreTime = 0
