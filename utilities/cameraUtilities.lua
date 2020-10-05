@@ -17,7 +17,7 @@ local function Initialize()
 	self = {
 		cameraPos = {0, 0},
 		cameraVelocity = {0, 0},
-		cameraScale = 93,
+		cameraScale = 0.93,
 	}
 end
 
