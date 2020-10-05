@@ -235,10 +235,13 @@ function api.DrawInterface()
 	local myDist = math.floor(self.pos[2]*10*DIST_TO_KM)/10
 	
 	local bossDist, loops = Progression.GetProgressStats(myDist)
+	
+	local rivalString = (myDist < 25 and ("distance " .. (string.format("%.1f", 25 - myDist)) .. "km")) or "nearby!"
+	
 	if loops == 0 then
-		love.graphics.print("Rival distance " .. (string.format("%.1f", 25 - myDist)) .. "km", 8, 10 + HEALTH_SPACING + 22)
+		love.graphics.print("Rival " .. rivalString, 8, 10 + HEALTH_SPACING + 22)
 	else
-		love.graphics.print("Rivals defeated " .. loops, 8, 10 + HEALTH_SPACING + 22)
+		love.graphics.print("Rivals defeated: " .. loops, 8, 10 + HEALTH_SPACING + 22)
 	end
 	
 	love.graphics.print("Distance " .. (string.format("%.1f", myDist)) .. "km", 8, 10 + HEALTH_SPACING + 22 + 26)

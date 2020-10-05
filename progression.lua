@@ -211,7 +211,7 @@ local distanceKeyframes = {
 		spawnCount    = {5,   8},
 		
 		bunny         = {1,   2},
-		rocket_bear   = {0,   3},
+		rocket_bear   = {0.5,   3},
 		bunny_car     = {1,   5},
 		bear_car      = {0,   0.8},
 		spider        = {0,   0},
