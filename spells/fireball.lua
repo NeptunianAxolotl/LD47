@@ -92,6 +92,7 @@ local function NewSpell(player, modifies, level)
                         enemysplash[t].ProjectileImpact(self.projectiles[k].exploEffect)
                     end
 					EffectHandler.Spawn("fireball_explode", self.projectiles[k].pos, exploRadius/200)
+					SoundHandler.PlaySound("fireball_explode")
                 end
             end
         end
