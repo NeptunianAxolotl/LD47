@@ -16,13 +16,13 @@ local function NewSpell(player, modifies, level)
     -- properties derived from modifiers
     local nProjectiles = level + 1
     local sprayAngle = 0.8
-    local myDamage = 60
+    local myDamage = 60 + 3*level
     local exploDamage = 0
     local exploRadius = 0
-    local baseSpeed = 5
+    local baseSpeed = 5 + level/3
     local myLives = 1
-    local turnspeed = math.pi/50
-    local mySearchRad = 500
+    local turnspeed = math.pi/math.max(35, 50 - level*3/2)
+    local mySearchRad = 500 + math.min(500, 40*(level - 1))
     
     -- setting up the spell
 	local self = {}
@@ -33,7 +33,7 @@ local function NewSpell(player, modifies, level)
     self.explosionEffects = {}
     
     -- setting up the projectiles
-    for i = 1,nProjectiles do
+    for i = 1, nProjectiles do
         self.projectiles[i] = {}
         self.projectiles[i].pos, self.projectiles[i].velocity = self.pos, self.velocity
         local launchVelocity = util.SetLength(baseSpeed, self.projectiles[i].velocity)
@@ -59,7 +59,7 @@ local function NewSpell(player, modifies, level)
 						if self.lifetime <= 0 then return true end
 						
 						local anyAlive = false
-						for k in pairs(self.projectiles) do 
+						for k = 1, #self.projectiles do 
 								if self.projectiles[k].alive then anyAlive = true end
 						end
 						if not anyAlive then 
@@ -76,7 +76,7 @@ local function NewSpell(player, modifies, level)
 								end
 						end
 						
-						for k in pairs(self.projectiles) do
+						for k = 1, #self.projectiles do
 								if self.projectiles[k].alive then
 								
 										-- seek enemy
@@ -146,13 +146,13 @@ local function NewSpell(player, modifies, level)
 					end)()
                     
                     local any_alive = false
-                    for k in pairs(self.projectiles) do
+                    for k = 1, #self.projectiles do
                         if not(self.lifetime < 8.3 or kill or not self.projectiles[k].alive) then
                             any_alive = true
                         end
                     end
                     if not any_alive then
-                        for k in pairs(self.projectiles) do
+                        for k = 1, #self.projectiles do
                             SoundHandler.StopSound("seeker_travel".. self.projectiles[k].effect.id, true)
                         end
                     end
@@ -160,7 +160,7 @@ local function NewSpell(player, modifies, level)
 	end
 	
 	function self.Draw(drawQueue)
-		for k in pairs(self.projectiles) do
+		for k = 1, #self.projectiles do
 			if self.projectiles[k].alive then
 				drawQueue:push({
 					y=self.projectiles[k].pos[2],

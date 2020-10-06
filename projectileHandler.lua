@@ -49,6 +49,10 @@ function api.Draw(drawQueue)
 	IterableMap.ApplySelf(self.activeProjectiles, "Draw", drawQueue)
 end
 
+function api.GetActivity()
+	return IterableMap.Count(self.activeProjectiles)
+end
+
 function api.Initialize()
 	self = {
 		activeProjectiles = IterableMap.New(),

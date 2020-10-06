@@ -1,5 +1,6 @@
 
 local util = require("include/util")
+local Progression = require("progression")
 
 local creatureUtils = {}
 
@@ -74,7 +75,8 @@ function creatureUtils.UpdateReload(self, def, dt)
 	if self.reload > 0 then
 		return false
 	end
-	self.fireCycle = ((self.fireCycle or 0) + 1)%def.burstCount
+	self.burstCount = self.burstCount or math.floor(def.burstCount * Progression.GetBurstMult())
+	self.fireCycle = ((self.fireCycle or 0) + 1)%self.burstCount
 	self.reload = (self.fireCycle > 0 and def.burstRate) or def.reloadTime*(math.random()*0.1 + 0.95)
 	return true
 end

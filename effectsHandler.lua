@@ -41,6 +41,14 @@ function api.DrawInterface()
 	IterableMap.ApplySelf(self.interfaceEffects, "DrawInterface")
 end
 
+function api.GetActivity()
+	return IterableMap.Count(self.worldEffects)
+end
+
+function api.GetActivityInterface()
+	return IterableMap.Count(self.interfaceEffects)
+end
+
 function api.Initialize()
 	self = {
 		worldEffects = IterableMap.New(),

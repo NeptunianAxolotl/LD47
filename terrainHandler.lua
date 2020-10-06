@@ -277,6 +277,10 @@ function api.Draw(drawQueue)
 	drawChunks(self.visibleChunks, drawQueue)
 end
 
+function api.GetActivity()
+	return #chunkList
+end
+
 function api.Initialize()
 	rngSeed = math.random(0, 2^16)
 	self = {}

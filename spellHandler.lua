@@ -149,6 +149,10 @@ function api.DrawInterface()
 	Resources.DrawImage("spell_croc", 1920 - CROC_CENTRE, CROC_CENTRE, SpellChargeToAngle())
 end
 
+function api.GetActivity()
+	return IterableMap.Count(self.activeSpells)
+end
+
 function api.Initialize()
 	self = {
 		activeSpells = IterableMap.New(),

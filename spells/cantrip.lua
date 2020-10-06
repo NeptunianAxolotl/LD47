@@ -53,7 +53,7 @@ local function NewSpell(player, modifies, level)
         if self.lifetime <= 0 then return true end
         
         local anyAlive = false
-        for k in pairs(self.projectiles) do 
+        for k = 1, #self.projectiles do 
             if self.projectiles[k].alive then anyAlive = true end
         end
         if not anyAlive then 
@@ -70,7 +70,7 @@ local function NewSpell(player, modifies, level)
             end
         end
         
-        for k in pairs(self.projectiles) do
+        for k = 1, #self.projectiles do
             if self.projectiles[k].alive then
                 -- move
                 self.projectiles[k].pos = util.Add(util.Mult(dt*60, self.projectiles[k].velocity), self.projectiles[k].pos)
@@ -109,7 +109,7 @@ local function NewSpell(player, modifies, level)
 	end
 	
 	function self.Draw(drawQueue)
-		for k in pairs(self.projectiles) do
+		for k = 1, #self.projectiles do
 			if self.projectiles[k].alive then
 				drawQueue:push({
 					y=self.projectiles[k].pos[2],

@@ -63,7 +63,7 @@ local function NewSpell(player, modifies, level)
         if self.lifetime <= 0 then return true end
         
         local anyAlive = false
-        for k in pairs(self.projectiles) do 
+        for k = 1, #self.projectiles do 
             if self.projectiles[k].alive then anyAlive = true end
         end
         if not anyAlive then return true end
@@ -73,7 +73,7 @@ local function NewSpell(player, modifies, level)
 		self.pos = self.playerRef.GetPhysics()
         self.currentPhase = math.fmod(self.currentPhase + dt, self.phaseLength)
         local phaseAngle = - self.currentPhase / self.phaseLength * 2 * math.pi
-        for k in pairs(self.projectiles) do
+        for k = 1, #self.projectiles do
             if self.projectiles[k].alive then
                 if self.projectiles[k].hitMult then
 					self.projectiles[k].hitMult = self.projectiles[k].hitMult - 1.4*dt
@@ -113,7 +113,7 @@ local function NewSpell(player, modifies, level)
 	end
 	
 	function self.Draw(drawQueue)
-		for k in pairs(self.projectiles) do
+		for k = 1, #self.projectiles do
 			if self.projectiles[k].alive then
                 if self.projectiles[k].lives > 1 then
                     drawQueue:push({

@@ -84,6 +84,10 @@ function api.Draw(drawQueue)
 	IterableMap.ApplySelf(self.activeEnemies, "Draw", drawQueue)
 end
 
+function api.GetActivity()
+	return IterableMap.Count(self.activeEnemies)
+end
+
 function api.Initialize()
 	self = {
 		activeEnemies = IterableMap.New(),

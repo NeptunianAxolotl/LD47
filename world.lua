@@ -22,6 +22,19 @@ function self.MouseReleased()
 	SpellHandler.SwapSpell()
 end
 
+local function PrintActivity()
+	if math.random() > 0.01 then
+		return
+	end
+	print("==========================")
+	print("Enemy", EnemyHandler.GetActivity())
+	print("Terrain", Terrain.GetActivity())
+	print("Spell", SpellHandler.GetActivity())
+	print("Projectile", ProjectileHandler.GetActivity())
+	print("Effect", EffectsHandler.GetActivity())
+	print("Effect Int", EffectsHandler.GetActivityInterface())
+end
+
 function self.Update(dt)
 	Player.Update(Terrain, EnemyHandler, self.cameraTransform, dt)
 	
@@ -40,6 +53,8 @@ function self.Update(dt)
 	-- Only update visible chunks.
 	love.graphics.replaceTransform(self.cameraTransform)
 	Terrain.Update(dt)
+	
+	--PrintActivity()
 end
 
 function self.Draw()

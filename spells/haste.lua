@@ -43,7 +43,7 @@ local function NewSpell(player, modifies, level)
             return true
         end
         
-        for k in pairs(self.projectiles) do
+        for k = 1, #self.projectiles do
             -- move
             self.projectiles[k].pos = util.Add(util.Mult(dt*60, self.projectiles[k].velocity), self.projectiles[k].pos)
         end
@@ -51,7 +51,7 @@ local function NewSpell(player, modifies, level)
     
     function self.Draw(drawQueue)
         if self.particleLifetime > 0 then
-            for k in pairs(self.projectiles) do
+            for k = 1, #self.projectiles do
                 Resources.DrawImage("haste", self.projectiles[k].pos[1], self.projectiles[k].pos[2]) 
             end
         end

@@ -558,21 +558,22 @@ end
 
 function progression.GetNextEnemySpawnTime(playerDistance, enemyCount)
 	local first, second, factor = Interpolate((playerDistance - (self.resetDist or 0))*DISTANCE_MULT)
-	return IntAndRand(factor, first, second, "spawnTime")
+	local mult = 1 / (self.spawnMult or 1)
+	return IntAndRand(factor, first, second, "spawnTime")*mult
 end
 
 function progression.GetEnemySpawnCount(playerDistance, enemyCount)
 	local first, second, factor = Interpolate((playerDistance - (self.resetDist or 0))*DISTANCE_MULT)
 	local count = math.floor(IntAndRand(factor, first, second, "spawnCount"))
 	if self.spawnMult then
-		count = count*self.spawnMult + 8
+		count = count*self.spawnMult + 10
 	end
 	return math.max(count*0.1 , count - 0.7*enemyCount)
 end
 
 function progression.GetEnemySpawnWeights(playerDistance, enemyCount)
 	local first, second, factor = Interpolate((playerDistance - (self.resetDist or 0))*DISTANCE_MULT)
-	local add = (self.spawnMult and (self.spawnMult - 0.8)) or 0
+	local add = (self.spawnMult and 0.2) or 0
 	return {
 		bunny       = add + IntAndRand(factor, first, second, "bunny"),
 		rocket_bear = add + IntAndRand(factor, first, second, "rocket_bear"),
@@ -588,15 +589,29 @@ end
 -- Loop
 
 local function UpdateLoop()
-	self.loops = (self.loops or 0) + 1
-	self.healthMult = (self.healthMult or 1)*1.5
-	self.spawnMult  = (self.spawnMult or 1) + 0.2
+	self.loops      = (self.loops      or 0) + 1
+	self.healthMult = (self.healthMult or 1)*1.66
+	self.burstMult  = (self.burstMult  or 1)*1.5
+	self.spawnMult  = (self.spawnMult  or 1)*1.33
+	self.spreadMult = (self.spreadMult or 1) + 0.25
+	
+	if self.spreadMult > 1.5 then
+		self.spreadMult = 1.65
+	end
 	
 	self.resetDist = self.lastPlayerDist
 end
 
+function progression.GetBurstMult()
+	return self.burstMult or 1
+end
+
 function progression.GetHealthMult()
 	return self.healthMult or 1
+end
+
+function progression.GetSpreadMult()
+	return self.spreadMult or 1
 end
 
 function progression.GetProgressStats()

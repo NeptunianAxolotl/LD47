@@ -226,6 +226,7 @@ local creatureDefs = {
 			self.goalChangeTime = (self.goalChangeTime or 1) - dt
 			if self.goalChangeTime < 0 then
 				self.goalChangeTime = self.goalChangeTime + 5
+				-- Don't multiply by Progression.GetSpreadMult() here, boss moves around enough as is.
 				self.randomGoalOffset = util.RandomPointInEllipse(def.goalRandomOffsetX, def.goalRandomOffsetY)
 			end
 			

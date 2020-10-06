@@ -11,6 +11,11 @@ local PROJ_TIMEOUT = 0.6
 local function NewCreature(self, def)
 	-- pos
 	self.health = (def.health + math.random()*def.healthRange)*Progression.GetHealthMult()
+	if def.isBoss then
+		local _, loop = Progression.GetProgressStats()
+		self.health = self.health*(1 + 0.5*loop)
+	end
+	
 	self.direction = 0
 	self.velocity = {0, 0}
     self.projIgnoreTime = 0
@@ -22,7 +27,7 @@ local function NewCreature(self, def)
 	end
 	
 	if def.goalRandomOffsetX then
-		self.randomGoalOffset = util.RandomPointInEllipse(def.goalRandomOffsetX, def.goalRandomOffsetY)
+		self.randomGoalOffset = util.RandomPointInEllipse(def.goalRandomOffsetX * Progression.GetSpreadMult(), def.goalRandomOffsetY * Progression.GetSpreadMult())
 	end
 	
 	function self.GetPhysics()
