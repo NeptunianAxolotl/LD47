@@ -57,7 +57,9 @@ local function NewSpell(player, modifies, level)
 					(function()
 						-- check for spell termination
 						self.lifetime = self.lifetime - dt
-						if self.lifetime <= 0 then return true end
+						if self.lifetime <= 0 then 
+                            return true 
+                        end
 						
 						local anyAlive = false
 						for k = 1, #self.projectiles do 
@@ -158,6 +160,7 @@ local function NewSpell(player, modifies, level)
                         end
                     end
                     
+                    return kill
 	end
 	
 	function self.Draw(drawQueue)
