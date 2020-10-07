@@ -1,8 +1,8 @@
 
 local Font = require("include/font")
 local Resources = require("resourceHandler")
-local SpellHandler = require("spellHandler")
 local World = require("world")
+local Score = require("score")
 
 --------------------------------------------------
 -- Draw
@@ -27,6 +27,9 @@ end
 function love.keypressed(key, scancode, isRepeat)
 	if key == 'r' then
 		World.Initialize()
+	end
+	if key == 'tab' then
+		Score.ShowStats()
 	end
 	if key == 'escape' then
 		love.event.quit()

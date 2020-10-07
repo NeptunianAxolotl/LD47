@@ -361,6 +361,27 @@ end
 
 --------------------------------------------------
 --------------------------------------------------
+-- Time
+
+function util.SecondsToString(seconds, dashForEmpty)
+	if (seconds or 0) == 0 and dashForEmpty then
+		return "-"
+	end
+	if seconds <= 0 then
+		return "0:00"
+	end
+	local hours = math.floor(seconds/3600)			
+	local minutes = math.floor(seconds/60)%60
+	local seconds = math.floor(seconds)%60
+	
+	if hours > 0 then
+		return string.format("%d:%02.f:%02.f", hours, minutes, seconds)
+	end
+	return string.format("%d:%02.f", minutes, seconds)
+end
+
+--------------------------------------------------
+--------------------------------------------------
 -- Table Utilities
 
 function util.TableKeysToList(keyTable, indexToKey)

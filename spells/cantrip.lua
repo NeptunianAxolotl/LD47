@@ -3,6 +3,7 @@ local Resources = require("resourceHandler")
 local spellutil = require("spells/spellutil")
 local EffectHandler = require("effectsHandler")
 local SoundHandler = require("soundHandler")
+local SPELL_NAME = "cantrip"
 
 local colrad = 20
 
@@ -83,7 +84,7 @@ local function NewSpell(player, modifies, level)
                 else
                     collided = Enemies.DetectCollision(self.projectiles[k].pos, colrad, false, self.projectiles[k].effect.id, nil, dt)
                     if collided then
-                        collided.ProjectileImpact(self.projectiles[k].effect)
+                        collided.ProjectileImpact(self.projectiles[k].effect, SPELL_NAME)
                         self.projectiles[k].lives = self.projectiles[k].lives - 1
                         if self.projectiles[k].lives <= 0 then
                             self.projectiles[k].alive = false
@@ -97,7 +98,7 @@ local function NewSpell(player, modifies, level)
                     if exploDamage > 0 then
                         local enemysplash = Enemies.DetectInCircle(self.projectiles[k].pos, exploRadius)
                         for t in pairs(enemysplash) do
-                            enemysplash[t].ProjectileImpact(self.projectiles[k].exploEffect)
+                            enemysplash[t].ProjectileImpact(self.projectiles[k].exploEffect, SPELL_NAME)
                         end
                         self.explosionEffects[#self.explosionEffects+1] = {timer = exploDuration, x = self.projectiles[k].pos[1], y = self.projectiles[k].pos[2]}
                     end

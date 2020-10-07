@@ -3,6 +3,7 @@ local Resources = require("resourceHandler")
 local spellutil = require("spells/spellutil")
 local EffectHandler = require("effectsHandler")
 local SoundHandler = require("soundHandler")
+local SPELL_NAME = "fireball"
 
 local function speedMultiplier(i)
     local multiplier = math.floor(i/2) * 0.2
@@ -77,7 +78,7 @@ local function NewSpell(player, modifies, level)
                 else
                     collided = Enemies.DetectCollision(self.projectiles[k].pos, 60, false, self.projectiles[k].effect.id, nil, dt)
                     if collided then
-                        collided.ProjectileImpact(self.projectiles[k].effect)
+                        collided.ProjectileImpact(self.projectiles[k].effect, SPELL_NAME)
                         self.projectiles[k].lives = self.projectiles[k].lives - 1
                         if self.projectiles[k].lives <= 0 then
                             self.projectiles[k].alive = false
@@ -89,7 +90,7 @@ local function NewSpell(player, modifies, level)
                     -- explosion
                     local enemysplash = Enemies.DetectInCircle(self.projectiles[k].pos, exploRadius)
                     for t in pairs(enemysplash) do
-                        enemysplash[t].ProjectileImpact(self.projectiles[k].exploEffect)
+                        enemysplash[t].ProjectileImpact(self.projectiles[k].exploEffect, SPELL_NAME)
                     end
 					EffectHandler.Spawn("fireball_explode", self.projectiles[k].pos, exploRadius/200)
 					SoundHandler.PlaySound("fireball_explode")

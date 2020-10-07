@@ -5,6 +5,7 @@ local spellutil = require("spells/spellutil")
 local Projectiles = require("projectileHandler")
 local EffectHandler = require("effectsHandler")
 local SoundHandler = require("soundHandler")
+local SPELL_NAME = "shield"
 
 local lookup = {0, math.pi, math.pi / 2, 3 / 2 * math.pi}
 
@@ -101,7 +102,7 @@ local function NewSpell(player, modifies, level)
                 if collided then
 					EffectHandler.Spawn("shield_hit", self.projectiles[k].pos)
 					self.projectiles[k].hitMult = 1.8
-                    collided.Kill(true)
+                    collided.Kill(true, SPELL_NAME)
                     self.projectiles[k].lives = self.projectiles[k].lives - 1
                     if self.projectiles[k].lives <= 0 then
                         self.projectiles[k].alive = false

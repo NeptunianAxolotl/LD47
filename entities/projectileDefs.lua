@@ -2,6 +2,8 @@
 local util = require("include/util")
 local EffectHandler = require("effectsHandler")
 
+local PROJ_SOURCE = "projectile_hit"
+
 local creatureDefs = {
 	bunny_bullet = {
 		animationName = "bullet",
@@ -47,7 +49,7 @@ local creatureDefs = {
 			EffectHandler.Spawn("rocket_explode", self.pos)
 			local playerPos, playerVelocity, playerSpeed = player.GetPhysics()
 			if util.DistVectors(playerPos, self.pos) < def.hitRadius then
-				player.ModifyHealth(-1)
+				player.ModifyHealth(-1, PROJ_SOURCE)
 			end
 		end,
 	},
@@ -78,7 +80,7 @@ local creatureDefs = {
 			EffectHandler.Spawn("rocket_explode", self.pos)
 			local playerPos, playerVelocity, playerSpeed = player.GetPhysics()
 			if util.DistVectors(playerPos, self.pos) < def.hitRadius then
-				player.ModifyHealth(-1)
+				player.ModifyHealth(-1, PROJ_SOURCE)
 			end
 		end,
 	},

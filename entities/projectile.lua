@@ -2,6 +2,9 @@
 local util = require("include/util")
 local Resources = require("resourceHandler")
 local EffectHandler = require("effectsHandler")
+local Score = require("score")
+
+local PROJ_SOURCE = "projectile_hit"
 
 local DRAW_DEBUG = false
 
@@ -56,7 +59,7 @@ local function NewProjectile(self, def)
 		
 		if player.IsColliding(self.pos, def.radius) then
 			if def.damage then
-				player.ModifyHealth(def.damage)
+				player.ModifyHealth(def.damage, PROJ_SOURCE)
 			end
 			if def.onKill then
 				def.onKill(self, def, Terrain, Enemies, player, dt)
@@ -74,9 +77,12 @@ local function NewProjectile(self, def)
 		self.pos = util.Add(self.pos, util.Mult(dt*60, self.velocity))
 	end
 	
-	function self.Kill(noExplode)
+	function self.Kill(noExplode, spellName)
 		self.toKill = true
 		self.noExplode = noExplode
+		if spellName then
+			Score.AddScore("spell" .. spellName, 1)
+		end
 	end
 	
 	function self.Draw(drawQueue)

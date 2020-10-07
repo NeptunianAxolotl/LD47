@@ -7,6 +7,7 @@ local EffectHandler = require("effectsHandler")
 local SpellHandler = require("spellHandler")
 local SoundHandler = require("soundHandler")
 local Progression = require("progression")
+local Score = require("score")
 local pi = math.pi
 
 local DOWNHILL_DIR = {0, 1}
@@ -23,10 +24,15 @@ local healthImages = {
 	"health_full",
 }
 
-function api.ModifyHealth(change)
+function api.ModifyHealth(change, source)
 	if self.isDead then
 		return
 	end
+	
+	if source then
+		Score.AddScore(source, math.abs(change))
+	end
+	
 	self.health = math.max(0, math.min(6, self.health + change))
 	if change < 0 then
 		SoundHandler.PlaySound("health_down")
@@ -41,6 +47,7 @@ function api.ModifyHealth(change)
 		self.speed = 0
 		SpellHandler.SetDead()
 		SoundHandler.PlaySound("death")
+		Progression.SetGameOver()
 	end
 end
 
@@ -87,7 +94,7 @@ local function UpdatePhysics(mouseX, mouseY, dt)
 	self.speedMult = false
 end
 
-local function DoCollision(other, typeMult, dt)
+local function DoCollision(other, typeMult, source, dt)
 	local otherPos, otherRadius = other.GetPhysics()
 	
 	local toOther = util.Unit(util.Subtract(otherPos, self.pos))
@@ -130,9 +137,9 @@ local function DoCollision(other, typeMult, dt)
 	
 	--print("Ouch severity", damageSeverity, self.speed)
 	if damageSeverity > 14 then
-		api.ModifyHealth(-2)
+		api.ModifyHealth(-2, source)
 	elseif damageSeverity > 8 then
-		api.ModifyHealth(-1)
+		api.ModifyHealth(-1, source)
 	end
 end
 
@@ -142,7 +149,7 @@ local function CheckTerrainCollision(Terrain, dt)
 		return
 	end
 	
-	DoCollision(collide, 1, dt)
+	DoCollision(collide, 1, "terrain_hit", dt)
 end
 
 local function CheckEnemyCollision(EnemyHandler, dt)
@@ -151,7 +158,7 @@ local function CheckEnemyCollision(EnemyHandler, dt)
 		return
 	end
 	
-	DoCollision(collide, 0.45, dt)
+	DoCollision(collide, 0.45, "enemy_hit",dt)
 end
 
 local function UpdateFacing(dt)
@@ -209,7 +216,6 @@ function api.GetPhysics()
 	return self.pos, self.velocity, self.speed
 end
 
-
 function api.SetSpeed(speed)
 	self.speed = speed
 	self.velocity = util.SetLength(self.speed, self.velocity)
@@ -244,8 +250,11 @@ function api.DrawInterface()
 		love.graphics.print("Rivals defeated: " .. loops, 8, 10 + HEALTH_SPACING + 22)
 	end
 	
+	local speedConverted = self.speed*60*1000*DIST_TO_KM
+	Score.UpdateRecord("top_speed", speedConverted)
+	
 	love.graphics.print("Distance " .. (string.format("%.1f", myDist)) .. "km", 8, 10 + HEALTH_SPACING + 22 + 26)
-	love.graphics.print("Speed " .. (string.format("%.0f", math.floor(self.speed*60*1000*DIST_TO_KM))) .. "m/s", 8, 10 + HEALTH_SPACING + 22 + 26 + 26)
+	love.graphics.print("Speed " .. (string.format("%.0f", math.floor(speedConverted))) .. "m/s", 8, 10 + HEALTH_SPACING + 22 + 26 + 26)
 	love.graphics.print("Esc to quit", 8, 10 + HEALTH_SPACING + 22 + 26 + 26 + 26 + 21)
 	
 	--love.graphics.print("REAL DEBUG DISTANCE " .. (string.format("%.1f", math.floor(self.pos[2])/1800)), 8, 10 + HEALTH_SPACING + 22 + 260)
@@ -254,6 +263,10 @@ function api.DrawInterface()
 		Font.SetSize(0)
 		love.graphics.setColor(1, 0.1, 0)
 		love.graphics.print("Whoops! Press 'r' to restart.", 710, 25)
+		if loops > 0 or myDist > 17.5 then
+			Font.SetSize(1)
+			love.graphics.print("Press 'tab' for stats.", 820, 70)
+		end
 	end
 end
 

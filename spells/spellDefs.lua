@@ -32,8 +32,32 @@ local spellObstacleAnim = {
 	shield   = "spell_anim_shield",
 }
 
+local humanName = {
+	cantrip  = "Cantrip",
+	fireball = "Fireball",
+	shotgun  = "Ice Shards",
+	serpent  = "Serpent",
+	wisp     = "Energy Orb",
+	haste    = "Haste",
+	seeker   = "Busy Bee",
+	shield   = "Shield",
+}
+
+local statName = {
+	cantrip  = " damage",
+	fireball = " damage",
+	shotgun  = " damage",
+	serpent  = " damage",
+	wisp     = " damage",
+	haste    = false,
+	seeker   = " damage",
+	shield   = " blocked"
+}
+
 return {
 	spellList = spellList,
 	spellIcon = spellIcon,
 	spellObstacleAnim = spellObstacleAnim,
+	humanName = humanName,
+	statName = statName,
 }

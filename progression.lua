@@ -1,5 +1,6 @@
 
 local SoundHandler = require("soundHandler")
+local Score = require("score")
 
 local progression = {}
 local self = {}
@@ -12,6 +13,8 @@ local PLATEU_MULT = 1.3
 local END_SCALE = 11000
 
 local DISTANCE_MULT = 1/1800
+
+local DIST_TO_M = 1000/9340 -- Matches DIST_TO_KM in player
 
 local BOSS_DISTANCE = 130
 
@@ -558,16 +561,12 @@ end
 
 function progression.GetNextEnemySpawnTime(playerDistance, enemyCount)
 	local first, second, factor = Interpolate((playerDistance - (self.resetDist or 0))*DISTANCE_MULT)
-	local mult = 1 / (self.spawnMult or 1)
-	return IntAndRand(factor, first, second, "spawnTime")*mult
+	return IntAndRand(factor, first, second, "spawnTime")*(self.spawnTime or 1)
 end
 
 function progression.GetEnemySpawnCount(playerDistance, enemyCount)
 	local first, second, factor = Interpolate((playerDistance - (self.resetDist or 0))*DISTANCE_MULT)
-	local count = math.floor(IntAndRand(factor, first, second, "spawnCount"))
-	if self.spawnMult then
-		count = count*self.spawnMult + 10
-	end
+	local count = math.floor(IntAndRand(factor, first, second, "spawnCount")) + 10*(self.loops or 0)
 	return math.max(count*0.1 , count - 0.7*enemyCount)
 end
 
@@ -593,7 +592,12 @@ local function UpdateLoop()
 	self.healthMult = (self.healthMult or 1)*1.66
 	self.burstMult  = (self.burstMult  or 1)*1.5
 	self.spawnMult  = (self.spawnMult  or 1)*1.33
+	self.spawnTime  = (self.spawnTime  or 1)*0.6
 	self.spreadMult = (self.spreadMult or 1) + 0.25
+	
+	if self.loops == 1 then
+		Score.SetScore("first_rival_time", self.totalTime)
+	end
 	
 	if self.spreadMult > 1.5 then
 		self.spreadMult = 1.65
@@ -657,11 +661,31 @@ function progression.SetBossHealth(newHealth, isDead, maxHealth)
 		self.bossHealth = nil
 		self.bossMaxHealth = nil
 		UpdateLoop()
-end
+	end
 end
 
 function progression.BossExists()
 	return self.bossHealth
+end
+
+------------------------------------------------------------------
+------------------------------------------------------------------
+
+function progression.SetGameOver()
+	if self.gameOver then
+		return
+	end
+	Score.SetScore("total_time", self.totalTime)
+	Score.SetScore("rivals_defeated", self.loops)
+	
+	local playerDist = ((self.lastPlayerDist or 0) - (self.resetDist or 0))*DIST_TO_M
+	Score.SetScore("next_rival_dist", 25000 - playerDist)
+	Score.SetGameOver()
+	self.gameOver = true
+end
+
+function progression.GetGameOver()
+	return self.gameOver
 end
 
 ------------------------------------------------------------------
@@ -714,6 +738,8 @@ function progression.Update(playerDistance, dt)
 			self.bossAlpha = self.bossAlpha + dt*0.5
 		end
 	end
+	
+	self.totalTime = (self.totalTime or 0) + dt
 end
 
 function progression.DrawInterface()

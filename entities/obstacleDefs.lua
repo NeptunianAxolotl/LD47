@@ -115,7 +115,7 @@ local obstacleDefs = {
 				player.SetSpeed(playerSpeed)
 			end
 			if not self.imageOverride then
-				player.ModifyHealth(1)
+				player.ModifyHealth(1, "bush_hit")
 			end
 			self.imageOverride = "bush_1_flat"
 		end,

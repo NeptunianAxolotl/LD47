@@ -3,6 +3,7 @@ local util = require("include/util")
 local Resources = require("resourceHandler")
 local Progression = require("progression")
 local EffectHandler = require("effectsHandler")
+local Score = require("score")
 
 local DRAW_DEBUG = false
 
@@ -89,11 +90,14 @@ local function NewCreature(self, def)
         end
 	end
     
-    function self.ProjectileImpact(projEffect)
+    function self.ProjectileImpact(projEffect, spellName)
         if projEffect then
             if projEffect.id then
                 self.projIgnoreFresh[#self.projIgnoreFresh+1] = projEffect.id
             end
+			if spellName then
+				Score.AddScore("spell" .. spellName, self.health - math.max(0, self.health - projEffect.damage))
+			end
             if projEffect.damage then
                 self.health = self.health - projEffect.damage
             end

@@ -4,6 +4,7 @@ local Resources = require("resourceHandler")
 local spellutil = require("spells/spellutil")
 local EffectHandler = require("effectsHandler")
 local SoundHandler = require("soundHandler")
+local SPELL_NAME = "serpent"
 
 local function sineMultiplier(i)
     local multiplier = math.floor((i+1)/2)
@@ -88,7 +89,7 @@ local function NewSpell(player, modifies, level)
                 if collided then
 					EffectHandler.Spawn("serpent_hit", self.projectiles[k].pos)
 					self.projectiles[k].hitMult = 1.8
-                    collided.ProjectileImpact(self.projectiles[k].effect)
+                    collided.ProjectileImpact(self.projectiles[k].effect, SPELL_NAME)
                     -- Do not destroy projectile, serpent pierces enemies
                 end
             end

@@ -10,9 +10,9 @@ local Resources = require("resourceHandler")
 local Enemies = require("enemyHandler")
 local EffectHandler = require("effectsHandler")
 local SoundHandler = require("soundHandler")
+local Score = require("score")
 
 local self = {}
-
 local api = {}
 
 local CHARGE_MULT = 0.11
@@ -55,12 +55,16 @@ function api.SwapSpell()
 	if currentSpellData.spellName == self.heldSpell then
 		currentSpellData.spellLevel = currentSpellData.spellLevel + self.heldSpellLevel
 		self.heldSpell, self.heldSpellLevel = false, false
+		
+		Score.SetScore("slot_level" .. self.currentSpell, currentSpellData.spellLevel)
 		return
 	end
 	
 	currentSpellData.spellName, self.heldSpell = self.heldSpell, currentSpellData.spellName
 	currentSpellData.spellLevel, self.heldSpellLevel = self.heldSpellLevel, currentSpellData.spellLevel
 	
+	Score.SetScore("slot_name" .. self.currentSpell, currentSpellData.spellName)
+	Score.SetScore("slot_level" .. self.currentSpell, currentSpellData.spellLevel)
 	
 	EffectHandler.Spawn("switch_spell", SPELL_HELD_POS)
 	EffectHandler.Spawn("switch_spell", currentSpellData.pos)
@@ -111,32 +115,32 @@ function api.Draw(drawQueue)
 	IterableMap.ApplySelf(self.activeSpells, "Draw", drawQueue)
 end
 
-local function DrawSpellLevel(pos, level, rotation, scale, selected)
+function api.DrawSpellLevel(pos, level, rotation, scale, selected, alpha)
 	if level <= 3 then
-		Resources.DrawImage("shape_" .. (level + 2), pos[1], pos[2], rotation, false, scale, selected and SELECTED_COLOR)
+		Resources.DrawImage("shape_" .. (level + 2), pos[1], pos[2], rotation, alpha, scale, selected and SELECTED_COLOR)
 		return
 	end
 	
 	local nests = {}
 	while level > 3 do
-		Resources.DrawImage("shape_5", pos[1], pos[2], rotation, false, scale, selected and SELECTED_COLOR)
+		Resources.DrawImage("shape_5", pos[1], pos[2], rotation, alpha, scale, selected and SELECTED_COLOR)
 		scale = scale*0.81
 		level = level - 3
 	end
 	
-	Resources.DrawImage("shape_" .. (level + 2), pos[1], pos[2], rotation, false, scale, selected and SELECTED_COLOR)
+	Resources.DrawImage("shape_" .. (level + 2), pos[1], pos[2], rotation, alpha, scale, selected and SELECTED_COLOR)
 end
 
 function api.DrawInterface()
 	Resources.DrawImage("spell_interface", 1920 - 340, 0)
 	for i = 1, SPELL_COUNT do
 		local spellData = self.spellPositions[i]
-		DrawSpellLevel(spellData.pos, spellData.spellLevel, spellData.rotation, 1, i == self.currentSpell)
+		api.DrawSpellLevel(spellData.pos, spellData.spellLevel, spellData.rotation, 1, i == self.currentSpell)
 		Resources.DrawImage(spellDefs.spellIcon[spellData.spellName], spellData.pos[1], spellData.pos[2])
 	end
 	
 	if self.heldSpell then
-		DrawSpellLevel(SPELL_HELD_POS, self.heldSpellLevel, self.heldSpellRotate, 1.3)
+		api.DrawSpellLevel(SPELL_HELD_POS, self.heldSpellLevel, self.heldSpellRotate, 1.3)
 		Resources.DrawImage(spellDefs.spellIcon[self.heldSpell], SPELL_HELD_POS[1], SPELL_HELD_POS[2], 0, 1.3)
 	end
 	
@@ -177,6 +181,9 @@ function api.Initialize()
 			rotation = (i + 5)*math.pi/4,
 		}
 		spellData.pos = util.Add(spellCentre, toOut)
+		
+		Score.SetScore("slot_name" .. i, spellData.spellName)
+		Score.SetScore("slot_level" .. i, spellData.spellLevel)
 		
 		self.spellPositions[i] = spellData
 	end
