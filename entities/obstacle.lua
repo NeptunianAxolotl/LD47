@@ -3,7 +3,7 @@ local util = require("include/util")
 local Resources = require("resourceHandler")
 local EffectsHandler = require("effectsHandler")
 
-local DRAW_DEBUG = true
+local DRAW_DEBUG = false
 
 local function NewObstacle(self, def, rng, chunkX, chunkY, chunkWidth, chunkHeight)
 	-- pos

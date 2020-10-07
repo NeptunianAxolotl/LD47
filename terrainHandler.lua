@@ -29,8 +29,6 @@ local CHUNK_DRAW_BOT_RANGE = 300 -- stops tall sprites from popping at the botto
 local CHUNK_WIDTH = 64 * 32
 local CHUNK_HEIGHT = 64 * 32
 
-local EDGE_WIDTH = 455
-
 local rngSeed
 
 local function getExistingChunk(a, b)
@@ -89,7 +87,7 @@ local function detectPlacementCollision(a, b, obstacles, colPos, colDef, placeBl
 		end
 	end
 	if not colDef.chunkEdgePads then
-		return true
+		return
 	end
 	
 	local chunks = GetNearbyChunks(a, b)
