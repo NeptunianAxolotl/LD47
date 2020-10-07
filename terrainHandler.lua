@@ -44,7 +44,7 @@ local function getExistingChunk(a, b)
 end
 
 local function GetNearbyChunks(a, b)
-	local offset = ((b%2 == 0) and -1) or 0
+	local offset = ((b%2 == 0) and 0) or -1
 
 	local nearbyChunks = {}
 	nearbyChunks[#nearbyChunks + 1] = getExistingChunk(a - 1, b)
@@ -311,6 +311,12 @@ function api.Update(dt)
 end
 
 function api.Draw(drawQueue)
+	--local chunks = GetNearbyChunks(1, 2)
+	--for i = 1, #chunks do
+	--	love.graphics.setColor((chunks[i].left/1.4)%1, (chunks[i].left/1.4)%1, (chunks[i].left/1.4)%1, 0.5)
+	--	love.graphics.rectangle('fill', chunks[i].left, chunks[i].top, CHUNK_WIDTH, CHUNK_HEIGHT)
+	--end
+	
 	self.visibleChunks = self.visibleChunks or GetVisibleChunks()
 	drawChunks(self.visibleChunks, drawQueue)
 end
