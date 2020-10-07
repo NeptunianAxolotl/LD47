@@ -29,7 +29,35 @@ local CHUNK_DRAW_BOT_RANGE = 300 -- stops tall sprites from popping at the botto
 local CHUNK_WIDTH = 64 * 32
 local CHUNK_HEIGHT = 64 * 32
 
+local EDGE_WIDTH = 455
+
 local rngSeed
+
+local function getExistingChunk(a, b)
+	if not chunkCache[b] then
+		return
+	end
+	local hCache = chunkCache[b]
+	local cachedVal = hCache[a]
+	if cachedVal then
+		return cachedVal
+	end
+	return
+end
+
+local function GetNearbyChunks(a, b)
+	local offset = ((b%2 == 0) and -1) or 0
+
+	local nearbyChunks = {}
+	nearbyChunks[#nearbyChunks + 1] = getExistingChunk(a - 1, b)
+	nearbyChunks[#nearbyChunks + 1] = getExistingChunk(a + 1, b)
+	nearbyChunks[#nearbyChunks + 1] = getExistingChunk(a + offset, b - 1)
+	nearbyChunks[#nearbyChunks + 1] = getExistingChunk(a + offset + 1, b - 1)
+	nearbyChunks[#nearbyChunks + 1] = getExistingChunk(a + offset, b + 1)
+	nearbyChunks[#nearbyChunks + 1] = getExistingChunk(a + offset + 1, b + 1)
+	
+	return nearbyChunks
+end
 
 local function detectCollision(obstacles, otherPos, otherRadius, isCreature, isProjectile, player, dt)
 	--Does the circle described by 'x,y,radius' intersect with any
@@ -51,13 +79,27 @@ local function detectCollision(obstacles, otherPos, otherRadius, isCreature, isP
 	return collided
 end
 
-local function detectPlacementCollision(obstacles, colPos, colDef)
+local function detectPlacementCollision(a, b, obstacles, colPos, colDef, placeBlockPos, placeBlockRadius)
 	--Does the circle described by 'x,y,radius' intersect with any
 	--of the objects in the 'obstacles' list?
 	for i = 1, #obstacles do
 		local v = obstacles[i]
-		if v.IsBlockingPlacement(colPos, colDef) then
+		if v.IsBlockingPlacement(colPos, colDef, placeBlockPos, placeBlockRadius) then
 			return true
+		end
+	end
+	if not colDef.chunkEdgePads then
+		return true
+	end
+	
+	local chunks = GetNearbyChunks(a, b)
+	for c = 1, #chunks do
+		local chunk = chunks[c]
+		for i = 1, #chunk.obstacles do
+			local v = chunk.obstacles[i]
+			if v.nearChunkEdge and v.IsBlockingPlacement(colPos, colDef, placeBlockPos, placeBlockRadius) then
+				return true
+			end
 		end
 	end
 end
@@ -79,18 +121,6 @@ local function getChunkPositionFromID(a, b)
 	local x = ((b%2==0 and 0.5 or 0)+a)*CHUNK_WIDTH
 	local y = b*CHUNK_HEIGHT
 	return x, y
-end
-
-local function getExistingChunk(a, b)
-	if not chunkCache[b] then
-		return false
-	end
-	local hCache = chunkCache[b]
-	local cachedVal = hCache[a]
-	if cachedVal then
-		return cachedVal
-	end
-	return false
 end
 
 local function addObstacleToChunk(chunk, obstacleDef, pos)
@@ -132,9 +162,12 @@ local function generateChunk(a, b)
 			left + radius + rng:random()*(CHUNK_WIDTH  - radius*2),
 			top + radius + rng:random()*(CHUNK_HEIGHT - radius*2),
 		}
+		local obstacleSize = (obstacleDef.minSize + rng:random()*(obstacleDef.maxSize - obstacleDef.minSize))
 		
-		if not detectPlacementCollision(obstacles, obstaclePos, obstacleDef) then
-			obstacles[#obstacles + 1] = NewObstacle({pos = obstaclePos}, obstacleDef, rng)
+		if not detectPlacementCollision(a, b, obstacles, obstaclePos, obstacleDef,
+				obstacleDef.placeBlock and util.Add(util.Mult(obstacleSize, obstacleDef.placeBlock[1]), obstaclePos),
+				obstacleDef.placeBlock and obstacleDef.placeBlock[2]) then
+			obstacles[#obstacles + 1] = NewObstacle({pos = obstaclePos, sizeMult = obstacleSize}, obstacleDef, rng, left, top, CHUNK_WIDTH, CHUNK_HEIGHT)
 		end
 	end
 	
@@ -147,15 +180,20 @@ local function generateChunk(a, b)
 			left + radius + rng:random()*(CHUNK_WIDTH  - radius*2),
 			top + radius + rng:random()*(CHUNK_HEIGHT - radius*2),
 		}
+		local obstacleSize = (obstacleDef.minSize + rng:random()*(obstacleDef.maxSize - obstacleDef.minSize))
 		
-		if not detectPlacementCollision(obstacles, obstaclePos, obstacleDef) then
-			obstacles[#obstacles + 1] = NewObstacle({pos = obstaclePos}, obstacleDef, rng)
+		if not detectPlacementCollision(a, b, obstacles, obstaclePos, obstacleDef,
+				obstacleDef.placeBlock and util.Add(util.Mult(obstacleSize, obstacleDef.placeBlock[1]), obstaclePos),
+				obstacleDef.placeBlock and obstacleDef.placeBlock[2]) then
+			obstacles[#obstacles + 1] = NewObstacle({pos = obstaclePos, sizeMult = obstacleSize}, obstacleDef, rng, left, top, CHUNK_WIDTH, CHUNK_HEIGHT)
 		end
 	end
 	
 	local chunk = {
 		obstacles = obstacles,
 		rng = rng,
+		left = left,
+		top = top,
 	}
 	hCache[a] = chunk
 	
@@ -248,6 +286,8 @@ local function updateChunks(visibleChunks, dt)
 end
 
 local function drawChunk(chunk, drawQueue)
+	--love.graphics.setColor((chunk.left/1.4)%1, (chunk.left/1.4)%1, (chunk.left/1.4)%1, 0.5)
+	--love.graphics.rectangle('fill', chunk.left, chunk.top, CHUNK_WIDTH, CHUNK_HEIGHT)
 	for i = 1, #chunk.obstacles do
 		chunk.obstacles[i].Draw(drawQueue)
 	end

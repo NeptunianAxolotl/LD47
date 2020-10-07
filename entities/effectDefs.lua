@@ -153,6 +153,16 @@ local effectDefs = {
 		spawnOffset = {0, 0},
 		duration = "inherit",
 	},
+	debug_explode = {
+		image = "fireball_explode",
+		interface = false,
+		alphaScale = true,
+		color = {0.2, 0.8, 0.5},
+		inFront = 50,
+		scale = 0.08,
+		spawnOffset = {0, 0},
+		duration = 20,
+	},
 	
 	-- Death Clones
 	dead_bear = {

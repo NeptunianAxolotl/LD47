@@ -260,18 +260,25 @@ function util.IntersectingRectangles(x1, y1, w1, h1, x2, y2, w2, h2)
 	return ((x1 + w1 >= x2 and x1 <= x2) or (x2 + w2 >= x1 and x2 <= x1)) and ((y1 + h1 >= y2 and y1 <= y2) or (y2 + h2 >= y1 and y2 <= y1))
 end
 
-function util.PosInRectangle(x1, y1, w1, h1, x2, y2)
-	return (x1 + w1 > x2 and x1 <= x2) and (y1 + h1 > y2 and y1 <= y2)
+function util.PosInRectangle(pos, x1, y1, w1, h1)
+	return (x1 + w1 > pos[1] and x1 <= pos[1]) and (y1 + h1 > pos[2] and y1 <= pos[2])
 end
 
 --------------------------------------------------
 --------------------------------------------------
 -- Circles
 
+function util.PosInCircle(pos1, pos2, radius)
+	local distSq = util.DistSqVectors(pos1, pos2)
+	if distSq <= radius*radius then
+		return true, distSq
+	end
+end
+
 function util.IntersectingCircles(pos1, radius1, pos2, radius2)
 	local distSq = util.DistSqVectors(pos1, pos2)
 	if distSq <= (radius1 + radius2)*(radius1 + radius2) then
-		return true, dist
+		return true, distSq
 	end
 end
 

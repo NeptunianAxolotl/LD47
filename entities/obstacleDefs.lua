@@ -22,6 +22,11 @@ local obstacleDefs = {
                 return 0
             end
         end,
+		placeBlock = {
+			{5, -270},
+			160,
+		},
+		chunkEdgePads = {190, 500, 190, 0},
 	},
 	{
 		name = "rock_1",
@@ -35,6 +40,8 @@ local obstacleDefs = {
 		maxSize = 1.5,
 		collideCreature = true,
 		collideProjectile = false,
+		blockedByTrees = true,
+		chunkEdgePads = {190, 0, 190, 500},
 	},
 	{
 		name = "rock_2",
@@ -48,6 +55,8 @@ local obstacleDefs = {
 		maxSize = 1.2,
 		collideCreature = true,
 		collideProjectile = true,
+		blockedByTrees = true,
+		chunkEdgePads = {190, 0, 190, 500},
 	},
 	{
 		name = "grass_1",
