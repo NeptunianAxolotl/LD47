@@ -707,18 +707,28 @@ function progression.Update(playerDistance, dt)
     if self.introTimer < 0 then
         if not self.loopTimer then self.loopTimer = 12.170 end
         self.loopTimer = self.loopTimer - dt
-        if self.loopTimer < 0 then self.loopTimer = self.loopTimer + 12.170 end
-        if (not progression.BossExists()) and (playerDistance*DISTANCE_MULT <= BOSS_DISTANCE * 0.66) and self.wantedMusicTrack ~= 1 then
+        if self.loopTimer < 0 then 
+            self.loopTimer = self.loopTimer + 12.170 
+            self.switchedThisLoop = false
+        end
+        --Comments are easier conditions to reach for debugging.
+        --if not self.switchedThisLoop and (playerDistance*DISTANCE_MULT <= BOSS_DISTANCE * 0.10) and self.wantedMusicTrack ~= 1 then
+        if not self.switchedThisLoop and (not progression.BossExists()) and (playerDistance*DISTANCE_MULT <= BOSS_DISTANCE * 0.66) and self.wantedMusicTrack ~= 1 then
             self.wantedMusicTrack = 1
             SoundHandler.PlaySound("crocodial_b", true, "1", 1, self.loopTimer, 20)
+            self.switchedThisLoop = true
         end
-        if (not progression.BossExists()) and (playerDistance*DISTANCE_MULT > BOSS_DISTANCE * 0.66) and self.wantedMusicTrack ~= 2 then
+        --if not self.switchedThisLoop and (playerDistance*DISTANCE_MULT > BOSS_DISTANCE * 0.10) and (playerDistance*DISTANCE_MULT <= BOSS_DISTANCE * 0.105) and self.wantedMusicTrack ~= 2 then
+        if not self.switchedThisLoop and (not progression.BossExists()) and (playerDistance*DISTANCE_MULT > BOSS_DISTANCE * 0.66) and self.wantedMusicTrack ~= 2 then
             self.wantedMusicTrack = 2
             SoundHandler.PlaySound("crocodial_c", true, "2", 1, self.loopTimer, 20)
+            self.switchedThisLoop = true
         end
-        if progression.BossExists() and self.wantedMusicTrack ~= 3 then
+        --if not self.switchedThisLoop and (playerDistance*DISTANCE_MULT > BOSS_DISTANCE * 0.105) and self.wantedMusicTrack ~= 3 then
+        if not self.switchedThisLoop and progression.BossExists() and self.wantedMusicTrack ~= 3 then
             self.wantedMusicTrack = 3
             SoundHandler.PlaySound("crocodial_d", true, "3", 1, self.loopTimer, 20)
+            self.switchedThisLoop = true
         end
         if self.loopTimer < 0.2 and self.musicTrack ~= self.wantedMusicTrack then
             if self.musicTrack == 1 then SoundHandler.StopSound("crocodial_b1", true) end
