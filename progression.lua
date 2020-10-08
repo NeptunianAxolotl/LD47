@@ -595,9 +595,7 @@ local function UpdateLoop()
 	self.spawnTime  = (self.spawnTime  or 1)*0.6
 	self.spreadMult = (self.spreadMult or 1) + 0.25
 	
-	if self.loops == 1 then
-		Score.SetScore("first_rival_time", self.totalTime)
-	end
+	Score.SetScore("rival_time" .. self.loops, self.totalTime)
 	
 	if self.spreadMult > 1.5 then
 		self.spreadMult = 1.65

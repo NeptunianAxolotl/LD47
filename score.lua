@@ -33,6 +33,10 @@ function api.UpdateRecord(cat, value)
 	self.scores[cat] = math.max((self.scores[cat] or 0), value)
 end
 
+function api.ScoreHasEntry(cat)
+	return self.scores[cat] and true
+end
+
 function api.GetScore(cat)
 	return self.scores[cat] or 0
 end
@@ -152,8 +156,23 @@ function api.DrawInterface()
 	love.graphics.print("Total time", xPos, yPos)
 	love.graphics.print(util.SecondsToString(api.GetScore("total_time")), xPos + STAT_OFFSET, yPos)
 	yPos = yPos + OFFSET*2/3
-	love.graphics.print("First rival time", xPos, yPos)
-	love.graphics.print(util.SecondsToString(api.GetScore("first_rival_time"), true), xPos + STAT_OFFSET, yPos)
+	love.graphics.print("Rival time", xPos, yPos)
+	
+	local rival = 1
+	if api.ScoreHasEntry("rival_time" .. rival) then
+		local rivalString = ""
+		while api.ScoreHasEntry("rival_time" .. rival) do
+			if rival ~= 1 then
+				rivalString = rivalString .. ", "
+			end
+			rivalString = rivalString .. util.SecondsToString(api.GetScore("rival_time" .. rival))
+			rival = rival + 1
+		end
+		love.graphics.print(rivalString, xPos + STAT_OFFSET, yPos)
+	else
+		love.graphics.print("-", xPos + STAT_OFFSET, yPos)
+	end
+	
 	yPos = yPos + OFFSET*2/3
 	love.graphics.print("Top speed", xPos, yPos)
 	love.graphics.print(math.floor(api.GetScore("top_speed")) .. "m/s", xPos + STAT_OFFSET, yPos)
