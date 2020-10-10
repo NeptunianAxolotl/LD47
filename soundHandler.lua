@@ -33,9 +33,10 @@ function addSource(name, id)
     end
 end
 
-function api.PlaySound(name, loop, id, fadeRate, delay, fadeIn)
+function api.PlaySound(name, loop, id, fadeIn, fadeOut, delay)
 	id = name .. (id or 1)
-    fadeIn = fadeIn or fadeRate
+    fadeIn = fadeIn or 10
+    fadeOut = fadeOut or 10
 	local soundData = IterableMap.Get(sounds, id)
     if not soundData then
 		local def = soundFiles[name]
@@ -45,7 +46,7 @@ function api.PlaySound(name, loop, id, fadeRate, delay, fadeIn)
             have = 0,
 			volumeMult = def.volMult,
             source = addSource(name, id),
-            fadeRate = fadeRate,
+            fadeOut = fadeOut,
             fadeIn = fadeIn,
             delay = delay,
         }
@@ -95,7 +96,7 @@ function api.Update(dt)
             end
 
             if soundData.want < soundData.have then
-                soundData.have = soundData.have - (soundData.fadeRate or 10)*dt
+                soundData.have = soundData.have - (soundData.fadeOut or 10)*dt
                 if soundData.have < soundData.want then
                     soundData.have = soundData.want
                 end
@@ -110,8 +111,6 @@ function api.Initialize()
         soundData.source:stop()
     end
     sounds = IterableMap.New()
-	
-	
 end
 
 return api

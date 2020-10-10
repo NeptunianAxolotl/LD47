@@ -1,9 +1,11 @@
 
 local SoundHandler = require("soundHandler")
+local MusicHandler = require("musicHandler")
 local Score = require("score")
 
 local progression = {}
 local self = {}
+local music = nil
 
 local OBSTACLES_PER_CHUNK_MIN = 18
 local OBSTACLES_PER_CHUNK_MAX = 50
@@ -693,46 +695,26 @@ function progression.Update(playerDistance, dt)
 	self.lastPlayerDist = playerDistance -- This is the only line that sees unmodified distances
 	playerDistance = playerDistance - (self.resetDist or 0)
 	
-    if not self.musicPlaying then
-       self.introTimer = 18.146
-       self.musicPlaying = true
-       self.musicTrack = 1
-       self.wantedMusicTrack = 1
-       SoundHandler.PlaySound("crocodial_a", false, "0", 0.5, 0, 1)
-       SoundHandler.PlaySound("crocodial_b", true, "1", 1, 18.146, 20)
+    if not music then
+        MusicHandler.SwitchTrack('intro')
+        MusicHandler.QueueTrack('normal')
+        music = 1
     end
-    self.introTimer = self.introTimer - dt
-    if self.introTimer < 0 then
-        if not self.loopTimer then self.loopTimer = 12.170 end
-        self.loopTimer = self.loopTimer - dt
-        if self.loopTimer < 0 then 
-            self.loopTimer = self.loopTimer + 12.170 
-            self.switchedThisLoop = false
+    
+    if progression.BossExists() then
+        if music ~= 3 then
+            music = 3
+            MusicHandler.SwitchTrack('boss')
         end
-        --Comments are easier conditions to reach for debugging.
-        --if not self.switchedThisLoop and (playerDistance*DISTANCE_MULT <= BOSS_DISTANCE * 0.10) and self.wantedMusicTrack ~= 1 then
-        if not self.switchedThisLoop and (not progression.BossExists()) and (playerDistance*DISTANCE_MULT <= BOSS_DISTANCE * 0.66) and self.wantedMusicTrack ~= 1 then
-            self.wantedMusicTrack = 1
-            SoundHandler.PlaySound("crocodial_b", true, "1", 1, self.loopTimer, 20)
-            self.switchedThisLoop = true
+    elseif (playerDistance*DISTANCE_MULT > BOSS_DISTANCE * 0.66) then
+        if music ~= 2 then
+            music = 2
+            MusicHandler.SwitchTrack('late')
         end
-        --if not self.switchedThisLoop and (playerDistance*DISTANCE_MULT > BOSS_DISTANCE * 0.10) and (playerDistance*DISTANCE_MULT <= BOSS_DISTANCE * 0.105) and self.wantedMusicTrack ~= 2 then
-        if not self.switchedThisLoop and (not progression.BossExists()) and (playerDistance*DISTANCE_MULT > BOSS_DISTANCE * 0.66) and self.wantedMusicTrack ~= 2 then
-            self.wantedMusicTrack = 2
-            SoundHandler.PlaySound("crocodial_c", true, "2", 1, self.loopTimer, 20)
-            self.switchedThisLoop = true
-        end
-        --if not self.switchedThisLoop and (playerDistance*DISTANCE_MULT > BOSS_DISTANCE * 0.105) and self.wantedMusicTrack ~= 3 then
-        if not self.switchedThisLoop and progression.BossExists() and self.wantedMusicTrack ~= 3 then
-            self.wantedMusicTrack = 3
-            SoundHandler.PlaySound("crocodial_d", true, "3", 1, self.loopTimer, 20)
-            self.switchedThisLoop = true
-        end
-        if self.loopTimer < 0.2 and self.musicTrack ~= self.wantedMusicTrack then
-            if self.musicTrack == 1 then SoundHandler.StopSound("crocodial_b1", true) end
-            if self.musicTrack == 2 then SoundHandler.StopSound("crocodial_c2", true) end
-            if self.musicTrack == 3 then SoundHandler.StopSound("crocodial_d3", true) end
-            self.musicTrack = self.wantedMusicTrack
+    else
+        if music ~= 1 then
+            music = 1
+        MusicHandler.SwitchTrack('normal')
         end
     end
 
@@ -758,6 +740,7 @@ end
 
 function progression.Initialize()
 	self = {}
+    music = nil
 end
 
 return progression
