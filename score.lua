@@ -175,7 +175,7 @@ function api.DrawInterface()
 	
 	yPos = yPos + OFFSET*2/3
 	love.graphics.print("Top speed", xPos, yPos)
-	love.graphics.print(math.floor(api.GetScore("top_speed")) .. "m/s", xPos + STAT_OFFSET, yPos)
+	love.graphics.print(math.floor(api.GetScore("top_speed")) .. "km/h", xPos + STAT_OFFSET, yPos)
 	yPos = yPos + OFFSET*2/3
 	
 end
