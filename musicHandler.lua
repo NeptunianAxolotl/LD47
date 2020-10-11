@@ -7,7 +7,7 @@ local api = {}
 local font = love.graphics.newFont(70)
 
 local tracks = {
-    intro = {id = 'a', sound = 'crocodial_a', duration = 6.05, canLoop = false},
+    intro = {id = 'a', sound = 'crocodial_a', duration = 6.04, canLoop = false},
     normal = {id = 'b', sound = 'crocodial_b', duration = 12.170, canLoop = true},
     late = {id = 'c', sound = 'crocodial_c', duration = 12.170, canLoop = true},
     boss = {id = 'd', sound = 'crocodial_d', duration = 12.170, canLoop = true}
@@ -94,10 +94,8 @@ function api.Draw(x,y)
 end
 
 function api.Initialize()
-    -- for _, soundData in IterableMap.Iterator(sounds) do
-        -- soundData.source:stop()
-    -- end
-    -- sounds = IterableMap.New()
+    api.SwitchTrack('none')
+    api.StopCurrentTrack()
 end
 
 return api
